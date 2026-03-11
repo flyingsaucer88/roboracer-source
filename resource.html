@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RoboRacer Platform</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Montserrat',sans-serif;
+}
+
+body{
+background:#ffffff;
+}
+
+/* GRID BACKGROUND */
+
+.hero{
+min-height:100vh;
+
+background-image:
+linear-gradient(#e5e5e5 1px, transparent 1px),
+linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+
+background-size:60px 60px;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:25px 80px;
+position:relative;
+}
+
+
+
+/* NAV LINKS */
+
+.nav-links{
+display:flex;
+gap:30px;
+}
+
+.nav-links a{
+text-decoration:none;
+color:#333;
+font-weight:500;
+font-size:14px;
+}
+
+/* RIGHT BUTTONS */
+
+.nav-actions{
+display:flex;
+flex-direction:column;
+gap:10px;
+align-items:flex-end;
+}
+
+.nav-btn{
+background:#000;
+color:#fff;
+padding:10px 18px;
+border-radius:20px;
+font-size:13px;
+text-decoration:none;
+display:inline-block;
+}
+
+/* HAMBURGER */
+
+.hamburger{
+display:none;
+flex-direction:column;
+cursor:pointer;
+gap:5px;
+}
+
+.hamburger span{
+width:25px;
+height:3px;
+background:#000;
+}
+
+/* PAGE SECTION */
+
+.page-section{
+max-width:1100px;
+margin:auto;
+padding:80px 20px;
+text-align:center;
+}
+
+/* diagram */
+
+.diagram-box img{
+width:100%;
+max-width:1200px;
+border-radius:6px;
+box-shadow:0 4px 20px rgba(0,0,0,0.1);
+}
+
+.diagram-box h3{
+color:rgb(92,88,88);
+margin-bottom:20px;
+margin-top:-10px;
+font-size:18px;
+}
+
+/* text */
+
+.info-text{
+margin-top:25px;
+font-size:15px;
+color:#555;
+}
+
+.section-title{
+margin-top:40px;
+font-size:18px;
+font-weight:600;
+color:#444;
+}
+
+/* buttons */
+
+.main-btn{
+display:inline-block;
+margin-top:25px;
+padding:14px 36px;
+background:#e31c2b;
+color:white;
+text-decoration:none;
+border-radius:4px;
+font-weight:600;
+letter-spacing:.5px;
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
+transition:0.3s;
+}
+
+.main-btn:hover{
+background:#c81422;
+transform:translateY(-2px);
+}
+
+.button-block{
+margin-top:35px;
+}
+
+
+/* ============================= */
+/* MOBILE NAVBAR */
+/* ============================= */
+
+@media(max-width:900px){
+
+.navbar{
+padding:20px 30px;
+}
+
+.nav-links{
+position:absolute;
+top:80px;
+left:0;
+width:100%;
+background:white;
+flex-direction:column;
+align-items:center;
+gap:20px;
+padding:25px 0;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+display:none;
+}
+
+.nav-links.active{
+display:flex;
+}
+
+.nav-actions{
+display:none;
+}
+
+.hamburger{
+display:flex;
+}
+
+}
+
+
+/* ============================= */
+/* TABLET */
+/* ============================= */
+
+@media(max-width:1024px){
+
+.page-section{
+padding:60px 25px;
+}
+
+.diagram-box h3{
+font-size:17px;
+}
+
+}
+
+
+/* ============================= */
+/* MOBILE */
+/* ============================= */
+
+@media(max-width:600px){
+
+.page-section{
+padding:50px 18px;
+}
+
+.diagram-box h3{
+font-size:15px;
+}
+
+.section-title{
+font-size:16px;
+}
+
+.info-text{
+font-size:14px;
+}
+
+.main-btn{
+padding:12px 28px;
+font-size:14px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section class="hero">
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<a href="index.html">
+<div class="logo">
+<img src="https://ambimat.com/wp-content/uploads/2017/07/ambimat-logo.png">
+</div>
+</a>
+
+<div class="nav-links" id="navMenu">
+<a href="index.html#description">Description</a>
+<a href="index.html#parts">Parts</a>
+<a href="index.html#services">Services</a>
+<a href="resource.html">Resource</a>
+<a href="contact.html">Contact</a>
+</div>
+
+<div class="nav-actions">
+<a class="nav-btn" href="https://github.com/f1tenth">Access Directory</a>
+<a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup">Access Community</a>
+</div>
+
+<!-- HAMBURGER -->
+
+<div class="hamburger" onclick="toggleMenu()">
+<span></span>
+<span></span>
+<span></span>
+</div>
+
+</div>
+
+
+<div class="page-section">
+
+<!-- Diagram -->
+
+<div class="diagram-box">
+<h3>
+The design for the board has been made open source so that the ROBORACER community can benefit out of it.
+</h3>
+
+<img src="https://ambimat.com/wp-content/uploads/2024/01/Frame-1.png">
+</div>
+
+<!-- Download ZIP -->
+
+<div class="button-block">
+<a href="#" class="main-btn">DOWNLOAD ZIP</a>
+</div>
+
+<p class="info-text">
+If you wish to order the boards from Ambimat Electronics please click on the
+<strong>Order Now</strong> button
+</p>
+
+<!-- Order Button -->
+
+<div class="button-block">
+<a href="#" class="main-btn">ORDER NOW</a>
+</div>
+
+<!-- Test Report -->
+
+<p class="section-title">
+Get your test report here.
+</p>
+
+<div class="button-block">
+<a href="#" class="main-btn">TEST REPORT</a>
+</div>
+
+<!-- Manual -->
+
+<p class="section-title">
+ROBORACER Power Board User Manual
+</p>
+
+<div class="button-block">
+<a href="#" class="main-btn">DOWNLOAD NOW</a>
+</div>
+
+</div>
+
+</section>
+
+
+<script>
+
+function toggleMenu(){
+document.getElementById("navMenu").classList.toggle("active");
+}
+
+</script>
+
+</body>
+</html>
