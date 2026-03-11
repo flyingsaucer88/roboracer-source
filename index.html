@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimSecure — Open API for Trusted Mobile Identity</title>
+  <meta name="description" content="Structured, permissioned access to the programmable mobile network. Verified identity, fraud prevention, location intelligence, and carrier charging — through a single governed interface layer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="SimSecure home">
+        <span class="nav-logo-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="2.5" fill="#111"/>
+            <circle cx="14" cy="14" r="5.5" stroke="#111" stroke-width="1.2" stroke-dasharray="2.5 2" fill="none"/>
+            <circle cx="14" cy="14" r="8.5" stroke="#111" stroke-width="1" stroke-dasharray="3 2.5" fill="none"/>
+            <circle cx="14" cy="14" r="11.5" stroke="#111" stroke-width="0.8" stroke-dasharray="3.5 3" fill="none"/>
+          </svg>
+        </span>
+        <span class="nav-logo-text">simsecure</span>
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li><a href="#platform">Platform</a></li>
+        <li><a href="#industries">Industries</a></li>
+        <li><a href="#openapi">Open API</a></li>
+        <li><a href="#registry">Registry</a></li>
+        <li><a href="#technology">Technology</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <a href="#registry" class="btn-pill">Access Directory</a>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU OVERLAY -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-inner">
+      <div class="mobile-menu-header">
+        <a href="/" class="nav-logo" aria-label="SimSecure home">
+          <span class="nav-logo-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="14" cy="14" r="2.5" fill="#111"/>
+              <circle cx="14" cy="14" r="5.5" stroke="#111" stroke-width="1.2" stroke-dasharray="2.5 2" fill="none"/>
+              <circle cx="14" cy="14" r="8.5" stroke="#111" stroke-width="1" stroke-dasharray="3 2.5" fill="none"/>
+              <circle cx="14" cy="14" r="11.5" stroke="#111" stroke-width="0.8" stroke-dasharray="3.5 3" fill="none"/>
+            </svg>
+          </span>
+          <span class="nav-logo-text">simsecure</span>
+        </a>
+        <button class="mobile-menu-close" id="menuClose" aria-label="Close menu">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 3L17 17M17 3L3 17" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="mobile-menu-grid">
+        <nav class="mobile-nav-links">
+          <a href="#platform" class="mobile-nav-link">Platform</a>
+          <a href="#industries" class="mobile-nav-link">Industries</a>
+          <a href="#openapi" class="mobile-nav-link">Open API</a>
+          <a href="#registry" class="mobile-nav-link">Registry</a>
+          <a href="#technology" class="mobile-nav-link">Technology</a>
+          <a href="#faq" class="mobile-nav-link">FAQ</a>
+        </nav>
+        <nav class="mobile-footer-links">
+          <a href="#" class="mobile-footer-link">Developer Portal</a>
+          <a href="#" class="mobile-footer-link">LinkedIn</a>
+          <a href="#" class="mobile-footer-link">Privacy</a>
+          <a href="#" class="mobile-footer-link">Terms</a>
+          <a href="#registry" class="btn-pill mobile-cta">Access Directory</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="hero">
+    <div class="hero-grid-bg" aria-hidden="true"></div>
+    <div class="hero-scanline" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <p class="hero-label">SIM SECURE OPEN API</p>
+      <h1 class="hero-heading">Open API for Trusted<br />Mobile Identity.</h1>
+      <p class="hero-sub">Structured, permissioned access to the programmable mobile network. Verified identity, fraud prevention, location intelligence, and carrier charging — through a single governed interface layer.</p>
+      <div class="hero-ctas">
+        <a href="#openapi" class="link-underline">Explore Open API &rarr;</a>
+        <a href="#registry" class="link-underline">View Registry</a>
+      </div>
+    </div>
+
+    <div class="hero-panels">
+      <!-- Left: Code Panel -->
+      <div class="code-panel" aria-label="Java code example">
+        <div class="panel-topbar">
+          <span class="panel-dot red"></span>
+          <span class="panel-dot yellow"></span>
+          <span class="panel-dot green"></span>
+          <span class="panel-title">SATAuthService.java</span>
+        </div>
+        <pre class="code-block" id="codeBlock" aria-live="polite"><code></code></pre>
+      </div>
+
+      <!-- Right: Auth Log Panel -->
+      <div class="log-panel" aria-label="Authentication event log">
+        <div class="panel-topbar">
+          <span class="panel-dot red"></span>
+          <span class="panel-dot yellow"></span>
+          <span class="panel-dot green"></span>
+          <span class="panel-title">auth.log</span>
+        </div>
+        <div class="log-entries" id="logEntries" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GLOBAL COVERAGE SECTION -->
+  <section class="coverage" id="openapi">
+    <div class="section-inner">
+      <div class="coverage-header">
+        <p class="section-label">GLOBAL COVERAGE</p>
+        <h2 class="coverage-stat">25 Governed APIs</h2>
+      </div>
+
+      <div class="api-table" role="table" aria-label="API categories">
+        <div class="api-table-head" role="row">
+          <span role="columnheader">Category</span>
+          <span role="columnheader">APIs</span>
+          <span role="columnheader">Status</span>
+        </div>
+
+        <div class="api-row fade-row" role="row" data-status="live">
+          <span class="api-category" role="cell">Authentication &amp; Fraud</span>
+          <span class="api-count" role="cell">6 APIs</span>
+          <span class="api-status" role="cell">
+            <span class="status-dot live" aria-label="Live"></span>
+            <span class="status-text">Live</span>
+          </span>
+        </div>
+
+        <div class="api-row fade-row" role="row" data-status="live">
+          <span class="api-category" role="cell">Location Services</span>
+          <span class="api-count" role="cell">3 APIs</span>
+          <span class="api-status" role="cell">
+            <span class="status-dot live" aria-label="Live"></span>
+            <span class="status-text">Live</span>
+          </span>
+        </div>
+
+        <div class="api-row fade-row" role="row" data-status="live">
+          <span class="api-category" role="cell">Device Information</span>
+          <span class="api-count" role="cell">3 APIs</span>
+          <span class="api-status" role="cell">
+            <span class="status-dot live" aria-label="Live"></span>
+            <span class="status-text">Live</span>
+          </span>
+        </div>
+
+        <div class="api-row fade-row" role="row" data-status="progress">
+          <span class="api-category" role="cell">Communication Quality</span>
+          <span class="api-count" role="cell">2 APIs</span>
+          <span class="api-status" role="cell">
+            <span class="status-dot progress" aria-label="In progress"></span>
+            <span class="status-text">In Progress</span>
+          </span>
+        </div>
+
+        <div class="api-row fade-row" role="row" data-status="live">
+          <span class="api-category" role="cell">Payments &amp; Charging</span>
+          <span class="api-count" role="cell">2 APIs</span>
+          <span class="api-status" role="cell">
+            <span class="status-dot live" aria-label="Live"></span>
+            <span class="status-text">Live</span>
+          </span>
+        </div>
+
+        <div class="api-row fade-row" role="row" data-status="progress">
+          <span class="api-category" role="cell">Edge &amp; Compute</span>
+          <span class="api-count" role="cell">1 API</span>
+          <span class="api-status" role="cell">
+            <span class="status-dot progress" aria-label="In progress"></span>
+            <span class="status-text">In Progress</span>
+          </span>
+        </div>
+
+        <div class="api-row fade-row" role="row" data-status="live">
+          <span class="api-category" role="cell">SIM Secure Platform</span>
+          <span class="api-count" role="cell">8 APIs</span>
+          <span class="api-status" role="cell">
+            <span class="status-dot live" aria-label="Live"></span>
+            <span class="status-text">Live</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="features" id="platform">
+    <div class="section-inner">
+      <div class="features-header">
+        <p class="section-label">WHAT IT MEANS FOR YOU</p>
+      </div>
+      <div class="features-list">
+
+        <div class="feature-row fade-row">
+          <div class="feature-label-col">
+            <span class="feature-label">01</span>
+          </div>
+          <div class="feature-body">
+            <h3 class="feature-heading">Hardware-anchored identity</h3>
+            <p class="feature-desc">Authentication is rooted in the SIM — tamper-resistant, not software-based.</p>
+          </div>
+        </div>
+
+        <div class="feature-row fade-row">
+          <div class="feature-label-col">
+            <span class="feature-label">02</span>
+          </div>
+          <div class="feature-body">
+            <h3 class="feature-heading">Carrier-grade trust signals</h3>
+            <p class="feature-desc">SIM Swap, Number Verification, and device context from the network itself.</p>
+          </div>
+        </div>
+
+        <div class="feature-row fade-row">
+          <div class="feature-label-col">
+            <span class="feature-label">03</span>
+          </div>
+          <div class="feature-body">
+            <h3 class="feature-heading">25 governed APIs</h3>
+            <p class="feature-desc">One interface layer for identity, fraud, location, payments, and platform services.</p>
+          </div>
+        </div>
+
+        <div class="feature-row fade-row">
+          <div class="feature-label-col">
+            <span class="feature-label">04</span>
+          </div>
+          <div class="feature-body">
+            <h3 class="feature-heading">Standards aligned</h3>
+            <p class="feature-desc">GSMA Open Gateway, CAMARA, Nokia Network as Code — production-grade interop.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL CARDS SECTION -->
+  <section class="tools" id="technology">
+    <div class="section-inner">
+      <div class="tools-header">
+        <p class="section-label">YOUR TOOLS</p>
+        <h2 class="tools-heading">Everything you need to build on the mobile network.</h2>
+      </div>
+
+      <div class="tools-grid">
+
+        <div class="tool-card fade-row">
+          <div class="tool-card-top">
+            <div class="tool-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="#111" stroke-width="1.6" fill="none"/>
+                <path d="M7 11V7a5 5 0 0110 0v4" stroke="#111" stroke-width="1.6" stroke-linecap="round"/>
+                <circle cx="12" cy="16" r="1.5" fill="#111"/>
+              </svg>
+            </div>
+            <span class="tool-api-count">6 APIs</span>
+          </div>
+          <h3 class="tool-title">Authentication &amp; Fraud Prevention</h3>
+          <p class="tool-desc">Number Verification, SIM Swap, Device Swap, KYC Match — verified identity signals anchored in the mobile network.</p>
+        </div>
+
+        <div class="tool-card fade-row">
+          <div class="tool-card-top">
+            <div class="tool-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7z" stroke="#111" stroke-width="1.6" fill="none"/>
+                <circle cx="12" cy="9" r="2.5" stroke="#111" stroke-width="1.4" fill="none"/>
+              </svg>
+            </div>
+            <span class="tool-api-count">6 APIs</span>
+          </div>
+          <h3 class="tool-title">Location &amp; Device Intelligence</h3>
+          <p class="tool-desc">Location retrieval, location verification, device reachability, roaming status — network-derived context without GPS.</p>
+        </div>
+
+        <div class="tool-card fade-row">
+          <div class="tool-card-top">
+            <div class="tool-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="2" y="6" width="20" height="14" rx="2" stroke="#111" stroke-width="1.6" fill="none"/>
+                <path d="M2 10h20" stroke="#111" stroke-width="1.4"/>
+                <path d="M6 15h4M14 15h4" stroke="#111" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="tool-api-count">2 APIs</span>
+          </div>
+          <h3 class="tool-title">Payments &amp; Charging</h3>
+          <p class="tool-desc">Carrier billing and refund APIs — digital commerce through the trusted operator billing relationship.</p>
+        </div>
+
+        <div class="tool-card fade-row">
+          <div class="tool-card-top">
+            <div class="tool-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="8" y="2" width="8" height="4" rx="1" stroke="#111" stroke-width="1.5" fill="none"/>
+                <path d="M8 4H5a2 2 0 00-2 2v13a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-3" stroke="#111" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                <path d="M9 12h6M9 16h4" stroke="#111" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="tool-api-count">8 APIs</span>
+          </div>
+          <h3 class="tool-title">SIM Secure Platform APIs</h3>
+          <p class="tool-desc">Secure authentication, trusted identity assertion, session trust scoring, consent, audit — the enterprise trust layer.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY SECTION -->
+  <section class="why-section world-section" id="industries">
+    <div class="section-inner">
+      <div class="world-grid">
+        <div class="world-label-col">
+          <p class="section-label">WHY SIMSECURE</p>
+        </div>
+        <div class="world-content-col">
+          <h2 class="why-heading">Secure authentication changes what is possible.</h2>
+          <div class="why-body">
+            <p>For decades, mobile networks have carried the world's most sensitive identity signals — SIM card state, network presence, subscriber data — locked inside proprietary operator systems.</p>
+            <p>The result has been a fragile authentication ecosystem built on top of consumer-grade channels: SMS OTPs that can be intercepted, passwords that can be phished, and device signals that can be spoofed. The network knew the truth. The application layer never could.</p>
+            <p>SimSecure changes that. By exposing carrier-grade identity signals through a governed API layer, we make it possible for applications to build authentication and fraud prevention on the same signals the network uses internally — without compromising privacy, without bypassing consent, and without requiring new infrastructure.</p>
+          </div>
+          <a href="#openapi" class="link-underline why-cta">Learn more &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET STARTED SECTION -->
+  <section class="get-started" id="registry">
+    <div class="section-inner">
+      <div class="get-started-inner">
+        <h2 class="get-started-heading">Build on the mobile network</h2>
+        <p class="get-started-desc">Register with your corporate email to request developer access. Explore API documentation, integration guides, and sandbox environments at developer.simsecure.com.</p>
+        <div class="get-started-ctas">
+          <a href="https://developer.simsecure.com" class="btn-pill btn-pill-lg" target="_blank" rel="noopener">Go to Developer Portal</a>
+          <a href="#registry" class="link-underline">Request Registry Access</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="faq">
+    <div class="footer-inner">
+
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo footer-logo" aria-label="SimSecure home">
+            <span class="nav-logo-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="14" cy="14" r="2.5" fill="#111"/>
+                <circle cx="14" cy="14" r="5.5" stroke="#111" stroke-width="1.2" stroke-dasharray="2.5 2" fill="none"/>
+                <circle cx="14" cy="14" r="8.5" stroke="#111" stroke-width="1" stroke-dasharray="3 2.5" fill="none"/>
+                <circle cx="14" cy="14" r="11.5" stroke="#111" stroke-width="0.8" stroke-dasharray="3.5 3" fill="none"/>
+              </svg>
+            </span>
+            <span class="nav-logo-text">simsecure</span>
+          </a>
+          <p class="footer-brand-desc">Hardware-anchored identity infrastructure for the global mobile network.</p>
+        </div>
+
+        <nav class="footer-social" aria-label="Social and external links">
+          <a href="#" class="footer-link">LinkedIn</a>
+          <a href="https://developer.simsecure.com" class="footer-link" target="_blank" rel="noopener">Dev Portal</a>
+          <a href="#registry" class="footer-link">Registry</a>
+          <a href="#" class="footer-link">Privacy</a>
+          <a href="#" class="footer-link">Terms</a>
+        </nav>
+      </div>
+
+      <div class="footer-nav-grid">
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">Platform</h4>
+          <ul role="list">
+            <li><a href="#platform" class="footer-nav-link">SIM Secure Platform</a></li>
+            <li><a href="#registry" class="footer-nav-link">Application Registry</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">Developers</h4>
+          <ul role="list">
+            <li><a href="#openapi" class="footer-nav-link">Open API</a></li>
+            <li><a href="#faq" class="footer-nav-link">FAQ</a></li>
+            <li><a href="https://developer.simsecure.com" class="footer-nav-link" target="_blank" rel="noopener">Developer Portal</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h4 class="footer-nav-heading">Industries</h4>
+          <ul role="list">
+            <li><a href="#industries" class="footer-nav-link">Use Cases</a></li>
+            <li><a href="#technology" class="footer-nav-link">Integrations</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-standards">
+        <span>GSMA Open Gateway</span>
+        <span class="footer-standards-sep">·</span>
+        <span>CAMARA Project</span>
+        <span class="footer-standards-sep">·</span>
+        <span>Nokia Network as Code</span>
+        <span class="footer-standards-sep">·</span>
+        <span>3GPP Standards</span>
+        <span class="footer-standards-sep">·</span>
+        <span>ETSI NFV</span>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-legal">
+          <p>SimSecure Limited &middot; Registered in Ireland</p>
+          <p class="footer-jv">A JOINT VENTURE BETWEEN <strong>Centili Group Limited</strong> &middot; <strong>Ciright Inc.</strong></p>
+        </div>
+        <div class="footer-copy">
+          <p>&copy; SimSecure Limited &mdash; All Rights Reserved</p>
+          <p class="footer-tm">SIM Secure, S.A.T.&trade; and SATMFApplet are trademarks of SimSecure Limited.</p>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
