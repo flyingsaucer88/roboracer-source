@@ -1,364 +1,264 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-<head>
+    <title>Resources — Open-Source RoboRacer Power Board Files | RoboRacer</title>
+    <meta
+      name="description"
+      content="Download the open-source RoboRacer power board design files and the Power Board User Manual, released by Ambimat Electronics for the ROBORACER community."
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://roboracer.ambimat.com/resource.html" />
 
-    <!-- Google tag (gtag.js) - GA4 -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RoboRacer" />
+    <meta property="og:title" content="Resources — Open-Source RoboRacer Power Board Files" />
+    <meta
+      property="og:description"
+      content="Design files and the user manual for the RoboRacer power board, open-sourced for the ROBORACER community."
+    />
+    <meta property="og:url" content="https://roboracer.ambimat.com/resource.html" />
+    <meta property="og:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Resources — Open-Source RoboRacer Power Board Files" />
+    <meta name="twitter:description" content="Design files and the user manual for the RoboRacer power board." />
+    <meta name="twitter:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta
+      name="twitter:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+
+    <link rel="preload" href="/assets/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/assets/css/fonts.css?v=1" />
+    <link rel="stylesheet" href="/assets/css/main.css?v=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#E31C2B" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://roboracer.ambimat.com/" },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Resources",
+            "item": "https://roboracer.ambimat.com/resource.html"
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="/">
+          <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+          <span class="brand-text">
+            <span class="brand-line">Robo<span class="accent">Racer</span></span>
+            <span class="brand-tag">Autonomous racing platform</span>
+          </span>
+        </a>
+
+        <div class="nav-links" id="nav-menu">
+          <a href="/#description">Description</a>
+          <a href="/#parts">Parts</a>
+          <a href="/#services">Services</a>
+          <a href="/resource.html">Resources</a>
+          <a href="/contact.html">Contact</a>
+          <a class="nav-cta secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-cta" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-btn secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+          <button
+            class="hamburger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="nav-menu"
+            aria-label="Open navigation menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <div class="page-header">
+        <p class="eyebrow">Open source</p>
+        <h1 class="page-title">RoboRacer Power Board Resources</h1>
+        <hr class="section-line" />
+        <p class="section-desc">
+          The design for the board has been made open source so that the ROBORACER community can benefit out of it.
+        </p>
+      </div>
+
+      <section class="section" aria-labelledby="board-title">
+        <div class="section-container">
+          <h2 class="visually-hidden" id="board-title">Power board design</h2>
+
+          <figure class="figure">
+            <picture>
+              <source
+                type="image/webp"
+                srcset="
+                  /assets/img/roboracer-power-board-diagram-800.webp   800w,
+                  /assets/img/roboracer-power-board-diagram-1100.webp 1100w,
+                  /assets/img/roboracer-power-board-diagram-1600.webp 1600w
+                "
+                sizes="(max-width: 880px) 92vw, 1100px"
+              />
+              <img
+                src="/assets/img/roboracer-power-board-diagram.png"
+                width="1600"
+                height="1147"
+                loading="lazy"
+                decoding="async"
+                alt="Schematic overview of the RoboRacer power distribution board, showing the input stage, regulated output rails and connector layout."
+              />
+            </picture>
+            <figcaption>RoboRacer power distribution board — open-source design.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section alt" id="downloads" aria-labelledby="downloads-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <h2 class="section-title" id="downloads-title">Downloads</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="resource-row">
+            <div>
+              <h3>Power board design files</h3>
+              <p>The complete open-source design package for the RoboRacer power distribution board.</p>
+              <span class="resource-meta">ZIP archive</span>
+            </div>
+            <a class="btn btn-primary" href="/files/roboracer-board.zip" download>
+              Download ZIP<span class="visually-hidden"> — RoboRacer power board design files</span>
+            </a>
+          </div>
+
+          <div class="resource-row">
+            <div>
+              <h3>ROBORACER Power Board User Manual</h3>
+              <p>Assembly, connection and operating guidance for the RoboRacer power board.</p>
+              <span class="resource-meta">PDF document</span>
+            </div>
+            <a class="btn btn-primary" href="/files/roboracer-board.pdf" download>
+              Download manual<span class="visually-hidden"> — ROBORACER Power Board User Manual PDF</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="order-cta-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <h2 class="section-title" id="order-cta-title">Order the boards</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              If you wish to order the boards from Ambimat Electronics please use the
+              <strong>Order Now</strong> option below.
+            </p>
+          </div>
+          <div class="order-actions">
+            <a class="btn btn-primary" href="/contact.html#order">Order now</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+            <p>
+              RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
+              autonomy system for 1:10-scale robotic vehicles.
+            </p>
+          </div>
+
+          <nav aria-labelledby="footer-explore">
+            <h2 id="footer-explore">Explore</h2>
+            <ul>
+              <li><a href="/#description">Description</a></li>
+              <li><a href="/#parts">Major parts</a></li>
+              <li><a href="/#services">Services</a></li>
+              <li><a href="/resource.html">Resources</a></li>
+              <li><a href="/contact.html">Contact</a></li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-community">
+            <h2 id="footer-community">Community</h2>
+            <ul>
+              <li><a href="https://github.com/f1tenth" rel="noopener">Access Directory</a></li>
+              <li><a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">Access Community</a></li>
+              <li><a href="/resource.html">Open-source board files</a></li>
+              <li><a href="/contact.html#order">Order the Core Kit</a></li>
+            </ul>
+          </nav>
+
+          <div>
+            <h2>Contact</h2>
+            <address>
+              1005 &amp; 1006, 10th Floor,<br />
+              Shivalik Shilp II,<br />
+              Ahmedabad, Gujarat 380015, India<br /><br />
+              India: <a href="tel:+917925501989">+91&nbsp;79255&nbsp;01989</a><br />
+              Global: <a href="tel:+12153973819">+1&nbsp;215&nbsp;397&nbsp;3819</a><br />
+              <a href="mailto:support@ambimat.com">support@ambimat.com</a>
+            </address>
+          </div>
+        </div>
+
+        <div class="footer-base">
+          <span>&copy; 2026 Ambimat Electronics. All rights reserved.</span>
+          <span>Part of the <a href="https://ambimat.com/" rel="noopener">Ambimat Electronics</a> group.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Google tag (gtag.js) — GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-03T01GG8K1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-03T01GG8K1');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-03T01GG8K1");
     </script>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>RoboRacer Platform</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Montserrat',sans-serif;
-}
-
-body{
-background:#ffffff;
-}
-
-/* GRID BACKGROUND */
-
-.hero{
-min-height:100vh;
-
-background-image:
-linear-gradient(#e5e5e5 1px, transparent 1px),
-linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
-
-background-size:60px 60px;
-}
-
-/* NAVBAR */
-
-.navbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:25px 80px;
-position:relative;
-}
-
-
-
-/* NAV LINKS */
-
-.nav-links{
-display:flex;
-gap:30px;
-}
-
-.nav-links a{
-text-decoration:none;
-color:#333;
-font-weight:500;
-font-size:14px;
-}
-
-/* RIGHT BUTTONS */
-
-.nav-actions{
-display:flex;
-flex-direction:column;
-gap:10px;
-align-items:flex-end;
-}
-
-.nav-btn{
-background:#000;
-color:#fff;
-padding:10px 18px;
-border-radius:20px;
-font-size:13px;
-text-decoration:none;
-display:inline-block;
-}
-
-/* HAMBURGER */
-
-.hamburger{
-display:none;
-flex-direction:column;
-cursor:pointer;
-gap:5px;
-}
-
-.hamburger span{
-width:25px;
-height:3px;
-background:#000;
-}
-
-/* PAGE SECTION */
-
-.page-section{
-max-width:1100px;
-margin:auto;
-padding:80px 20px;
-text-align:center;
-}
-
-/* diagram */
-
-.diagram-box img{
-width:100%;
-max-width:1200px;
-border-radius:6px;
-box-shadow:0 4px 20px rgba(0,0,0,0.1);
-}
-
-.diagram-box h3{
-color:rgb(92,88,88);
-margin-bottom:20px;
-margin-top:-10px;
-font-size:18px;
-}
-
-/* text */
-
-.info-text{
-margin-top:25px;
-font-size:15px;
-color:#555;
-}
-
-.section-title{
-margin-top:40px;
-font-size:18px;
-font-weight:600;
-color:#444;
-}
-
-/* buttons */
-
-.main-btn{
-display:inline-block;
-margin-top:25px;
-padding:14px 36px;
-background:#e31c2b;
-color:white;
-text-decoration:none;
-border-radius:4px;
-font-weight:600;
-letter-spacing:.5px;
-box-shadow:0 4px 10px rgba(0,0,0,0.15);
-transition:0.3s;
-}
-
-.main-btn:hover{
-background:#c81422;
-transform:translateY(-2px);
-}
-
-.button-block{
-margin-top:35px;
-}
-
-
-/* ============================= */
-/* MOBILE NAVBAR */
-/* ============================= */
-
-@media(max-width:900px){
-
-.navbar{
-padding:20px 30px;
-}
-
-.nav-links{
-position:absolute;
-top:80px;
-left:0;
-width:100%;
-background:white;
-flex-direction:column;
-align-items:center;
-gap:20px;
-padding:25px 0;
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
-display:none;
-}
-
-.nav-links.active{
-display:flex;
-}
-
-.nav-actions{
-display:none;
-}
-
-.hamburger{
-display:flex;
-}
-
-}
-
-
-/* ============================= */
-/* TABLET */
-/* ============================= */
-
-@media(max-width:1024px){
-
-.page-section{
-padding:60px 25px;
-}
-
-.diagram-box h3{
-font-size:17px;
-}
-
-}
-
-
-/* ============================= */
-/* MOBILE */
-/* ============================= */
-
-@media(max-width:600px){
-
-.page-section{
-padding:50px 18px;
-}
-
-.diagram-box h3{
-font-size:15px;
-}
-
-.section-title{
-font-size:16px;
-}
-
-.info-text{
-font-size:14px;
-}
-
-.main-btn{
-padding:12px 28px;
-font-size:14px;
-}
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<section class="hero">
-
-<!-- NAVBAR -->
-
-<div class="navbar">
-
-<a href="index.html">
-<div class="logo">
-<img src="https://ambimat.com/wp-content/uploads/2017/07/ambimat-logo.png">
-</div>
-</a>
-
-<div class="nav-links" id="navMenu">
-<a href="index.html#description">Description</a>
-<a href="index.html#parts">Parts</a>
-<a href="index.html#services">Services</a>
-<a href="resource.html">Resource</a>
-<a href="contact.html">Contact</a>
-</div>
-
-<div class="nav-actions">
-<a class="nav-btn" href="https://github.com/f1tenth">Access Directory</a>
-<a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup">Access Community</a>
-</div>
-
-<!-- HAMBURGER -->
-
-<div class="hamburger" onclick="toggleMenu()">
-<span></span>
-<span></span>
-<span></span>
-</div>
-
-</div>
-
-
-<div class="page-section">
-
-<!-- Diagram -->
-
-<div class="diagram-box">
-<h3>
-The design for the board has been made open source so that the ROBORACER community can benefit out of it.
-</h3>
-
-<img src="https://ambimat.com/wp-content/uploads/2024/01/Frame-1.png">
-</div>
-
-<!-- Download ZIP -->
-
-<div class="button-block">
-<a href="files/roboracer-board.zip" download class="main-btn">
-DOWNLOAD ZIP
-</a></div>
-
-<p class="info-text">
-If you wish to order the boards from Ambimat Electronics please click on the
-<strong>Order Now</strong> button
-</p>
-
-<!-- Order Button -->
-
-<div class="button-block">
-<a href="contact.html#centy" class="main-btn">ORDER NOW</a>
-</div>
-
-<!-- Test Report -->
-
-<p class="section-title">
-Get your test report here.
-</p>
-
-<div class="button-block">
-<a href="#" class="main-btn">TEST REPORT</a>
-</div>
-
-<!-- Manual -->
-
-<p class="section-title">
-ROBORACER Power Board User Manual
-</p>
-
-<div class="button-block">
-<a href="files/roboracer-board.pdf" download class="main-btn">DOWNLOAD NOW</a>
-</div>
-
-</div>
-
-</section>
-
-
-<script>
-
-function toggleMenu(){
-document.getElementById("navMenu").classList.toggle("active");
-}
-
-</script>
-
-</body>
+    <script src="/assets/js/nav.js" defer></script>
+  </body>
 </html>

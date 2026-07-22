@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.lighthouseci/
+assets/fonts/
+assets/img/
+files/
+package-lock.json
+sitemap.xml
+SHA256SUMS

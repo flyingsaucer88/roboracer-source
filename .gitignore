@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.lighthouseci/
+.DS_Store
+**/.DS_Store
+__pycache__/
+*.pyc
+*.bak
+*.swp
+.env
+.env.*
+!.env.example
+.deploy.env

@@ -1,0 +1,155 @@
+name: CI
+
+# Validates every pull request and every push to main.
+#
+# This workflow NEVER deploys and NEVER reads a deployment secret, so it is
+# safe to run against pull requests from forks. Deployment lives in
+# deploy-hostinger.yml, which is workflow_dispatch-only.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least privilege: the jobs only need to read the repository.
+permissions:
+  contents: read
+
+# A newer commit on the same ref supersedes an in-flight run.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  validate:
+    name: Lint, test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        # `npm ci` installs strictly from package-lock.json and fails if the
+        # lockfile and package.json disagree — reproducible by construction.
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint CSS
+        run: npm run lint:css
+
+      - name: Lint JavaScript
+        run: npm run lint:js
+
+      - name: Validate HTML
+        run: npm run lint:html
+
+      - name: Validate sitemap XML
+        run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends libxml2-utils
+          xmllint --noout sitemap.xml
+          echo "sitemap.xml is well-formed"
+
+      - name: Audit site (links, assets, SEO, canonicals, brand leakage)
+        run: npm run audit:site
+
+      - name: Build deployable artifact
+        run: npm run build
+
+      - name: Audit built artifact
+        run: npm run audit:dist
+
+      - name: Run tests
+        run: npm test
+
+      - name: Upload build artifact
+        # Retained so the Lighthouse job scores the exact bytes built here
+        # rather than rebuilding and potentially scoring something else.
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-artifact
+          path: dist/roboracer-site
+          retention-days: 7
+          include-hidden-files: true
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validate-logs
+          path: |
+            npm-debug.log*
+            dist/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  lighthouse:
+    name: Lighthouse (${{ matrix.profile }})
+    runs-on: ubuntu-latest
+    needs: validate
+    timeout-minutes: 25
+
+    strategy:
+      # Report both profiles even when one fails — a mobile regression should
+      # not hide the desktop result.
+      fail-fast: false
+      matrix:
+        include:
+          - profile: desktop
+            config: .lighthouserc.json
+          - profile: mobile
+            config: .lighthouserc.mobile.json
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download the artifact built by the validate job
+        uses: actions/download-artifact@v4
+        with:
+          name: site-artifact
+          path: dist/roboracer-site
+
+      - name: Run Lighthouse CI
+        # Scores the locally built production artifact over LHCI's own static
+        # server — never the public site — so a pull request tests the code
+        # under review. 3 runs per URL, asserted on the median.
+        run: npx lhci autorun --config=${{ matrix.config }}
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-${{ matrix.profile }}
+          path: .lighthouseci
+          retention-days: 14
+          if-no-files-found: warn

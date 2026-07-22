@@ -1,0 +1,38 @@
+{
+  "name": "roboracer-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RoboRacer — static site for the RoboRacer autonomous racing platform by Ambimat Electronics.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "bash tools/build-site-package.sh",
+    "serve": "python3 -m http.server 8080 --directory dist/roboracer-site",
+    "serve:src": "python3 -m http.server 8080",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:css": "stylelint \"assets/css/**/*.css\"",
+    "lint:js": "eslint assets/js",
+    "lint:html": "html-validate \"*.html\"",
+    "lint": "npm run lint:css && npm run lint:js && npm run lint:html",
+    "audit:site": "python3 tools/audit-site.py",
+    "audit:dist": "python3 tools/audit-site.py --root dist/roboracer-site",
+    "test": "node --test tests/*.test.js",
+    "validate": "npm run format:check && npm run lint && npm run audit:site && npm run build && npm run audit:dist && npm test",
+    "lh:desktop": "lhci autorun --config=.lighthouserc.json",
+    "lh:mobile": "lhci autorun --config=.lighthouserc.mobile.json",
+    "lh": "npm run lh:desktop && npm run lh:mobile"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.14.0",
+    "eslint": "^9.17.0",
+    "html-validate": "^9.1.2",
+    "lightningcss-cli": "^1.33.0",
+    "prettier": "^3.4.2",
+    "stylelint": "^16.12.0",
+    "stylelint-config-standard": "^36.0.1"
+  }
+}

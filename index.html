@@ -1,799 +1,408 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-<head>
+    <title>RoboRacer Core Kit — Pre-Assembled Autonomous Racing Platform</title>
+    <meta
+      name="description"
+      content="The RoboRacer Core Kit is a fully assembled, pre-tested autonomy system for 1:10-scale robotic vehicles — sensors, compute, chassis and software integrated and validated by Ambimat Electronics."
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://roboracer.ambimat.com/" />
 
-    <!-- Google tag (gtag.js) - GA4 -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RoboRacer" />
+    <meta property="og:title" content="RoboRacer Core Kit — Pre-Assembled Autonomous Racing Platform" />
+    <meta
+      property="og:description"
+      content="A fully assembled, pre-tested autonomy system for 1:10-scale robotic vehicles. Mount, connect, and start building autonomy faster."
+    />
+    <meta property="og:url" content="https://roboracer.ambimat.com/" />
+    <meta property="og:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RoboRacer Core Kit — Pre-Assembled Autonomous Racing Platform" />
+    <meta
+      name="twitter:description"
+      content="A fully assembled, pre-tested autonomy system for 1:10-scale robotic vehicles."
+    />
+    <meta name="twitter:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta
+      name="twitter:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+
+    <link rel="preload" href="/assets/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/assets/css/fonts.css?v=1" />
+    <link rel="stylesheet" href="/assets/css/main.css?v=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#E31C2B" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://roboracer.ambimat.com/#org",
+            "name": "Ambimat Electronics",
+            "url": "https://ambimat.com/",
+            "logo": "https://roboracer.ambimat.com/assets/img/ambimat-logo.png",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "1005 & 1006, 10th Floor, Shivalik Shilp II",
+              "addressLocality": "Ahmedabad",
+              "addressRegion": "Gujarat",
+              "postalCode": "380015",
+              "addressCountry": "IN"
+            },
+            "contactPoint": [
+              {
+                "@type": "ContactPoint",
+                "telephone": "+91-79255-01989",
+                "contactType": "customer support",
+                "email": "support@ambimat.com"
+              },
+              {
+                "@type": "ContactPoint",
+                "telephone": "+1-215-397-3819",
+                "contactType": "sales",
+                "email": "business.development@ambimat.com"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://roboracer.ambimat.com/#site",
+            "url": "https://roboracer.ambimat.com/",
+            "name": "RoboRacer",
+            "publisher": { "@id": "https://roboracer.ambimat.com/#org" }
+          },
+          {
+            "@type": "Product",
+            "@id": "https://roboracer.ambimat.com/#core-kit",
+            "name": "RoboRacer Core Kit",
+            "description": "A fully assembled, pre-tested autonomy system for 1:10-scale robotic vehicles, with all sensors, compute and software integrated and validated.",
+            "image": "https://roboracer.ambimat.com/assets/img/roboracer-core-kit.jpg",
+            "brand": { "@type": "Brand", "name": "RoboRacer" },
+            "manufacturer": { "@id": "https://roboracer.ambimat.com/#org" },
+            "offers": {
+              "@type": "Offer",
+              "url": "https://roboracer.ambimat.com/contact.html#order",
+              "price": "628000",
+              "priceCurrency": "INR",
+              "valueAddedTaxIncluded": false
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="/">
+          <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+          <span class="brand-text">
+            <span class="brand-line">Robo<span class="accent">Racer</span></span>
+            <span class="brand-tag">Autonomous racing platform</span>
+          </span>
+        </a>
+
+        <div class="nav-links" id="nav-menu">
+          <a href="/#description">Description</a>
+          <a href="/#parts">Parts</a>
+          <a href="/#services">Services</a>
+          <a href="/resource.html">Resources</a>
+          <a href="/contact.html">Contact</a>
+          <a class="nav-cta secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-cta" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-btn secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+          <button
+            class="hamburger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="nav-menu"
+            aria-label="Open navigation menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-container">
+          <div class="hero-left">
+            <p class="hero-tag">RoboRacer Platform</p>
+            <h1 class="hero-title">RoboRacer Core Kit</h1>
+            <p class="hero-desc">
+              The RoboRacer Core Kit eliminates complexity by delivering a fully assembled, pre-tested autonomy system
+              for 1:10-scale robotic vehicles. We source, integrate, and validate all sensors, compute, and
+              software—including the chassis, battery, and charger—so teams can simply mount, connect, and start
+              building autonomy faster.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="/contact.html#order">Order the Core Kit</a>
+              <a class="btn btn-outline" href="/resource.html">Open-source board resources</a>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <picture>
+              <source
+                type="image/webp"
+                srcset="
+                  /assets/img/roboracer-core-kit-400.webp 400w,
+                  /assets/img/roboracer-core-kit-460.webp 460w,
+                  /assets/img/roboracer-core-kit-600.webp 600w
+                "
+                sizes="(max-width: 1080px) min(420px, 90vw), 460px"
+              />
+              <img
+                class="hero-visual"
+                src="/assets/img/roboracer-core-kit.jpg"
+                width="600"
+                height="800"
+                fetchpriority="high"
+                decoding="async"
+                alt="Assembled RoboRacer Core Kit: a 1:10-scale racing chassis carrying a LiDAR unit, Jetson compute module, VESC motor controller and power distribution board."
+              />
+            </picture>
+          </div>
+        </div>
+      </section>
+
+      <!-- DESCRIPTION -->
+      <section class="section alt" id="description" aria-labelledby="description-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <h2 class="section-title" id="description-title">Description</h2>
+            <hr class="section-line" />
+          </div>
+          <p class="section-desc">
+            Building an autonomous racecar shouldn’t start with weeks of sourcing parts, debugging hardware, or
+            resolving integration issues. The RoboRacer Core Kit exists to remove that friction. We handle component
+            selection, procurement, assembly, wiring, and validation of the entire autonomy stack—so teams can focus on
+            algorithms, performance, and innovation. By delivering a fully assembled, pre-tested system that mounts
+            directly onto your chosen chassis, RoboRacer enables faster onboarding, predictable performance, and a
+            reliable foundation for education, research, and competitive autonomous racing.
+          </p>
+          <p class="section-desc">
+            Academic programs and research labs often lose valuable time and resources assembling and troubleshooting
+            autonomous vehicle hardware instead of advancing coursework or research outcomes. The RoboRacer Core Kit
+            addresses this by delivering a fully assembled, pre-tested autonomy system, with all sensors, compute, and
+            software integrated and validated. By excluding only the chassis, battery, and charger, the kit remains
+            flexible while significantly reducing procurement complexity, setup time, and technical risk. Faculty and
+            procurement teams benefit from predictable performance, faster deployment into labs or classrooms,
+            standardized platforms across cohorts, and reduced dependency on specialized hardware integration expertise.
+          </p>
+        </div>
+      </section>
+
+      <!-- PROGRAM -->
+      <section class="section" id="program" aria-labelledby="program-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <h2 class="section-title" id="program-title">ROBORACER Program</h2>
+            <hr class="section-line" />
+            <p class="section-subtitle">What is the RoboRacer Program?</p>
+            <p class="section-desc">
+              RoboRacer is an international community of researchers, engineers, and autonomous systems enthusiasts. It
+              aims to foster interest, excitement, and critical thinking about the rapidly growing field of autonomous
+              systems and robotics. Through collaboration between academic institutions, engineers, and innovators,
+              RoboRacer enables teams to develop, test, and improve autonomous racing technologies on standardized
+              platforms.
+            </p>
+            <p class="section-note">
+              Ambimat Electronics in collaboration with global research partners has designed the Power Supply board for
+              autonomous racing systems.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PARTS -->
+      <section class="section alt" id="parts" aria-labelledby="parts-title">
+        <div class="section-container">
+          <div class="section-head">
+            <p class="eyebrow">What’s in the box</p>
+            <h2 class="section-title" id="parts-title">Major Parts Included</h2>
+            <hr class="section-line" />
+          </div>
+
+          <ul class="grid-4" role="list">
+            <li class="part-card">Jetson Orin Super Nano</li>
+            <li class="part-card">MK IV VESC</li>
+            <li class="part-card">MDF Base Plate (Extra Included)</li>
+            <li class="part-card">Hokuyo LiDAR</li>
+            <li class="part-card">3S Battery</li>
+            <li class="part-card">Battery Charger</li>
+            <li class="part-card">Traxxas Slash Ultimate 4x4 Chassis</li>
+            <li class="part-card">Power Distribution Unit</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="section" id="services" aria-labelledby="services-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Included with every kit</p>
+            <h2 class="section-title" id="services-title">Software &amp; Technical Services</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="grid-2">
+            <article class="card">
+              <span class="card-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="8 6 3 12 8 18" />
+                  <polyline points="16 6 21 12 16 18" />
+                </svg>
+              </span>
+              <h3>Software Setup</h3>
+              <p>
+                Loading of the Operating System for NVIDIA Jetson and complete ROS stack configuration ready for
+                autonomous development.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="card-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 22a10 10 0 1 0-10-10" />
+                  <path d="M2 12h4" />
+                  <path d="M18 12h4" />
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M12 15v7" />
+                </svg>
+              </span>
+              <h3>Technical Support</h3>
+              <p>
+                Remote hardware and software technical support for up to 60 days post delivery to assist with deployment
+                and setup.
+              </p>
+            </article>
+          </div>
+
+          <div class="price-panel">
+            <h3>Total Cost</h3>
+            <p class="price-value">INR 628,000</p>
+            <p class="price-note">+ 18% GST</p>
+          </div>
+
+          <div class="order-actions" style="margin-top: 32px">
+            <a class="btn btn-primary" href="/contact.html#order">Order now</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+            <p>
+              RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
+              autonomy system for 1:10-scale robotic vehicles.
+            </p>
+          </div>
+
+          <nav aria-labelledby="footer-explore">
+            <h2 id="footer-explore">Explore</h2>
+            <ul>
+              <li><a href="/#description">Description</a></li>
+              <li><a href="/#parts">Major parts</a></li>
+              <li><a href="/#services">Services</a></li>
+              <li><a href="/resource.html">Resources</a></li>
+              <li><a href="/contact.html">Contact</a></li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-community">
+            <h2 id="footer-community">Community</h2>
+            <ul>
+              <li><a href="https://github.com/f1tenth" rel="noopener">Access Directory</a></li>
+              <li><a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">Access Community</a></li>
+              <li><a href="/resource.html">Open-source board files</a></li>
+              <li><a href="/contact.html#order">Order the Core Kit</a></li>
+            </ul>
+          </nav>
+
+          <div>
+            <h2>Contact</h2>
+            <address>
+              1005 &amp; 1006, 10th Floor,<br />
+              Shivalik Shilp II,<br />
+              Ahmedabad, Gujarat 380015, India<br /><br />
+              India: <a href="tel:+917925501989">+91&nbsp;79255&nbsp;01989</a><br />
+              Global: <a href="tel:+12153973819">+1&nbsp;215&nbsp;397&nbsp;3819</a><br />
+              <a href="mailto:support@ambimat.com">support@ambimat.com</a>
+            </address>
+          </div>
+        </div>
+
+        <div class="footer-base">
+          <span>&copy; 2026 Ambimat Electronics. All rights reserved.</span>
+          <span>Part of the <a href="https://ambimat.com/" rel="noopener">Ambimat Electronics</a> group.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Google tag (gtag.js) — GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-03T01GG8K1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-03T01GG8K1');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-03T01GG8K1");
     </script>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>RoboRacer Platform</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        body {
-            background: #ffffff;
-        }
-
-        /* GRID BACKGROUND */
-
-        .hero {
-            min-height: 100vh;
-
-            background-image:
-                linear-gradient(#e5e5e5 1px, transparent 1px),
-                linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
-
-            background-size: 60px 60px;
-        }
-
-        /* NAVBAR */
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            padding: 25px 80px;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .nav-btn {
-            background: #000;
-            color: #fff;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-size: 13px;
-            text-decoration: none;
-        }
-
-        /* HERO CONTAINER */
-
-        .hero-container {
-
-            width: 1300px;
-            margin: auto;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding-top: 100px;
-            gap: 60px;
-
-        }
-
-        /* LEFT SIDE */
-
-        .hero-left {
-            flex: 1;
-        }
-
-        .hero-tag {
-            font-size: 13px;
-            letter-spacing: 2px;
-            color: #888;
-            margin-bottom: 20px;
-        }
-
-        .hero-title {
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 1.1;
-            color: #111;
-            margin-bottom: 25px;
-        }
-
-        .hero-desc {
-            font-size: 16px;
-            line-height: 1.7;
-            color: #555;
-            max-width: 520px;
-            margin-bottom: 35px;
-        }
-
-        /* RIGHT SIDE */
-
-        .hero-right {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-        .hero-right img {
-            width: 520px;
-            border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-        }
-
-
-        /* DETAILS */
-
-        .details {
-            padding: 120px 80px;
-            background: #ffffff;
-        }
-
-        .details-container {
-            max-width: 1000px;
-            margin: auto;
-            text-align: center;
-        }
-
-        .section-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 25px;
-        }
-
-        .section-desc {
-            font-size: 16px;
-            color: #555;
-            line-height: 1.7;
-            max-width: 800px;
-            margin: auto;
-        }
-
-        /* PARTS */
-
-        .parts {
-            padding: 120px 80px;
-            background: #ffffff;
-        }
-
-        .parts-container {
-            max-width: 1200px;
-            margin: auto;
-            text-align: center;
-        }
-
-        .parts-grid {
-            margin-top: 60px;
-
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-        }
-
-        .part-card {
-
-            background: #e5e5e5;
-            padding: 30px;
-
-            border-radius: 8px;
-
-            font-weight: 600;
-            font-size: 15px;
-
-            transition: all .3s ease;
-            cursor: pointer;
-        }
-
-        .part-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
-        }
-
-        /* SERVICES */
-
-        .services {
-            padding: 120px 80px;
-            background: white;
-        }
-
-        .services-container {
-            max-width: 1200px;
-            margin: auto;
-            text-align: center;
-        }
-
-        /* TOP 2 BOX */
-
-        .services-grid {
-
-            margin-top: 60px;
-
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-
-            gap: 60px;
-
-            max-width: 800px;
-
-            margin-left: auto;
-            margin-right: auto;
-
-        }
-
-        .service-card {
-
-            background: #e5e5e5;
-
-            padding: 20px 40px;
-
-            border-radius: 10px;
-
-            font-weight: 600;
-            font-size: 15px;
-
-            transition: all .3s ease;
-            cursor: pointer;
-
-            text-align: center;
-        }
-
-        .service-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
-        }
-
-        .service-card h3 {
-            margin-bottom: 15px;
-        }
-
-        .service-card p {
-            color: #555;
-            line-height: 1.8;
-        }
-
-        /* COST BOX */
-
-        .cost-box {
-
-            margin-top: 70px;
-
-            background: #4f4f4f;
-
-            color: white;
-
-            padding: 40px 70px;
-
-            border-radius: 12px;
-
-            display: block;
-
-            width: 420px;
-
-            margin-left: auto;
-            margin-right: auto;
-
-            text-align: center;
-
-            transition: all .3s ease;
-        }
-
-        .cost-box:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .cost-box h3 {
-            margin-bottom: 12px;
-        }
-
-        .cost-box p {
-            font-size: 22px;
-            font-weight: 600;
-            color: white;
-        }
-
-        /* MOBILE */
-
-        @media(max-width:900px) {
-
-            .services-grid {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-            }
-
-            .cost-box {
-                width: 90%;
-            }
-
-        }
-
-        /* PROGRAM SECTION */
-
-        .program {
-            padding-top: 130px;
-        }
-
-        .program-container {
-            max-width: 1000px;
-            margin: auto;
-            text-align: center;
-        }
-
-        .program-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .program-line {
-            width: 60px;
-            height: 3px;
-            background: #e63946;
-            margin: 15px auto 30px auto;
-        }
-
-        .program-subtitle {
-            color: #555;
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        .program-text {
-            color: gray;
-            line-height: 1.7;
-            max-width: 700px;
-            margin: auto;
-            margin-bottom: 20px;
-        }
-
-        .program-highlight {
-            color: #555;
-            font-weight: 500;
-            margin-top: 10px;
-        }
-
-        .program-divider {
-            width: 60%;
-            height: 2px;
-            background: #e63946;
-            margin: 50px auto;
-        }
-        .nav-actions{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    align-items:flex-end;
-}
-
-.nav-btn{
-    background:#000;
-    color:#fff;
-    padding:10px 18px;
-    border-radius:20px;
-    font-size:13px;
-    text-decoration:none;
-    display:inline-block;
-}
-
-/* =========================
-NAVBAR MOBILE
-========================= */
-
-.hamburger{
-display:none;
-flex-direction:column;
-gap:5px;
-cursor:pointer;
-}
-
-.hamburger span{
-width:25px;
-height:3px;
-background:#000;
-}
-
-/* =========================
-LAPTOP
-========================= */
-
-@media (max-width:1200px){
-
-.hero-container{
-max-width:100%;
-padding-left:40px;
-padding-right:40px;
-}
-
-.parts-grid{
-grid-template-columns:repeat(3,1fr);
-}
-
-}
-
-/* =========================
-TABLET
-========================= */
-
-@media (max-width:1024px){
-
-.navbar{
-padding:20px 40px;
-}
-
-.hero-container{
-flex-direction:column;
-text-align:center;
-}
-
-.hero-desc{
-margin-left:auto;
-margin-right:auto;
-}
-
-.hero-right img{
-max-width:420px;
-}
-
-.parts{
-padding:100px 40px;
-}
-
-.details{
-padding:100px 40px;
-}
-
-.services{
-padding:100px 40px;
-}
-
-.parts-grid{
-grid-template-columns:repeat(2,1fr);
-}
-
-}
-
-/* =========================
-MOBILE NAV
-========================= */
-
-@media (max-width:900px){
-
-.nav-links{
-position:absolute;
-top:80px;
-left:0;
-width:100%;
-
-background:white;
-
-flex-direction:column;
-align-items:center;
-
-gap:20px;
-
-padding:25px 0;
-
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
-
-display:none;
-}
-
-.nav-links.active{
-display:flex;
-}
-
-.nav-actions{
-display:none;
-}
-
-.hamburger{
-display:flex;
-}
-
-.services-grid{
-grid-template-columns:1fr;
-max-width:500px;
-}
-
-.cost-box{
-width:90%;
-}
-
-}
-
-/* =========================
-MOBILE
-========================= */
-
-@media (max-width:600px){
-
-.navbar{
-padding:20px;
-}
-
-.hero-container{
-gap:40px;
-padding-left:20px;
-padding-right:20px;
-}
-
-.hero-title{
-font-size:26px;
-}
-
-.hero-desc{
-font-size:15px;
-}
-
-.hero-right img{
-max-width:100%;
-}
-
-.section-title{
-font-size:26px;
-}
-
-.program-title{
-font-size:26px;
-}
-
-.details,
-.parts,
-.services{
-padding:80px 20px;
-}
-
-.parts-grid{
-grid-template-columns:1fr;
-}
-
-.service-card{
-padding:20px;
-}
-
-}
-    </style>
-
-</head>
-
-<body>
-
-    <section class="hero">
-
-        <!-- NAVBAR -->
-
-        <div class="navbar">
-
-            <div class="logo"><img src="https://ambimat.com/wp-content/uploads/2017/07/ambimat-logo.png" alt=""></div>
-
-            <div class="nav-links">
-                <a href="#description">Description</a>
-                <a href="#parts">Parts</a>
-                <a href="#services">Services</a>
-                <a href="resource.html">Resource </a>
-                <a href="contact.html">Contact </a>
-
-            </div>
-
-            <div class="nav-actions">
-    <a class="nav-btn" href="https://github.com/f1tenth">Access Directory</a>
-    <a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup">Access Community</a>
-</div>
-<!-- HAMBURGER -->
-<div class="hamburger" onclick="toggleMenu()">
-<span></span>
-<span></span>
-<span></span>
-</div>
-
-        </div>
-        <!-- ROBORACER PROGRAM -->
-
-        <section class="program">
-
-            <div class="program-container">
-
-                <h2 class="program-title">ROBORACER Program</h2>
-
-                <div class="program-line"></div>
-
-                <h3 class="program-subtitle">
-                    What is RoboRacer Program?
-                </h3>
-
-                <p class="program-text">
-                    RoboRacer is an international community of researchers, engineers, and autonomous systems
-                    enthusiasts.
-                    It aims to foster interest, excitement, and critical thinking about the rapidly growing field of
-                    autonomous systems and robotics.
-                    Through collaboration between academic institutions, engineers, and innovators, RoboRacer enables
-                    teams to develop, test, and improve autonomous racing technologies on standardized platforms.
-                </p>
-
-                <p class="program-highlight">
-                    Ambimat Electronics in collaboration with global research partners has designed
-                    the Power Supply board for autonomous racing systems.
-                </p>
-
-                <div class="program-divider"></div>
-
-
-
-            </div>
-
-        </section>
-        <!-- HERO -->
-
-        <div class="hero-container">
-
-            <div class="hero-left">
-
-                <p class="hero-tag">ROBORACER PLATFORM</p>
-
-                <h1 class="hero-title">
-                    RoboRacer Core Kit
-                </h1>
-
-                <p class="hero-desc">
-                    Building an autonomous racecar shouldn’t start with weeks of sourcing parts, debugging hardware, or
-                    resolving integration issues. The RoboRacer Core Kit exists to remove that friction. We handle
-                    component selection, procurement, assembly, wiring, and validation of the entire autonomy stack—so
-                    teams can focus on algorithms, performance, and innovation. By delivering a fully assembled,
-                    pre-tested system that mounts directly onto your chosen chassis, RoboRacer enables faster
-                    onboarding, predictable performance, and a reliable foundation for education, research, and
-                    competitive autonomous racing.
-                </p>
-                <p class="hero-desc">
-                    Academic programs and research labs often lose valuable time and resources assembling and
-                    troubleshooting autonomous vehicle hardware instead of advancing coursework or research outcomes.
-                    The RoboRacer Core Kit addresses this by delivering a fully assembled, pre-tested autonomy system,
-                    with all sensors, compute, and software integrated and validated. By excluding only the chassis,
-                    battery, and charger, the kit remains flexible while significantly reducing procurement complexity,
-                    setup time, and technical risk. Faculty and procurement teams benefit from predictable performance,
-                    faster deployment into labs or classrooms, standardized platforms across cohorts, and reduced
-                    dependency on specialized hardware integration expertise.
-                </p>
-
-
-            </div>
-
-            <div class="hero-right">
-
-                <img src="https://orders.ambimat.com/wp-content/uploads/2025/12/IMG_9291-600x800.jpg">
-
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- PRODUCT DETAILS -->
-
-    <section class="details" id="description">
-
-        <div class="details-container">
-
-            <h2 class="section-title">Description</h2>
-            <div class="program-line"></div>
-
-
-            <p class="section-desc">
-                The RoboRacer Core Kit eliminates complexity by delivering a fully assembled, pre-tested autonomy system
-                for 1:10-scale robotic vehicles. We source, integrate, and validate all sensors, compute, and
-                software—including the chassis, battery, and charger—so teams can simply mount, connect, and start
-                building autonomy faster.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- MAJOR PARTS -->
-
-    <section class="parts" id="parts">
-
-        <div class="parts-container">
-
-            <h2 class="section-title">Major Parts Included</h2>
-            <div class="program-line"></div>
-
-
-            <div class="parts-grid">
-
-                <div class="part-card">Jetson Orin Super Nano</div>
-
-                <div class="part-card">MK IV VESC</div>
-
-                <div class="part-card">MDF Base Plate (Extra Included)</div>
-
-                <div class="part-card">Hokuyo LiDAR</div>
-
-                <div class="part-card">3S Battery</div>
-
-                <div class="part-card">Battery Charger</div>
-
-                <div class="part-card">Traxxas Slash Ultimate 4x4 Chassis</div>
-
-                <div class="part-card">Power Distribution Unit</div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- SERVICES -->
-
-    <section class="services" id="services">
-        <div class="services-container">
-
-            <h2 class="section-title">Software & Technical Services</h2>
-            <div class="program-line"></div>
-
-            <div class="services-grid">
-
-                <div class="service-card">
-
-                    <h3>Software Setup</h3>
-
-                    <p>
-                        Loading of the Operating System for NVIDIA Jetson and complete ROS stack configuration ready for
-                        autonomous development.
-                    </p>
-
-                </div>
-
-                <div class="service-card">
-
-                    <h3>Technical Support</h3>
-
-                    <p>
-                        Remote hardware and software technical support for up to 60 days post delivery to assist with
-                        deployment and setup.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <!-- COST BOX -->
-
-            <div class="cost-box">
-
-                <h3>Total Cost</h3>
-
-                <p>INR 628,000 + 18% GST</p>
-
-            </div>
-
-        </div>
-
-    </section>
-    <script>
-function toggleMenu(){
-document.querySelector(".nav-links").classList.toggle("active");
-}
-</script>
-</body>
-
+    <script src="/assets/js/nav.js" defer></script>
+  </body>
 </html>

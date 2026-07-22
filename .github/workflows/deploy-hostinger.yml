@@ -1,0 +1,236 @@
+name: Deploy to Hostinger
+
+# MANUAL ONLY. There is no push trigger and there never should be one without
+# a deliberate decision — this workflow publishes to the live site.
+#
+# Safety rails, in order:
+#   1. workflow_dispatch only — no automatic trigger of any kind
+#   2. the operator must type DEPLOY into the confirmation input
+#   3. refuses to run from any ref other than the production branch
+#   4. re-runs the full CI gate (lint, audit, build, tests) before uploading
+#   5. re-runs Lighthouse desktop + mobile against the artifact being deployed
+#   6. GitHub Environment `production` gates on reviewer approval and holds
+#      the only copy of the Hostinger credentials
+#   7. concurrency group prevents two production deploys overlapping
+#   8. the artifact is inspected for forbidden files before a byte is sent
+#
+# Secrets are referenced ONLY inside the deploy job, which is bound to the
+# `production` environment. No pull-request workflow can reach them.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type DEPLOY (exactly) to confirm a production deployment"
+        required: true
+        default: ""
+      reason:
+        description: "Short reason for this deploy (recorded in the run summary)"
+        required: false
+        default: "manual deployment"
+
+permissions:
+  contents: read
+
+# Never let two production deploys interleave. Unlike CI this does NOT
+# cancel in progress: killing a half-finished upload would leave the web
+# root in a mixed state.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "20"
+  PYTHON_VERSION: "3.12"
+  PRODUCTION_BRANCH: main
+
+jobs:
+  guard:
+    name: Verify deployment preconditions
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require the typed confirmation
+        if: inputs.confirm != 'DEPLOY'
+        run: |
+          echo "::error title=Confirmation missing::Type DEPLOY in the confirmation input to run this workflow."
+          exit 1
+
+      - name: Require the production branch
+        if: github.ref != format('refs/heads/{0}', 'main')
+        run: |
+          echo "::error title=Wrong branch::Production deploys are only allowed from ${{ env.PRODUCTION_BRANCH }}; this run is on ${{ github.ref }}."
+          exit 1
+
+      - name: Record intent
+        run: |
+          {
+            echo "### Production deployment requested"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| Actor | ${{ github.actor }} |"
+            echo "| Ref | ${{ github.ref_name }} |"
+            echo "| Commit | ${{ github.sha }} |"
+            echo "| Reason | ${{ inputs.reason }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    name: Build and verify the artifact
+    runs-on: ubuntu-latest
+    needs: guard
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Full validation gate
+        # Same checks the pull-request CI runs. A deploy must not be able to
+        # bypass a gate that a pull request cannot.
+        run: npm run validate
+
+      - name: Lighthouse desktop gate
+        run: npx lhci autorun --config=.lighthouserc.json
+
+      - name: Lighthouse mobile gate
+        run: npx lhci autorun --config=.lighthouserc.mobile.json
+
+      - name: Inspect the artifact before upload
+        run: |
+          set -euo pipefail
+          cd dist/roboracer-site
+          echo "Artifact contents:"
+          find . -type f | sort | sed 's/^/  /'
+          echo ""
+          echo "Verifying checksum manifest…"
+          shasum -a 256 -c SHA256SUMS --quiet
+          echo "Checksums OK."
+
+      - name: Upload verified artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-artifact
+          path: dist/roboracer-site
+          retention-days: 30
+          include-hidden-files: true
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-lighthouse
+          path: .lighthouseci
+          retention-days: 30
+          if-no-files-found: warn
+
+  deploy:
+    name: Upload to Hostinger
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 30
+
+    # Approvals and secrets both live here. Configure required reviewers on
+    # this environment so a human confirms before anything is published.
+    environment:
+      name: production
+      url: https://roboracer.ambimat.com/
+
+    steps:
+      - name: Download the verified artifact
+        # Deliberately NOT a rebuild: the exact bytes that passed the gates
+        # above are the bytes that ship.
+        uses: actions/download-artifact@v4
+        with:
+          name: production-artifact
+          path: dist/roboracer-site
+
+      - name: Confirm required secrets are present
+        env:
+          SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
+          USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+          PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+        run: |
+          # Presence check only — values are never echoed.
+          missing=0
+          for name in SERVER USERNAME PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error title=Missing secret::HOSTINGER_FTP_${name} is not set on the production environment."
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+          echo "All Hostinger credentials are present."
+
+      - name: Re-verify checksums after transit
+        run: |
+          set -euo pipefail
+          cd dist/roboracer-site
+          shasum -a 256 -c SHA256SUMS --quiet
+          echo "Artifact intact after artifact round-trip."
+
+      - name: Deploy via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.HOSTINGER_FTP_SERVER }}
+          username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          # Hostinger presents a shared *.hstgr.io certificate that does not
+          # match the connection hostname. The channel is still TLS-encrypted;
+          # only the hostname-to-certificate binding check is relaxed.
+          security: loose
+          # Trailing slash means "the contents of this directory".
+          local-dir: ./dist/roboracer-site/
+          # The remote web root. Set the repository variable
+          # HOSTINGER_REMOTE_DIR if the FTP account does not already land
+          # inside the site's document root — do NOT assume public_html.
+          server-dir: ${{ vars.HOSTINGER_REMOTE_DIR || './' }}
+          # Persisted server-side so later deploys upload only the diff.
+          state-name: .ftp-deploy-state.json
+          timeout: 60000
+          log-level: standard
+          exclude: |
+            **/.DS_Store
+            **/.git*
+
+      - name: Deployment summary
+        if: success()
+        run: |
+          {
+            echo "### Deployed to production"
+            echo ""
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Actor: ${{ github.actor }}"
+            echo ""
+            echo "Run the post-deployment verification before declaring success:"
+            echo ""
+            echo '```'
+            echo "bash tools/verify-production.sh"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Failure guidance
+        if: failure()
+        run: |
+          {
+            echo "### Deployment failed"
+            echo ""
+            echo "The upload did not complete. The web root may be in a partially"
+            echo "updated state — follow the rollback procedure in"
+            echo "\`docs/DEPLOYMENT.md\` before retrying."
+          } >> "$GITHUB_STEP_SUMMARY"

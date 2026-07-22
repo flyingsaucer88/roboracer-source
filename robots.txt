@@ -1,0 +1,9 @@
+# RoboRacer — https://roboracer.ambimat.com/
+User-agent: *
+Allow: /
+
+# Downloadable design files and the user manual are linked from
+# /resource.html and are intentionally crawlable.
+Allow: /files/
+
+Sitemap: https://roboracer.ambimat.com/sitemap.xml

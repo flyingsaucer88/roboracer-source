@@ -1,0 +1,120 @@
+# =============================================================
+# RoboRacer — Apache / LiteSpeed configuration
+# Host: Hostinger (LiteSpeed honours .htaccess)
+# Site: https://roboracer.ambimat.com/
+# =============================================================
+# This file MUST ship to the web root. tools/build-site-package.sh
+# copies it explicitly and tools/audit-site.py fails the build if it
+# is missing from the artifact.
+# =============================================================
+
+Options -MultiViews +FollowSymLinks
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# -------------------------------------------------------------
+# Force HTTPS. Hostinger terminates TLS; HSTS is set below.
+# -------------------------------------------------------------
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# -------------------------------------------------------------
+# Canonicalise /index.html -> /
+# The interior pages deliberately keep their .html extensions so the
+# pre-refresh URLs (/contact.html, /resource.html) stay valid.
+# -------------------------------------------------------------
+RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+RewriteRule ^ / [R=301,L]
+
+# -------------------------------------------------------------
+# Legacy / convenience aliases -> canonical .html URLs.
+# Extensionless forms are 301'd rather than served, so there is
+# exactly one indexable URL per page.
+# -------------------------------------------------------------
+RewriteRule ^contact/?$ /contact.html [R=301,L]
+RewriteRule ^resource/?$ /resource.html [R=301,L]
+RewriteRule ^resources/?$ /resource.html [R=301,L]
+
+# -------------------------------------------------------------
+# Custom error document
+# -------------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# -------------------------------------------------------------
+# Security headers
+# -------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+
+    # Fonts are same-origin but preloaded with crossorigin, which makes the
+    # request CORS-mode; without this the preload is discarded and refetched.
+    <FilesMatch "\.(woff2?)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+</IfModule>
+
+# -------------------------------------------------------------
+# Deny access to repository / tooling files, in case one is ever
+# uploaded by accident. Defence in depth: the build artifact
+# already excludes all of these.
+# -------------------------------------------------------------
+<FilesMatch "(^\.|\.(md|py|sh|yml|yaml|json5|map|lock|log|bak|swp)$)">
+    Require all denied
+</FilesMatch>
+# site.webmanifest and the sitemap must stay reachable.
+<FilesMatch "^(site\.webmanifest|sitemap\.xml|robots\.txt)$">
+    Require all granted
+</FilesMatch>
+
+RedirectMatch 404 ^/\.git
+RedirectMatch 404 ^/(\.github|tools|docs|node_modules)(/|$)
+
+# -------------------------------------------------------------
+# Compression
+# -------------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE image/svg+xml application/manifest+json
+</IfModule>
+
+# -------------------------------------------------------------
+# Caching. HTML stays short so content edits go live promptly;
+# fingerprinted CSS/JS and immutable media cache hard.
+# -------------------------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault                          "access plus 1 month"
+    ExpiresByType text/html                 "access plus 0 seconds"
+    ExpiresByType text/xml                  "access plus 0 seconds"
+    ExpiresByType text/css                  "access plus 1 year"
+    ExpiresByType application/javascript    "access plus 1 year"
+    ExpiresByType font/woff2                "access plus 1 year"
+    ExpiresByType image/png                 "access plus 1 year"
+    ExpiresByType image/jpeg                "access plus 1 year"
+    ExpiresByType image/webp                "access plus 1 year"
+    ExpiresByType application/pdf           "access plus 1 week"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|woff2|png|jpe?g|webp|svg)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.html$">
+        Header set Cache-Control "public, max-age=0, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# -------------------------------------------------------------
+# MIME types LiteSpeed does not always set correctly
+# -------------------------------------------------------------
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+    AddType image/webp .webp
+    AddType application/manifest+json .webmanifest
+</IfModule>
