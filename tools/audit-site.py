@@ -56,7 +56,7 @@ BRAND_LEAK_PATTERNS = [
     (re.compile(r"G-[A-Z0-9]{10}", 0), None),  # handled separately (analytics id)
 ]
 
-ALLOWED_ANALYTICS_IDS = {"G-03T01GG8K1"}
+ALLOWED_ANALYTICS_IDS = {"G-03T01GG8K1", "G-KCRP2C9ZCL"}
 
 LOCALHOST_PATTERN = re.compile(
     r"https?://(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])(:\d+)?", re.I
