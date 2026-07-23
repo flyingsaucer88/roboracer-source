@@ -718,6 +718,36 @@ ol {
   margin-top: 8px;
 }
 
+/* Two-currency price layout: domestic (INR, +GST) and export (USD, ex-works)
+   side by side on wide panels, stacked with a divider on narrow ones. */
+.price-grid {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 4px;
+}
+.price-item {
+  flex: 1;
+  min-width: 0;
+}
+.price-item + .price-item {
+  border-left: 1px solid #44586b;
+  padding-left: 32px;
+}
+
+@media (width <= 420px) {
+  .price-grid {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .price-item + .price-item {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid #44586b;
+    padding-top: 20px;
+  }
+}
+
 /* =========================================================
    RESOURCE / DOWNLOAD BLOCKS
    ========================================================= */

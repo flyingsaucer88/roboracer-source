@@ -101,13 +101,25 @@
             "image": "https://roboracer.ambimat.com/assets/img/roboracer-core-kit.jpg",
             "brand": { "@type": "Brand", "name": "RoboRacer" },
             "manufacturer": { "@id": "https://roboracer.ambimat.com/#org" },
-            "offers": {
-              "@type": "Offer",
-              "url": "https://roboracer.ambimat.com/contact.html#order",
-              "price": "628000",
-              "priceCurrency": "INR",
-              "valueAddedTaxIncluded": false
-            }
+            "offers": [
+              {
+                "@type": "Offer",
+                "name": "Domestic (India)",
+                "url": "https://roboracer.ambimat.com/contact.html#order",
+                "price": "628000",
+                "priceCurrency": "INR",
+                "valueAddedTaxIncluded": false,
+                "eligibleRegion": { "@type": "Country", "name": "India" }
+              },
+              {
+                "@type": "Offer",
+                "name": "Ex-works India",
+                "url": "https://roboracer.ambimat.com/contact.html#order",
+                "price": "6100",
+                "priceCurrency": "USD",
+                "valueAddedTaxIncluded": false
+              }
+            ]
           }
         ]
       }
@@ -330,8 +342,16 @@
 
           <div class="price-panel">
             <h3>Total Cost</h3>
-            <p class="price-value">INR 628,000</p>
-            <p class="price-note">+ 18% GST</p>
+            <div class="price-grid">
+              <div class="price-item">
+                <p class="price-value">INR 628,000</p>
+                <p class="price-note">+ 18% GST · India</p>
+              </div>
+              <div class="price-item">
+                <p class="price-value">USD 6,100</p>
+                <p class="price-note">Ex-works India</p>
+              </div>
+            </div>
           </div>
 
           <div class="order-actions" style="margin-top: 32px">

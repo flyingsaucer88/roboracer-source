@@ -26,10 +26,14 @@ ok()   { printf "  \033[32mPASS\033[0m  %s\n" "$1"; pass=$((pass + 1)); }
 bad()  { printf "  \033[31mFAIL\033[0m  %s\n" "$1"; fail=$((fail + 1)); }
 head1() { printf "\n\033[1m%s\033[0m\n" "$1"; }
 
-status() { curl -sS -o /dev/null -w '%{http_code}' -L --max-time 20 "$1" 2>/dev/null || echo "000"; }
-status_noredirect() { curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "$1" 2>/dev/null || echo "000"; }
-location() { curl -sS -o /dev/null -w '%{redirect_url}' --max-time 20 "$1" 2>/dev/null || echo ""; }
-body() { curl -sS -L --max-time 20 "$1" 2>/dev/null || echo ""; }
+# On a connection/resolve failure curl still writes "%{http_code}" as "000"
+# and exits non-zero. Capturing into a var and defaulting the empty case gives
+# a clean "000" — a `|| echo "000"` would instead APPEND to curl's own "000"
+# and produce "000000", which no case branch matches.
+status() { local c; c="$(curl -sS -o /dev/null -w '%{http_code}' -L --max-time 20 "$1" 2>/dev/null)"; echo "${c:-000}"; }
+status_noredirect() { local c; c="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "$1" 2>/dev/null)"; echo "${c:-000}"; }
+location() { curl -sS -o /dev/null -w '%{redirect_url}' --max-time 20 "$1" 2>/dev/null; }
+body() { curl -sS -L --max-time 20 "$1" 2>/dev/null; }
 
 # ---------------------------------------------------------------------
 head1 "1. Core routes return 200"
