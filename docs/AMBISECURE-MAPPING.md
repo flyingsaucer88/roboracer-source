@@ -34,7 +34,7 @@ information architecture, domain, analytics and assets.
 - The `--secure-cyan` accent family (an AmbiSecure-only technical-surface token)
 - AmbiSecure copy, product facts, certifications, partners and case studies
 - AmbiSecure schema entities, canonical URLs and `sameAs` links
-- The AmbiSecure GA4 measurement ID (RoboRacer keeps its own, `G-03T01GG8K1`)
+- The AmbiSecure GA4 measurement ID (RoboRacer keeps its own, `G-KCRP2C9ZCL`)
 - The ecosystem bar, blog/tag/category system, search, cookie consent, video platform,
   utility-tool shell — none of which RoboRacer has content for
 
