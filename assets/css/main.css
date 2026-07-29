@@ -707,67 +707,125 @@ ol {
   color: var(--muted);
 }
 
-/* =========================================================
-   PRICE PANEL
-   ========================================================= */
-.price-panel {
-  margin: 56px auto 0;
-  max-width: 460px;
-  background: var(--rr-dark);
-  color: #fff;
-  border-radius: 10px;
-  padding: 34px 40px;
-  text-align: center;
-  box-shadow: var(--shadow-md);
-}
-.price-panel h3 {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  color: #b9c4cd;
-  margin-bottom: 10px;
-}
-.price-value {
-  font-family: "Montserrat", sans-serif;
-  font-size: 30px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  line-height: 1.25;
-}
-.price-note {
-  font-size: 13.5px;
-  color: #b9c4cd;
-  margin-top: 8px;
-}
+/* ---------------------------------------------------------------
+   Price cards — the pricing comparison.
 
-/* Two-currency price layout: domestic (INR, +GST) and export (USD, ex-works)
-   side by side on wide panels, stacked with a divider on narrow ones. */
-.price-grid {
+   Product price, service price and shipping are separate line items
+   by design: they are billed separately and GST applies to the INR
+   figures, so folding them into one headline number would misstate
+   what a customer pays. Each row is label + figure, so a card can
+   carry four lines without the cramping a single big number forces.
+   --------------------------------------------------------------- */
+.price-card {
   display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-top: 4px;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--rr-red);
+  border-radius: var(--radius-card);
+  padding: 28px 26px;
+  text-align: left;
 }
-.price-item {
-  flex: 1;
-  min-width: 0;
+.price-card h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
 }
-.price-item + .price-item {
-  border-left: 1px solid #44586b;
-  padding-left: 32px;
+.price-card > p {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
-@media (width <= 420px) {
-  .price-grid {
-    flex-direction: column;
-    gap: 20px;
+.price-lines {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.price-lines li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 18px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.price-lines li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.price-line-label {
+  flex: 1 1 55%;
+  min-width: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--muted-strong);
+}
+.price-line-value {
+  flex: 0 0 auto;
+  font-family: "Montserrat", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+/* The lead figure in each card — the price most customers are here for. */
+.price-lines li.is-primary .price-line-value {
+  font-size: 21px;
+  color: var(--rr-red-dark);
+}
+/* "+ GST", "before shipping" — the qualifier that must never be dropped. */
+.price-line-tax {
+  display: block;
+  font-family: "Source Sans 3", system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.price-line-value .price-line-tax {
+  text-align: right;
+}
+/* Approximate figures are visually subordinate to firm ones. */
+.price-lines li.is-indicative .price-line-value {
+  color: var(--muted-strong);
+  font-weight: 600;
+}
+.price-card-note {
+  margin-top: 18px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--muted-strong);
+}
+.price-card-note strong {
+  color: var(--rr-dark);
+}
+.price-card-note + .price-card-note {
+  margin-top: 10px;
+}
+.price-card .order-actions {
+  margin-top: auto;
+  padding-top: 22px;
+  justify-content: flex-start;
+}
+
+@media (width <= 520px) {
+  .price-card {
+    padding: 24px 20px;
   }
-  .price-item + .price-item {
-    border-left: 0;
-    padding-left: 0;
-    border-top: 1px solid #44586b;
-    padding-top: 20px;
+  .price-lines li {
+    /* Stack label over figure rather than letting a long label squeeze
+       the number onto two lines. */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .price-line-value .price-line-tax,
+  .price-line-tax {
+    text-align: left;
   }
 }
 
@@ -1669,12 +1727,6 @@ code {
   .section-title {
     font-size: 24px;
   }
-  .price-panel {
-    padding: 28px 22px;
-  }
-  .price-value {
-    font-size: 25px;
-  }
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -1695,8 +1747,7 @@ code {
   border-radius: 3px;
 }
 .site-footer :focus-visible,
-.section.dark :focus-visible,
-.price-panel :focus-visible {
+.section.dark :focus-visible {
   outline-color: #fff;
 }
 

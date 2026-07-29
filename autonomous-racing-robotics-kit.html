@@ -105,20 +105,46 @@
             "offers": [
               {
                 "@type": "Offer",
-                "name": "Domestic (India)",
+                "name": "RoboRacer Core Kit - India",
+                "description": "The complete Core Kit, including the Traxxas chassis, compatible battery and corresponding battery charger. GST is charged in addition. Shipping is charged separately at the flat rate below.",
+                "url": "https://roboracer.ambimat.com/contact.html#order",
+                "price": "580000",
+                "priceCurrency": "INR",
+                "valueAddedTaxIncluded": false,
+                "eligibleRegion": { "@type": "Country", "name": "India" },
+                "shippingDetails": {
+                  "@type": "OfferShippingDetails",
+                  "shippingRate": { "@type": "MonetaryAmount", "value": "4500", "currency": "INR" },
+                  "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "IN" }
+                }
+              },
+              {
+                "@type": "Offer",
+                "name": "RoboRacer Core Kit with the additional end-to-end service - India",
+                "description": "The same complete Core Kit plus an additional end-to-end service, whose confirmed scope is set out on the quotation. GST is charged in addition. Shipping is charged separately at the flat rate below.",
                 "url": "https://roboracer.ambimat.com/contact.html#order",
                 "price": "628000",
                 "priceCurrency": "INR",
                 "valueAddedTaxIncluded": false,
-                "eligibleRegion": { "@type": "Country", "name": "India" }
+                "eligibleRegion": { "@type": "Country", "name": "India" },
+                "shippingDetails": {
+                  "@type": "OfferShippingDetails",
+                  "shippingRate": { "@type": "MonetaryAmount", "value": "4500", "currency": "INR" },
+                  "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "IN" }
+                }
               },
               {
                 "@type": "Offer",
-                "name": "Ex-works India",
+                "name": "Complete RoboRacer Core Kit - international",
+                "description": "The complete Core Kit, including the Traxxas chassis, compatible battery and corresponding battery charger. Shipping is charged separately at a flat US$500. Any applicable duties or local taxes are not included and are confirmed separately. An optional configuration excluding the chassis, battery and charger for local purchase attracts a discount of approximately US$725; that configuration is quoted individually.",
                 "url": "https://roboracer.ambimat.com/contact.html#order",
-                "price": "6100",
+                "price": "5900",
                 "priceCurrency": "USD",
-                "valueAddedTaxIncluded": false
+                "valueAddedTaxIncluded": false,
+                "shippingDetails": {
+                  "@type": "OfferShippingDetails",
+                  "shippingRate": { "@type": "MonetaryAmount", "value": "500", "currency": "USD" }
+                }
               }
             ]
           },
@@ -171,7 +197,15 @@
                 "name": "What does the RoboRacer Core Kit cost?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "INR 628,000 plus 18% GST for delivery within India, or USD 6,100 ex-works India for export orders. The price covers the assembled vehicle and its major parts — Jetson Orin Nano Super, VESC 6 MkIV, Hokuyo LiDAR, Traxxas Slash 4x4 Ultimate chassis, power distribution unit, MDF base plates with a spare, 3S battery and charger — plus operating-system and ROS stack setup and 60 days of remote technical support."
+                  "text": "In India the Core Kit is INR 580,000 + GST, or INR 628,000 + GST with the additional end-to-end service; the INR 48,000 difference is the price of that service. Flat-rate shipping is INR 4,500 + GST and is charged separately. Internationally the complete kit is US$5,900 with flat shipping at US$500. Every one of these prices is for the complete kit and its major parts — Jetson Orin Nano Super, VESC 6 MkIV, Hokuyo LiDAR, Traxxas Slash 4x4 Ultimate chassis, power distribution unit, MDF base plates with a spare, 3S battery and charger — plus operating-system and ROS stack setup and 60 days of remote technical support."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I buy the chassis, battery and charger locally instead?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "On international orders, yes. In some countries it is easier and more economical to buy the Traxxas chassis, a compatible battery and the corresponding battery charger from a local Traxxas reseller. If those three items are excluded from the supplied kit, a discount of approximately US$725 applies, giving an indicative price of approximately US$5,175 before shipping. The discount is approximate and the final quotation controls. This is an optional configuration: the INR 580,000, INR 628,000 and US$5,900 prices are all for the complete kit with the chassis, battery and charger included."
                 }
               },
               {
@@ -481,6 +515,16 @@
             support after delivery. Those two items are usually the difference between a vehicle that drives in week one
             and one that drives in week six.
           </div>
+
+          <div class="callout">
+            <strong>Optional international configuration.</strong> The table above is the complete kit, and the chassis,
+            battery and charger are part of it at every listed price. On international orders only, you may instead
+            source three of those items locally — the <strong>Traxxas chassis</strong>, a
+            <strong>compatible battery</strong> and the <strong>corresponding battery charger</strong> — from a Traxxas
+            reseller, which in some countries is easier and more economical. Excluding exactly those three items earns a
+            discount of approximately US$725. Everything else in the table ships as listed. See
+            <a href="#pricing">pricing</a> for the figures.
+          </div>
         </div>
       </section>
 
@@ -711,23 +755,86 @@
             <h2 class="section-title" id="pricing-title">Pricing and how to order</h2>
             <hr class="section-line" />
             <p class="section-desc">
-              One price covers the assembled vehicle, its major parts, operating-system and ROS stack setup, and 60 days
-              of remote technical support.
+              The kit, the additional end-to-end service and shipping are priced as separate line items. GST applies to
+              the Indian figures and is not included in them.
             </p>
           </div>
 
-          <div class="price-panel">
-            <h3>Total Cost</h3>
-            <div class="price-grid">
-              <div class="price-item">
-                <p class="price-value">INR 628,000</p>
-                <p class="price-note">+ 18% GST · India</p>
-              </div>
-              <div class="price-item">
-                <p class="price-value">USD 6,100</p>
-                <p class="price-note">Ex-works India</p>
-              </div>
-            </div>
+          <div class="grid-2">
+            <article class="price-card">
+              <h3>India</h3>
+              <p>Quoted in INR. Every figure below excludes GST.</p>
+              <ul class="price-lines" role="list">
+                <li class="is-primary">
+                  <span class="price-line-label">RoboRacer Core Kit</span>
+                  <span class="price-line-value">INR 580,000 <span class="price-line-tax">+ GST</span></span>
+                </li>
+                <li>
+                  <span class="price-line-label">RoboRacer Core Kit with the additional end-to-end service</span>
+                  <span class="price-line-value">INR 628,000 <span class="price-line-tax">+ GST</span></span>
+                </li>
+                <li>
+                  <span class="price-line-label">Flat-rate shipping, where this policy applies</span>
+                  <span class="price-line-value">INR 4,500 <span class="price-line-tax">+ GST</span></span>
+                </li>
+              </ul>
+              <p class="price-card-note">
+                <strong>The INR 48,000 difference is the price of the additional end-to-end service.</strong> It is not
+                a different or reduced kit: both options are the complete Core Kit, including the Traxxas chassis, the
+                compatible battery and the corresponding battery charger.
+              </p>
+              <p class="price-card-note">Shipping is charged separately and is not included in either kit price.</p>
+            </article>
+
+            <article class="price-card">
+              <h3>International</h3>
+              <p>Quoted in USD. Shipping is a separate flat rate.</p>
+              <ul class="price-lines" role="list">
+                <li class="is-primary">
+                  <span class="price-line-label">Complete RoboRacer Core Kit</span>
+                  <span class="price-line-value">US$5,900</span>
+                </li>
+                <li>
+                  <span class="price-line-label">
+                    Optional discount when the Traxxas chassis, compatible battery and corresponding battery charger are
+                    sourced locally
+                  </span>
+                  <span class="price-line-value">approximately US$725</span>
+                </li>
+                <li class="is-indicative">
+                  <span class="price-line-label">Indicative price for that locally sourced configuration</span>
+                  <span class="price-line-value"
+                    >approximately US$5,175 <span class="price-line-tax">before shipping</span></span
+                  >
+                </li>
+                <li>
+                  <span class="price-line-label">Flat international shipping</span>
+                  <span class="price-line-value">US$500</span>
+                </li>
+              </ul>
+              <p class="price-card-note">
+                <strong>The approximately US$5,175 figure is indicative only.</strong> It is US$5,900 less a discount of
+                approximately US$725; the discount is an approximation and the final quotation controls.
+              </p>
+              <p class="price-card-note">
+                Any applicable duties or local taxes are not included and will be confirmed separately.
+              </p>
+            </article>
+          </div>
+
+          <div class="callout">
+            <strong>The additional end-to-end service.</strong> INR 628,000 + GST is the Core Kit plus an additional
+            end-to-end service; INR 580,000 + GST is the same Core Kit without that service. Its confirmed scope is set
+            out on your quotation — <a href="/contact.html#order">request one</a> before ordering if the additional
+            end-to-end service is what you are evaluating.
+          </div>
+
+          <div class="callout">
+            <strong>Sourcing the chassis, battery and charger locally.</strong> In some countries it is easier and more
+            economical to buy the <strong>Traxxas chassis</strong>, a <strong>compatible battery</strong> and the
+            <strong>corresponding battery charger</strong> from a local Traxxas reseller. Excluding exactly those three
+            items from the supplied kit earns a discount of approximately US$725. This is an optional international
+            configuration only — every other price on this page is for the complete kit, with all three items included.
           </div>
 
           <div class="prose">
@@ -814,10 +921,31 @@
             <div class="faq-item">
               <h3>What does the RoboRacer Core Kit cost?</h3>
               <p>
-                INR 628,000 plus 18% GST for delivery within India, or USD 6,100 ex-works India for export orders. The
-                price covers the assembled vehicle and its major parts — Jetson Orin Nano Super, VESC 6 MkIV, Hokuyo
-                LiDAR, Traxxas Slash 4x4 Ultimate chassis, power distribution unit, MDF base plates with a spare, 3S
-                battery and charger — plus operating-system and ROS stack setup and 60 days of remote technical support.
+                In India the Core Kit is INR 580,000 + GST, or INR 628,000 + GST with the additional end-to-end service;
+                the INR 48,000 difference is the price of that service. Flat-rate shipping is INR 4,500 + GST and is
+                charged separately. Internationally the complete kit is US$5,900 with flat shipping at US$500.
+              </p>
+              <p>
+                Every one of these prices is for the complete kit and its major parts — Jetson Orin Nano Super, VESC 6
+                MkIV, Hokuyo LiDAR, Traxxas Slash 4x4 Ultimate chassis, power distribution unit, MDF base plates with a
+                spare, 3S battery and charger — plus operating-system and ROS stack setup and 60 days of remote
+                technical support. The <a href="#pricing">pricing section</a> sets out every line item.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3>Can I buy the chassis, battery and charger locally instead?</h3>
+              <p>
+                On international orders, yes. In some countries it is easier and more economical to buy the Traxxas
+                chassis, a compatible battery and the corresponding battery charger from a local Traxxas reseller. If
+                those three items are excluded from the supplied kit, a discount of approximately US$725 applies, giving
+                an indicative price of approximately US$5,175 before shipping. The discount is approximate and the final
+                quotation controls.
+              </p>
+              <p>
+                This is an optional configuration. The INR 580,000 price, the INR 628,000 price with the additional
+                end-to-end service, and the US$5,900 international price are all for the complete kit, with the chassis,
+                battery and charger included.
               </p>
             </div>
 

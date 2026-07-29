@@ -1,7 +1,7 @@
 # RoboRacer design system
 
 Everything lives in **`assets/css/main.css`**, in one file, in this order:
-tokens → base → header → hero → buttons → sections → grids/cards → price panel →
+tokens → base → header → hero → buttons → sections → grids/cards → price cards →
 resource rows → contact cards → page header → footer → responsive → focus/motion → print.
 
 There is no CSS build step. Add a token before you add a hex code.
@@ -20,7 +20,7 @@ All tokens are CSS custom properties on `:root`.
 | `--rr-red-dark` | `#b81422`             | Hover state; **all red text** (6.64:1 on white)     |
 | `--rr-red-soft` | `#e63946`             | Legacy lighter red, retained for tints              |
 | `--rr-red-tint` | `rgba(227,28,43,.08)` | Icon chip backgrounds                               |
-| `--rr-dark`     | `#2c3e50`             | Headings on dark surfaces, footer, price panel      |
+| `--rr-dark`     | `#2c3e50`             | Headings on dark surfaces, footer, dark sections    |
 | `--rr-grey`     | `#6c7a89`             | **Non-text only** — see the contrast note below     |
 | `--rr-soft`     | `#f4f5f6`             | Alternating section background, chips, inline boxes |
 
@@ -83,7 +83,7 @@ section copy) so line length stays readable independent of viewport.
 | `.card`                                                                | Bordered card; red rule wipes in on hover                        |
 | `.card-icon`                                                           | 44px tinted chip holding a 22px inline SVG                       |
 | `.part-card`                                                           | Compact label tile with a red spine (bill of materials)          |
-| `.price-panel`                                                         | Dark price block                                                 |
+| `.price-card` / `.price-lines`                                         | Pricing comparison: one card per region, one row per line item   |
 | `.figure`                                                              | Bordered image + caption                                         |
 | `.resource-row`                                                        | Title/description on the left, download button on the right      |
 | `.contact-card` / `.contact-box`                                       | Contact tiles with a red top edge                                |
@@ -91,6 +91,25 @@ section copy) so line length stays readable independent of viewport.
 | `.page-header`                                                         | Interior-page title band                                         |
 | `.site-footer`                                                         | 4-column dark footer                                             |
 | `.skip-link` / `.visually-hidden`                                      | Accessibility utilities                                          |
+
+---
+
+### Pricing
+
+`.price-card` replaced the old dark `.price-panel`, which could only carry one
+figure per currency. Pricing now has three independent components — kit price,
+the additional end-to-end service, and shipping — and GST applies to the INR
+figures only, so each is a separate `.price-lines` row of label + figure rather
+than a single headline number. `.is-primary` promotes the lead figure,
+`.is-indicative` demotes an approximate one, and `.price-line-tax` carries the
+qualifier ("+ GST", "before shipping") that must never be dropped.
+
+Below 520px each row stacks label over figure, so a long label never squeezes a
+price onto two lines.
+
+Copy inside these components is contract-tested in
+`tests/pricing-content.test.js` — figures, the service relationship, the
+inclusion/exclusion claims and the JSON-LD offers all have regression guards.
 
 ---
 
@@ -129,7 +148,7 @@ no interactive target under 24×24 CSS px.
   as the first focusable element. `audit-site.py` fails the build if one is missing.
 - **One `<h1>` per page**, no skipped heading levels — enforced by the audit.
 - **Focus.** A single global `:focus-visible` ring (2px `--rr-red`, 2px offset), flipped
-  to white on the dark footer, dark sections and price panel.
+  to white on the dark footer and dark sections.
 - **Target size.** WCAG 2.2 AA §2.5.8 — footer and contact-box links are `inline-block`
   with vertical padding so nothing falls under 24px.
 - **Reduced motion.** `prefers-reduced-motion: reduce` collapses every transition and

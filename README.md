@@ -71,7 +71,7 @@ bash tools/verify-production.sh           # post-deployment checks against the l
 │   └── fonts/                  woff2 variable-font subsets
 ├── files/                      downloadable board ZIP + user manual PDF
 ├── tools/                      build, audit and verification scripts (never shipped)
-├── tests/                      artifact contract tests (never shipped)
+├── tests/                      artifact + commercial-copy contract tests (never shipped)
 ├── docs/                       design system, CI, deployment, AmbiSecure mapping
 └── .github/workflows/          ci.yml (PRs) · deploy-hostinger.yml (manual)
 ```
