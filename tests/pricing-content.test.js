@@ -118,6 +118,129 @@ describe("retired pricing never reappears", () => {
   }
 });
 
+describe("retired wording never reappears", () => {
+  for (const file of ALL_HTML) {
+    test(`${file} does not state a GST rate`, () => {
+      // Only "+ GST" is approved; a published rate goes stale the day it moves.
+      assert.ok(!/\b18\s*%\s*GST/i.test(read(file)), `${file} states an explicit GST rate`);
+    });
+
+    test(`${file} does not use EXW or ex-works`, () => {
+      const raw = read(file);
+      assert.ok(!/ex-?works/i.test(raw), `${file} reintroduces ex-works`);
+      assert.ok(!/\bEXW\b/.test(raw), `${file} reintroduces EXW`);
+    });
+
+    test(`${file} does not use the vague shipping-scope phrase`, () => {
+      assert.ok(
+        !/where th[ai][st] policy applies/i.test(read(file)),
+        `${file} reintroduces "where this policy applies"`,
+      );
+    });
+
+    test(`${file} does not call the service "additional end-to-end service"`, () => {
+      assert.ok(!/end-to-end/i.test(read(file)), `${file} still uses the retired service name`);
+    });
+  }
+});
+
+describe("international terms are FOB and destination charges stay with the buyer", () => {
+  for (const file of PRICING_PAGES) {
+    test(`${file} states FOB terms`, () => {
+      assert.match(visibleText(read(file)), /FOB terms/, `${file} does not state FOB terms`);
+    });
+
+    test(`${file} says Ambimat does not pay destination charges`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /Ambimat does not pay destination customs-clearance charges, import duties, local taxes or related destination charges/i,
+        `${file} does not disclaim destination charges`,
+      );
+    });
+
+    test(`${file} excludes destination charges from the US$500 shipping rate`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /US\$500 shipping charge does not include destination customs clearance/i,
+        `${file} does not scope the US$500 charge`,
+      );
+    });
+
+    test(`${file} never implies Ambimat clears customs or pays duty`, () => {
+      const text = visibleText(read(file));
+      const forbidden = [
+        /we (pay|cover|handle) (the )?(import )?(duty|duties|customs)/i,
+        /duty[- ]paid/i,
+        /customs cleared/i,
+        /\bDDP\b/,
+        /shipping includes? (customs|duties|import)/i,
+        // Lookbehind so the approved disclaimer ("does not include destination
+        // customs clearance") is not mistaken for the claim it disclaims.
+        /(?<!does not |not )includes? destination (customs|duties|taxes)/i,
+      ];
+      for (const re of forbidden) {
+        assert.ok(!re.test(text), `${file} implies Ambimat covers destination charges: ${re}`);
+      }
+    });
+
+    test(`${file} does not invent an FOB port or Incoterms edition`, () => {
+      // The approved wording defers the FOB location to the quotation.
+      const text = visibleText(read(file));
+      assert.ok(
+        !/FOB\s+(Mumbai|Nhava|Mundra|Chennai|Kolkata|Ahmedabad|India\b)/i.test(text),
+        `${file} names an FOB port`,
+      );
+      assert.ok(!/Incoterms\s*(®|\(R\))?\s*20\d\d/i.test(text), `${file} names an Incoterms edition`);
+      assert.match(text, /FOB location and full commercial terms will be confirmed in the quotation/i);
+    });
+  }
+});
+
+describe("Software Setup / Technical Support is described consistently", () => {
+  for (const file of PRICING_PAGES) {
+    test(`${file} uses the approved service name`, () => {
+      assert.match(visibleText(read(file)), /Software Setup \/ Technical Support/);
+    });
+
+    test(`${file} does not claim the service comes with every kit`, () => {
+      const text = visibleText(read(file));
+      const forbidden = [
+        /included with every kit/i,
+        /every kit includes (loading|remote hardware)/i,
+        /services delivered with every kit/i,
+        /every kit carries \d+ days/i,
+      ];
+      for (const re of forbidden) {
+        assert.ok(!re.test(text), `${file} claims universal inclusion of the service: ${re}`);
+      }
+    });
+
+    test(`${file} does not expand the service scope beyond what is approved`, () => {
+      const text = visibleText(read(file));
+      const forbidden = [
+        /\bSLA\b/,
+        /service level agreement/i,
+        /on-?site (service|support|installation)/i,
+        /training (course|programme|program|entitlement)/i,
+        /\bwarrant(y|ies)\b/i,
+        /response time/i,
+        /\d+\s*-?\s*(hour|business day) response/i,
+      ];
+      for (const re of forbidden) {
+        assert.ok(!re.test(text), `${file} introduces an unapproved service commitment: ${re}`);
+      }
+    });
+  }
+
+  test("the service scope pages do not claim universal inclusion either", () => {
+    for (const file of ["specifications.html", "getting-started.html"]) {
+      const text = visibleText(read(file));
+      assert.ok(!/services delivered with every kit/i.test(text), `${file} claims universal inclusion`);
+      assert.ok(!/every kit includes remote hardware/i.test(text), `${file} claims universal inclusion`);
+    }
+  });
+});
+
 describe("India pricing is stated with the service relationship intact", () => {
   for (const file of PRICING_PAGES) {
     test(`${file} quotes INR 580,000 + GST`, () => {
@@ -128,9 +251,9 @@ describe("India pricing is stated with the service relationship intact", () => {
       assert.match(visibleText(read(file)), /INR 628,000 \+ GST/);
     });
 
-    test(`${file} never shows INR 628,000 without naming the end-to-end service`, () => {
-      // Every sentence-ish run containing 628,000 must also mention the service
-      // it pays for, otherwise the figure reads as the only kit price.
+    test(`${file} never shows INR 628,000 without naming the service`, () => {
+      // Every sentence-ish run containing 628,000 must also name the service it
+      // pays for, otherwise the figure reads as the only kit price.
       const text = visibleText(read(file));
       const windows = [...text.matchAll(/INR 628,000/g)].map((m) =>
         text.slice(Math.max(0, m.index - 240), m.index + 240),
@@ -139,7 +262,7 @@ describe("India pricing is stated with the service relationship intact", () => {
       for (const w of windows) {
         assert.match(
           w,
-          /end-to-end service/i,
+          /Software Setup \/ Technical Support/i,
           `INR 628,000 appears in ${file} without naming the service:\n${w}`,
         );
       }
@@ -153,8 +276,8 @@ describe("India pricing is stated with the service relationship intact", () => {
       assert.ok(line, `${file} has no INR 628,000 price line`);
       assert.match(
         line.label,
-        /end-to-end service/i,
-        `the INR 628,000 line in ${file} does not identify the additional end-to-end service:\n${line.label}`,
+        /Software Setup \/ Technical Support/,
+        `the INR 628,000 line in ${file} does not identify Software Setup / Technical Support:\n${line.label}`,
       );
     });
 
@@ -162,28 +285,51 @@ describe("India pricing is stated with the service relationship intact", () => {
       const line = priceLines(read(file)).find((l) => l.value.includes("INR 580,000"));
       assert.ok(line, `${file} has no INR 580,000 price line`);
       assert.ok(
-        !/end-to-end service/i.test(line.label),
-        `the INR 580,000 line in ${file} claims the additional service:\n${line.label}`,
+        !/Software Setup \/ Technical Support/i.test(line.label),
+        `the INR 580,000 line in ${file} claims the service:\n${line.label}`,
       );
     });
 
-    test(`${file} never labels INR 580,000 as including the additional service`, () => {
+    test(`${file} never labels INR 580,000 as including the service`, () => {
       const text = visibleText(read(file));
       for (const m of text.matchAll(/INR 580,000/g)) {
         const w = text.slice(m.index, m.index + 160);
         assert.ok(
-          !/580,000 \+ GST with the additional end-to-end service/i.test(w),
+          !/580,000 \+ GST with Software Setup \/ Technical Support/i.test(w),
           `INR 580,000 is described as including the service in ${file}:\n${w}`,
         );
       }
       assert.ok(
-        !/INR 580,000[^.]{0,120}\bincludes the additional end-to-end service/i.test(text),
-        `${file} says INR 580,000 includes the additional end-to-end service`,
+        !/INR 580,000[^.]{0,140}\bincludes Software Setup \/ Technical Support/i.test(text),
+        `${file} says INR 580,000 includes Software Setup / Technical Support`,
       );
     });
 
     test(`${file} states the INR 4,500 + GST shipping rate`, () => {
       assert.match(visibleText(read(file)), /INR 4,500 \+ GST/);
+    });
+
+    test(`${file} scopes the INR shipping charge to India`, () => {
+      const line = priceLines(read(file)).find((l) => l.value.includes("INR 4,500"));
+      assert.ok(line, `${file} has no INR 4,500 price line`);
+      assert.match(
+        line.label,
+        /within India/i,
+        `the INR 4,500 shipping line in ${file} is not scoped to India:\n${line.label}`,
+      );
+    });
+
+    test(`${file} presents both INR options as the same physical kit`, () => {
+      // The INR 48,000 buys a service, not more hardware. Any wording that
+      // makes 628,000 look like a bigger kit is a commercial misstatement.
+      const text = visibleText(read(file));
+      assert.match(
+        text,
+        /same complete (physical )?(RoboRacer )?Core Kit|both options include the complete/i,
+      );
+      for (const re of [/larger kit/i, /upgraded kit/i, /reduced kit\b(?! ?:)/i, /extra hardware/i]) {
+        assert.ok(!re.test(text), `${file} implies the two INR options differ physically: ${re}`);
+      }
     });
   }
 });
@@ -220,16 +366,34 @@ describe("international pricing is stated with the discount qualified", () => {
 
 describe("the locally sourced configuration names all three excluded items", () => {
   for (const file of PRICING_PAGES) {
-    test(`${file} names chassis, battery and charger wherever the discount appears`, () => {
+    test(`${file} names all three excluded items on the discount price row`, () => {
+      // Structural: the row carrying the discount must itself enumerate what
+      // is excluded. A word appearing elsewhere in the callout does not count.
+      const line = priceLines(read(file)).find((l) => l.value.includes("US$725"));
+      assert.ok(line, `${file} has no US$725 price line`);
+      for (const item of ["Traxxas chassis", "compatible battery", "corresponding battery charger"]) {
+        assert.ok(
+          line.label.includes(item),
+          `the US$725 row in ${file} does not name "${item}":\n${line.label}`,
+        );
+      }
+    });
+
+    test(`${file} names all three excluded items in every discount sentence`, () => {
+      // For each mention of the discount, the sentence it sits in — plus the
+      // two before it — must enumerate all three items by their full names.
       const text = visibleText(read(file));
-      const windows = [...text.matchAll(/US\$725/g)].map((m) =>
-        text.slice(Math.max(0, m.index - 420), m.index + 420),
-      );
-      assert.ok(windows.length > 0, `${file} never mentions the local-sourcing discount`);
-      for (const w of windows) {
-        assert.match(w, /chassis/i, `discount context in ${file} omits the chassis`);
-        assert.match(w, /battery/i, `discount context in ${file} omits the battery`);
-        assert.match(w, /charger/i, `discount context in ${file} omits the charger`);
+      const sentences = text.split(/(?<=\.)\s+/);
+      const mentions = sentences.map((s, i) => [s, i]).filter(([s]) => s.includes("US$725"));
+      assert.ok(mentions.length > 0, `${file} never mentions the local-sourcing discount`);
+      for (const [, i] of mentions) {
+        const context = sentences.slice(Math.max(0, i - 2), i + 1).join(" ");
+        for (const item of ["Traxxas chassis", "compatible battery", "corresponding battery charger"]) {
+          assert.ok(
+            context.includes(item),
+            `a US$725 mention in ${file} does not name "${item}" in context:\n${context}`,
+          );
+        }
       }
     });
 
@@ -343,19 +507,47 @@ describe("structured data carries the current commerce facts", () => {
       assert.ok(!prices.includes("5175"), `${file} publishes the indicative price as an Offer`);
     });
 
-    test(`${file} identifies the end-to-end service on the INR 628,000 offer`, () => {
+    test(`${file} identifies Software Setup / Technical Support on the INR 628,000 offer`, () => {
       const offer = offersIn(read(file)).find((o) => String(o.price) === "628000");
       assert.ok(offer, "no INR 628,000 offer found");
-      assert.match(`${offer.name} ${offer.description ?? ""}`, /end-to-end service/i);
+      assert.match(offer.name, /Software Setup \/ Technical Support/);
     });
 
     test(`${file} does not attach the service to the INR 580,000 offer`, () => {
       const offer = offersIn(read(file)).find((o) => String(o.price) === "580000");
       assert.ok(offer, "no INR 580,000 offer found");
       assert.ok(
-        !/with the additional end-to-end service/i.test(offer.name),
+        !/with Software Setup \/ Technical Support/i.test(offer.name),
         "the INR 580,000 offer is named as including the service",
       );
+      assert.match(
+        offer.description ?? "",
+        /not included/i,
+        "the INR 580,000 offer does not say the service is excluded",
+      );
+    });
+
+    test(`${file} INR offers describe the same physical kit`, () => {
+      const inr = offersIn(read(file)).filter((o) => o.priceCurrency === "INR");
+      assert.equal(inr.length, 2);
+      for (const o of inr) {
+        assert.match(
+          o.description ?? "",
+          /complete physical Core Kit/i,
+          `offer ${o.price} does not state it is the same complete physical kit`,
+        );
+      }
+    });
+
+    test(`${file} international offer does not absorb destination charges`, () => {
+      const usd = offersIn(read(file)).find((o) => o.priceCurrency === "USD");
+      assert.ok(usd, "no USD offer found");
+      const d = usd.description ?? "";
+      assert.match(d, /FOB/, "the USD offer does not state FOB terms");
+      assert.match(d, /does not include destination customs clearance/i);
+      for (const re of [/duties included/i, /customs cleared/i, /duty[- ]paid/i, /DDP/]) {
+        assert.ok(!re.test(d), `the USD offer implies Ambimat covers destination charges: ${re}`);
+      }
     });
   }
 });

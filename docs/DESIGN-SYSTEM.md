@@ -98,7 +98,7 @@ section copy) so line length stays readable independent of viewport.
 
 `.price-card` replaced the old dark `.price-panel`, which could only carry one
 figure per currency. Pricing now has three independent components — kit price,
-the additional end-to-end service, and shipping — and GST applies to the INR
+Software Setup / Technical Support, and shipping — and GST applies to the INR
 figures only, so each is a separate `.price-lines` row of label + figure rather
 than a single headline number. `.is-primary` promotes the lead figure,
 `.is-indicative` demotes an approximate one, and `.price-line-tax` carries the
@@ -107,9 +107,15 @@ qualifier ("+ GST", "before shipping") that must never be dropped.
 Below 520px each row stacks label over figure, so a long label never squeezes a
 price onto two lines.
 
+The INR 628,000 row label runs to two lines in the card at most widths; that is
+expected and is why the row is `flex-wrap` rather than a fixed two-column grid.
+
 Copy inside these components is contract-tested in
-`tests/pricing-content.test.js` — figures, the service relationship, the
-inclusion/exclusion claims and the JSON-LD offers all have regression guards.
+`tests/pricing-content.test.js` — figures, the service name and relationship,
+the India scope of the INR shipping rate, the FOB/destination-charge wording,
+the inclusion/exclusion claims and the JSON-LD offers all have regression
+guards, several of them structural (they read the price row or the Offer node,
+not nearby prose).
 
 ---
 
