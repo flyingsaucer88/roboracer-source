@@ -4,6 +4,10 @@
       "staticDistDir": "./dist/roboracer-site",
       "url": [
         "http://localhost/index.html",
+        "http://localhost/autonomous-racing-robotics-kit.html",
+        "http://localhost/specifications.html",
+        "http://localhost/getting-started.html",
+        "http://localhost/use-cases.html",
         "http://localhost/resource.html",
         "http://localhost/contact.html",
         "http://localhost/404.html"

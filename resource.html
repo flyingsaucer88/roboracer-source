@@ -6,20 +6,20 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-    <title>Resources — Open-Source RoboRacer Power Board Files | RoboRacer</title>
+    <title>Open-Source RoboRacer Power Board Files and Manual</title>
     <meta
       name="description"
-      content="Download the open-source RoboRacer power board design files and the Power Board User Manual, released by Ambimat Electronics for the ROBORACER community."
+      content="Download the open-source AE170 RoboRacer power distribution board package — schematic, Gerber, DXF and bill of materials — plus the Power Board User Manual covering its 19 V, 12 V and 5 V rails."
     />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://roboracer.ambimat.com/resource.html" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="RoboRacer" />
-    <meta property="og:title" content="Resources — Open-Source RoboRacer Power Board Files" />
+    <meta property="og:title" content="Open-Source RoboRacer Power Board Files and Manual" />
     <meta
       property="og:description"
-      content="Design files and the user manual for the RoboRacer power board, open-sourced for the ROBORACER community."
+      content="Schematic, Gerber, DXF, bill of materials and the user manual for the AE170 RoboRacer power distribution board, open-sourced for the RoboRacer and F1TENTH community."
     />
     <meta property="og:url" content="https://roboracer.ambimat.com/resource.html" />
     <meta property="og:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
@@ -31,8 +31,11 @@
       content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Resources — Open-Source RoboRacer Power Board Files" />
-    <meta name="twitter:description" content="Design files and the user manual for the RoboRacer power board." />
+    <meta name="twitter:title" content="Open-Source RoboRacer Power Board Files and Manual" />
+    <meta
+      name="twitter:description"
+      content="Schematic, Gerber, DXF, bill of materials and the user manual for the AE170 RoboRacer power distribution board."
+    />
     <meta name="twitter:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
     <meta
       name="twitter:image:alt"
@@ -53,14 +56,41 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://roboracer.ambimat.com/" },
+        "@graph": [
           {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Resources",
-            "item": "https://roboracer.ambimat.com/resource.html"
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://roboracer.ambimat.com/" },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Resources",
+                "item": "https://roboracer.ambimat.com/resource.html"
+              }
+            ]
+          },
+          {
+            "@type": "Dataset",
+            "@id": "https://roboracer.ambimat.com/resource.html#board-package",
+            "name": "RoboRacer AE170 power distribution board — open-source design package",
+            "description": "Open-source hardware design package for the Ambimat AE170 power distribution unit V02.04 used on the RoboRacer 1:10-scale autonomous racing platform: schematic and assembly PDF, mechanical drawing, Gerber manufacturing files, DXF outline and bill of materials.",
+            "url": "https://roboracer.ambimat.com/resource.html#downloads",
+            "creator": { "@id": "https://roboracer.ambimat.com/#org" },
+            "keywords": "power distribution unit, PDU, open source hardware, Gerber, DXF, bill of materials, RoboRacer, F1TENTH, NVIDIA Jetson, LiDAR",
+            "distribution": [
+              {
+                "@type": "DataDownload",
+                "name": "RoboRacer power board design files",
+                "encodingFormat": "application/zip",
+                "contentUrl": "https://roboracer.ambimat.com/files/roboracer-board.zip"
+              },
+              {
+                "@type": "DataDownload",
+                "name": "ROBORACER Power Board User Manual",
+                "encodingFormat": "application/pdf",
+                "contentUrl": "https://roboracer.ambimat.com/files/roboracer-board.pdf"
+              }
+            ]
           }
         ]
       }
@@ -81,10 +111,11 @@
         </a>
 
         <div class="nav-links" id="nav-menu">
-          <a href="/#description">Description</a>
-          <a href="/#parts">Parts</a>
-          <a href="/#services">Services</a>
-          <a href="/resource.html">Resources</a>
+          <a href="/autonomous-racing-robotics-kit.html">Core Kit</a>
+          <a href="/specifications.html">Specs</a>
+          <a href="/getting-started.html">Get Started</a>
+          <a href="/use-cases.html">Use Cases</a>
+          <a href="/resource.html" aria-current="page">Resources</a>
           <a href="/contact.html">Contact</a>
           <a class="nav-cta secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
           <a class="nav-cta" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
@@ -116,13 +147,25 @@
         <h1 class="page-title">RoboRacer Power Board Resources</h1>
         <hr class="section-line" />
         <p class="section-desc">
-          The design for the board has been made open source so that the ROBORACER community can benefit out of it.
+          Ambimat Electronics designed the AE170 power distribution unit for autonomous racing systems and released the
+          design so the RoboRacer and F1TENTH community can build on it. The complete package — schematic, Gerber, DXF
+          and bill of materials — and the user manual are below, with an explanation of what each file is for.
         </p>
       </div>
 
-      <section class="section" aria-labelledby="board-title">
+      <!-- WHAT THE BOARD IS -->
+      <section class="section" id="about-board" aria-labelledby="board-title">
         <div class="section-container">
-          <h2 class="visually-hidden" id="board-title">Power board design</h2>
+          <div class="section-head">
+            <p class="eyebrow">Context</p>
+            <h2 class="section-title" id="board-title">What the power board does</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              A 1:10-scale autonomous vehicle runs three different supply voltages off one battery, while a brushless
+              motor on the same pack draws current in violent steps. The power distribution unit is what keeps the
+              compute alive through that.
+            </p>
+          </div>
 
           <figure class="figure">
             <picture>
@@ -144,23 +187,57 @@
                 alt="Schematic overview of the RoboRacer power distribution board, showing the input stage, regulated output rails and connector layout."
               />
             </picture>
-            <figcaption>RoboRacer power distribution board — open-source design.</figcaption>
+            <figcaption>
+              RoboRacer AE170 power distribution board V02.04 — input stage, regulated rails and connector layout.
+            </figcaption>
           </figure>
+
+          <div class="prose">
+            <p>
+              The board takes input either from the 3S lithium-polymer traction pack (connector <strong>J9</strong>) or
+              from a wall adapter through a DC jack (<strong>J10</strong>), selected by switch <strong>SW1</strong>,
+              with <strong>SW2</strong> as the master power switch. From that single input it produces three regulated
+              rails across seven output connectors:
+            </p>
+            <ul>
+              <li><strong>19 V, up to 4 A</strong> on J7 — the supply the NVIDIA Jetson Orin Nano expects.</li>
+              <li>
+                <strong>12 V, up to 2 A</strong> on J1, J2, J5 and J6 — the Hokuyo LiDAR, with spare outputs for
+                additional sensors.
+              </li>
+              <li><strong>5 V, up to 1 A</strong> on J3 and J4 — hubs, logic and low-power accessories.</li>
+            </ul>
+            <p>
+              Those currents are totals across all outputs on a rail taken together, not per connector. The
+              <a href="/specifications.html#power">specifications page</a> summarises the same figures alongside the
+              rest of the vehicle, and the user manual below documents each switch scenario in full.
+            </p>
+          </div>
         </div>
       </section>
 
+      <!-- DOWNLOADS -->
       <section class="section alt" id="downloads" aria-labelledby="downloads-title">
         <div class="section-narrow">
           <div class="section-head">
+            <p class="eyebrow">Files</p>
             <h2 class="section-title" id="downloads-title">Downloads</h2>
             <hr class="section-line" />
+            <p class="section-desc">
+              Two downloads: the design package for anyone manufacturing, modifying or designing against the board, and
+              the manual for anyone operating one.
+            </p>
           </div>
 
           <div class="resource-row">
             <div>
               <h3>Power board design files</h3>
-              <p>The complete open-source design package for the RoboRacer power distribution board.</p>
-              <span class="resource-meta">ZIP archive</span>
+              <p>
+                The complete open-source design package for the AE170 power distribution unit V02.04 — schematic and
+                assembly drawing, mechanical drawing, Gerber manufacturing set, DXF outline and the bill of materials.
+                This is what a fabrication house and an electronics engineer need; the file-by-file breakdown is below.
+              </p>
+              <span class="resource-meta">ZIP archive · approx. 1.3 MB · 5 documents</span>
             </div>
             <a class="btn btn-primary" href="/files/roboracer-board.zip" download>
               Download ZIP<span class="visually-hidden"> — RoboRacer power board design files</span>
@@ -170,8 +247,12 @@
           <div class="resource-row">
             <div>
               <h3>ROBORACER Power Board User Manual</h3>
-              <p>Assembly, connection and operating guidance for the RoboRacer power board.</p>
-              <span class="resource-meta">PDF document</span>
+              <p>
+                Operating guidance for the assembled board: what SW1 and SW2 do, which connector is which, the maximum
+                current on each rail, and the switch scenarios for battery versus wall-adapter operation. Read this
+                before connecting anything to the board that did not ship with the kit.
+              </p>
+              <span class="resource-meta">PDF document · V02.04</span>
             </div>
             <a class="btn btn-primary" href="/files/roboracer-board.pdf" download>
               Download manual<span class="visually-hidden"> — ROBORACER Power Board User Manual PDF</span>
@@ -180,18 +261,206 @@
         </div>
       </section>
 
-      <section class="section" aria-labelledby="order-cta-title">
+      <!-- INSIDE THE ZIP -->
+      <section class="section" id="inside-the-zip" aria-labelledby="zip-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Package contents</p>
+            <h2 class="section-title" id="zip-title">What is inside the design package</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              Five documents, each answering a different question. Most people need one or two of them, not all five.
+            </p>
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                roboracer-board.zip — ROBORACER Power Board Files
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">File</th>
+                  <th scope="col">What it is</th>
+                  <th scope="col">Who needs it</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">AE170_PDU_02.04.pdf</th>
+                  <td>
+                    The main board document — schematic and assembly detail for revision 02.04. The authoritative answer
+                    to "what is actually on this board and how is it wired".
+                  </td>
+                  <td>Anyone adding loads, debugging a rail, or reviewing the design before modifying it.</td>
+                </tr>
+                <tr>
+                  <th scope="row">GERBER_AE170_PDU_02.04.zip</th>
+                  <td>
+                    The Gerber manufacturing set — copper, solder mask, silkscreen and drill data. This is the format
+                    every PCB fabricator accepts.
+                  </td>
+                  <td>Anyone having bare boards manufactured, in any quantity.</td>
+                </tr>
+                <tr>
+                  <th scope="row">BOM_AE170_PDU_02.04.xlsx</th>
+                  <td>
+                    The bill of materials — every component, its reference designator and its specification, as a
+                    spreadsheet.
+                  </td>
+                  <td>
+                    Anyone quoting, sourcing or substituting parts, and anyone sending the board out for assembly.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">MECH_AE170_PDU_02.04.pdf</th>
+                  <td>Mechanical drawing — board outline, mounting-hole positions and connector placement.</td>
+                  <td>Anyone designing a base plate, a mount or an enclosure around the board.</td>
+                </tr>
+                <tr>
+                  <th scope="row">DXF_AE170_PDU_02.04.DXF</th>
+                  <td>
+                    The same mechanical outline as a CAD vector file, importable into essentially any mechanical CAD or
+                    laser-cutting toolchain.
+                  </td>
+                  <td>Anyone cutting a custom MDF or acrylic deck, or modelling the vehicle assembly in CAD.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout">
+            The archive expands to a folder named <code>roboracer-board</code> containing
+            <code>ROBORACER Power Board Files</code>. If your extraction tool also shows a <code>__MACOSX</code> folder,
+            ignore it — it is macOS archive metadata, not part of the design.
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW TO USE -->
+      <section class="section alt" id="how-to-use" aria-labelledby="use-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Practical</p>
+            <h2 class="section-title" id="use-title">How to use these files</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="grid-2">
+            <article class="card">
+              <span class="card-meta">Manufacturing</span>
+              <h3>Having boards made</h3>
+              <p>
+                Send <code>GERBER_AE170_PDU_02.04.zip</code> to your PCB fabricator as-is — it is a standard Gerber set
+                and needs no conversion. Pair it with the BOM spreadsheet if you are also having the board assembled,
+                and check component availability against the BOM before committing, since passives and regulators go in
+                and out of stock.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="card-meta">Integration</span>
+              <h3>Designing around the board</h3>
+              <p>
+                Import the DXF into your mechanical CAD or laser-cutter software to place mounting holes and check
+                clearances, and use the mechanical PDF to confirm connector orientation before you cut anything. This is
+                the route to a custom equipment deck that still fits the standard board.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="card-meta">Extending</span>
+              <h3>Adding sensors and boards</h3>
+              <p>
+                Before hanging a depth camera, an external IMU or a custom board off a spare output, read the manual for
+                the rail totals and check your added load against them. The schematic PDF shows where the headroom
+                genuinely is, which is more reliable than measuring an idle vehicle with a multimeter.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="card-meta">Operating</span>
+              <h3>Running an assembled board</h3>
+              <p>
+                The manual is the reference for SW1 source selection and SW2 power switching, including the case where
+                SW2 is off and SW1's position stops mattering. The
+                <a href="/getting-started.html#steps">getting-started guide</a> puts the same switches in the order you
+                will actually touch them on the first day.
+              </p>
+            </article>
+          </div>
+
+          <div class="callout">
+            <strong>Licensing and reuse.</strong> The design has been made open source so the RoboRacer community can
+            benefit from it. If you intend to redistribute the files, manufacture at volume, or incorporate the design
+            into a commercial product, <a href="/contact.html">confirm the terms with Ambimat Electronics</a> first.
+          </div>
+        </div>
+      </section>
+
+      <!-- MORE RESOURCES -->
+      <section class="section" id="more" aria-labelledby="more-title">
+        <div class="section-container">
+          <div class="section-head">
+            <p class="eyebrow">Beyond the board</p>
+            <h2 class="section-title" id="more-title">Other resources worth having</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="grid-3">
+            <article class="card">
+              <h3>Vehicle specifications</h3>
+              <p>
+                Compute, LiDAR, VESC, rails, interfaces and delivered software versions for the complete RoboRacer Core
+                Kit.
+              </p>
+              <p class="section-cta">
+                <a class="btn btn-ghost btn-small" href="/specifications.html">Open specifications</a>
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>F1TENTH open-source stack</h3>
+              <p>
+                The community's ROS 2 packages and the <code>f1tenth_gym</code> simulator, published under the
+                <code>f1tenth</code> GitHub organisation.
+              </p>
+              <p class="section-cta">
+                <a class="btn btn-ghost btn-small" href="https://github.com/f1tenth" rel="noopener">Open on GitHub</a>
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>RoboRacer community</h3>
+              <p>The Slack workspace where teams, laboratories and organisers discuss builds, algorithms and events.</p>
+              <p class="section-cta">
+                <a
+                  class="btn btn-ghost btn-small"
+                  href="https://robo-racer.slack.com/signup#/domain-signup"
+                  rel="noopener"
+                  >Join the community</a
+                >
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDER -->
+      <section class="section alt" aria-labelledby="order-cta-title">
         <div class="section-narrow">
           <div class="section-head">
             <h2 class="section-title" id="order-cta-title">Order the boards</h2>
             <hr class="section-line" />
             <p class="section-desc">
-              If you wish to order the boards from Ambimat Electronics please use the
-              <strong>Order Now</strong> option below.
+              Manufacturing a handful of boards from the Gerbers is rarely economical. If you would rather buy the
+              assembled and tested AE170 power distribution unit — or the complete RoboRacer Core Kit built around it —
+              from Ambimat Electronics, use the <strong>Order Now</strong> option below.
             </p>
           </div>
           <div class="order-actions">
             <a class="btn btn-primary" href="/contact.html#order">Order now</a>
+            <a class="btn btn-outline" href="/autonomous-racing-robotics-kit.html">About the Core Kit</a>
           </div>
         </div>
       </section>
@@ -204,16 +473,17 @@
             <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
             <p>
               RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
-              autonomy system for 1:10-scale robotic vehicles.
+              1:10-scale autonomy system running ROS 2 on NVIDIA Jetson, with LiDAR perception and VESC drive.
             </p>
           </div>
 
           <nav aria-labelledby="footer-explore">
             <h2 id="footer-explore">Explore</h2>
             <ul>
-              <li><a href="/#description">Description</a></li>
-              <li><a href="/#parts">Major parts</a></li>
-              <li><a href="/#services">Services</a></li>
+              <li><a href="/autonomous-racing-robotics-kit.html">Autonomous racing kit</a></li>
+              <li><a href="/specifications.html">Specifications</a></li>
+              <li><a href="/getting-started.html">Getting started</a></li>
+              <li><a href="/use-cases.html">Use cases</a></li>
               <li><a href="/resource.html">Resources</a></li>
               <li><a href="/contact.html">Contact</a></li>
             </ul>
@@ -222,9 +492,11 @@
           <nav aria-labelledby="footer-community">
             <h2 id="footer-community">Community</h2>
             <ul>
-              <li><a href="https://github.com/f1tenth" rel="noopener">Access Directory</a></li>
-              <li><a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">Access Community</a></li>
-              <li><a href="/resource.html">Open-source board files</a></li>
+              <li><a href="https://github.com/f1tenth" rel="noopener">F1TENTH on GitHub</a></li>
+              <li>
+                <a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">RoboRacer on Slack</a>
+              </li>
+              <li><a href="/resource.html#downloads">Open-source board files</a></li>
               <li><a href="/contact.html#order">Order the Core Kit</a></li>
             </ul>
           </nav>

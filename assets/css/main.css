@@ -176,8 +176,12 @@ ol {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  padding: 16px 80px;
+  gap: 20px;
+  /* 48px, not the 80px the hero and sections use: the nav grew from five
+     links to six when the Core Kit, Specifications, Getting Started and
+     Use Cases pages were added, and the tighter gutter is what keeps the
+     desktop bar inside a 1280px viewport. */
+  padding: 16px 48px;
 }
 
 .brand {
@@ -220,7 +224,7 @@ ol {
 
 .nav-links {
   display: flex;
-  gap: 26px;
+  gap: 20px;
   list-style: none;
   align-items: center;
   margin: 0;
@@ -232,6 +236,10 @@ ol {
   font-weight: 600;
   font-size: 13.5px;
   letter-spacing: 0.2px;
+  /* A two-word label ("Get Started", "Use Cases") must never break across two
+     lines and double the header height; below the collapse breakpoint the
+     mobile menu takes over instead. */
+  white-space: nowrap;
   padding: 8px 0;
   border-bottom: 2px solid transparent;
   transition:
@@ -646,10 +654,12 @@ ol {
   height: 22px;
 }
 
-/* Part card — compact, label-only tile used for the bill of materials. */
+/* Part card — tile used for the bill of materials. The name carries the
+   Montserrat UI weight; the optional .part-role line underneath says what
+   the component actually does on the vehicle. */
 .part-card {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 12px;
   background: #fff;
   border: 1px solid var(--line);
@@ -682,6 +692,19 @@ ol {
 }
 .part-card:hover::before {
   opacity: 1;
+}
+.part-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+}
+.part-role {
+  font-family: "Source Sans 3", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
 }
 
 /* =========================================================
@@ -933,6 +956,430 @@ ol {
 }
 
 /* =========================================================
+   LONG-FORM PROSE
+   Used by the cornerstone, specification, guide and use-case
+   pages, where a section is a run of h3 + paragraphs + lists
+   rather than a card grid.
+   ========================================================= */
+.prose {
+  max-width: 76ch;
+  margin-inline: auto;
+  color: var(--muted-strong);
+}
+.section-head.left + .prose,
+.prose.left {
+  margin-inline: 0;
+}
+.prose > * + * {
+  margin-top: 16px;
+}
+.prose h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  color: var(--rr-dark);
+  margin-top: 34px;
+}
+.prose h4 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 26px;
+}
+.prose ul,
+.prose ol {
+  padding-left: 22px;
+  list-style-position: outside;
+}
+.prose li + li {
+  margin-top: 8px;
+}
+.prose strong {
+  color: var(--ink);
+}
+.prose a {
+  color: var(--rr-red-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose a:hover {
+  color: var(--rr-red);
+}
+
+/* WCAG 2.2 AA 2.5.8 Target Size (Minimum). Body copy at 16.5px/1.75 gives an
+   inline link a 21px box — under the 24px floor. Vertical padding on the
+   inline box lifts it past the minimum; `inline-block` would do the same but
+   would stop a link breaking across lines mid-sentence, so it is not used
+   here. Same technique as the footer and contact-box links. */
+.prose a,
+.callout a,
+.faq-item a,
+.steps a,
+.section-desc a,
+.card p a:not(.btn) {
+  padding-block: 3px;
+}
+
+/* Definition list used for short "term — meaning" runs (glossaries,
+   connector legends). Two columns on wide screens, stacked below 640px. */
+.deflist {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) 1fr;
+  gap: 12px 24px;
+  margin-top: 20px;
+}
+.deflist dt {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--rr-dark);
+}
+.deflist dd {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted-strong);
+}
+
+/* =========================================================
+   SPEC TABLES
+   Horizontally scrollable on narrow viewports so a wide table
+   never forces the page body to scroll sideways.
+   ========================================================= */
+.table-scroll {
+  overflow-x: auto;
+  margin-top: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: #fff;
+}
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  min-width: 520px;
+}
+.spec-table caption {
+  text-align: left;
+  padding: 18px 20px 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--rr-dark);
+}
+.spec-table th,
+.spec-table td {
+  text-align: left;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.spec-table thead th {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--rr-dark);
+  background: var(--rr-soft);
+  border-bottom: 2px solid var(--line);
+}
+.spec-table tbody th {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--ink);
+  width: 34%;
+}
+.spec-table td {
+  color: var(--muted-strong);
+}
+.spec-table tbody tr:last-child th,
+.spec-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.spec-table tbody tr:hover {
+  background: rgba(244, 245, 246, 0.6);
+}
+
+/* =========================================================
+   FAQ
+   Plain headings and paragraphs, not an accordion: the answers
+   are the substance search engines and answer engines read, so
+   they stay in the rendered text with no interaction required.
+   ========================================================= */
+.faq-list {
+  max-width: 82ch;
+  margin-inline: auto;
+  text-align: left;
+}
+.faq-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+.faq-item:first-child {
+  padding-top: 0;
+}
+.faq-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.faq-item h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.faq-item p {
+  color: var(--muted-strong);
+  line-height: 1.75;
+}
+.faq-item p + p {
+  margin-top: 10px;
+}
+.faq-item a {
+  color: var(--rr-red-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* =========================================================
+   NUMBERED STEPS (getting-started guide)
+   ========================================================= */
+.steps {
+  counter-reset: step;
+  list-style: none;
+  max-width: 82ch;
+  margin-inline: auto;
+}
+.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 32px 62px;
+  border-left: 2px solid var(--line);
+  margin-left: 17px;
+}
+.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: -18px;
+  top: -4px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--rr-red);
+  color: #fff;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+}
+.steps > li:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+.steps h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 2px 0 8px;
+}
+.steps p,
+.steps ul {
+  color: var(--muted-strong);
+  line-height: 1.75;
+}
+.steps p + p,
+.steps p + ul,
+.steps ul + p {
+  margin-top: 10px;
+}
+.steps ul {
+  padding-left: 20px;
+  list-style-position: outside;
+}
+.steps li li + li {
+  margin-top: 6px;
+}
+
+/* Terminal-style command block. Not a live console — just the exact
+   text a reader should type, kept selectable and copyable. */
+.cmd {
+  display: block;
+  background: var(--rr-dark);
+  color: #e7edf2;
+  border-radius: var(--radius-btn);
+  padding: 14px 16px;
+  margin-top: 12px;
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", monospace;
+  font-size: 13.5px;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 2;
+}
+code {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", monospace;
+  font-size: 0.92em;
+  background: var(--rr-soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+  overflow-wrap: anywhere;
+}
+.cmd code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* =========================================================
+   CALLOUT
+   ========================================================= */
+.callout {
+  border-left: 3px solid var(--rr-red);
+  background: var(--rr-red-tint);
+  border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  padding: 18px 22px;
+  margin-top: 26px;
+  max-width: 82ch;
+  margin-inline: auto;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted-strong);
+  text-align: left;
+}
+.callout strong {
+  color: var(--rr-dark);
+}
+.callout a {
+  color: var(--rr-red-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* =========================================================
+   ON-PAGE CONTENTS (cornerstone page)
+   ========================================================= */
+.toc {
+  max-width: 82ch;
+  margin: 0 auto;
+  background: var(--rr-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 22px 26px;
+  text-align: left;
+}
+.toc h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--rr-dark);
+  margin-bottom: 12px;
+}
+.toc ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 26px;
+  list-style-position: outside;
+  padding-left: 18px;
+  margin: 0;
+}
+.toc li {
+  font-size: 14.5px;
+}
+.toc a {
+  color: var(--rr-dark);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  display: inline-block;
+  padding: 2px 0;
+}
+.toc a:hover {
+  color: var(--rr-red-dark);
+  border-bottom-color: currentcolor;
+}
+
+/* =========================================================
+   FEATURE / USE-CASE CARD EXTRAS
+   Lists inside a .card, plus a labelled meta line.
+   ========================================================= */
+.card ul {
+  margin-top: 12px;
+  padding-left: 20px;
+  list-style-position: outside;
+  color: var(--muted-strong);
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+.card li + li {
+  margin-top: 6px;
+}
+.card p + p {
+  margin-top: 10px;
+}
+.card-meta {
+  display: block;
+  margin-bottom: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--rr-red-dark);
+}
+
+/* Stat strip — a few headline numbers under a section heading. */
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 8px;
+}
+.stat {
+  flex: 1 1 200px;
+  max-width: 260px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--rr-red);
+  border-radius: var(--radius-card);
+  padding: 22px 20px;
+  text-align: center;
+}
+.stat-num {
+  display: block;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.stat-label {
+  display: block;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Spacing utility for a CTA row that follows a block of content.
+   A class rather than an inline style so html-validate's no-inline-style
+   rule and the design system stay in agreement. */
+.section-cta {
+  margin-top: 34px;
+}
+
+/* =========================================================
    PAGE HEADER (interior pages)
    ========================================================= */
 .page-header {
@@ -1041,11 +1488,23 @@ ol {
 /* =========================================================
    RESPONSIVE
    ========================================================= */
-@media (width <= 1080px) {
-  /* Nav collapses at 1080, not 880: the brand lockup, five links and two
-     CTAs measure ~1208px, so between 880 and 1080 the desktop bar overflowed
-     the viewport. Both CTAs move into the menu rather than being dropped, so
-     every destination stays reachable on every screen size. */
+/* The "Autonomous racing platform" descender in the brand lockup is worth
+   ~170px. Below 1400 that width is better spent on the six nav links, and
+   the same words are the first line of the footer, so nothing is lost. */
+@media (width <= 1400px) {
+  .brand-tag {
+    display: none;
+  }
+}
+
+@media (width <= 1240px) {
+  /* Nav collapses at 1240, not 880. The bar carries a brand lockup, six links
+     and two CTAs; measured in Chrome, the labels start wrapping onto a second
+     line below ~1200px, and 1240 is the first width with comfortable slack
+     (~40px either side of the link row). Verified with
+     tools/check-responsive.mjs and a per-width navbar measurement at 1181 →
+     1920px. Both CTAs move into the menu rather than being dropped, so every
+     destination stays reachable on every screen size. */
   .navbar {
     padding: 12px 24px;
   }
@@ -1161,6 +1620,20 @@ ol {
   .resource-row .btn {
     width: 100%;
     text-align: center;
+  }
+
+  .deflist {
+    grid-template-columns: 1fr;
+    gap: 4px 0;
+  }
+  .deflist dd + dt {
+    margin-top: 14px;
+  }
+  .steps > li {
+    padding-left: 44px;
+  }
+  .toc ol {
+    gap: 4px 0;
   }
 
   .site-footer {
