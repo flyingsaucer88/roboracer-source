@@ -104,7 +104,10 @@ printf "  Total size:   %s\n" "$(du -sh "${OUT}" | cut -f1)"
 
 echo
 echo "Required-file check:"
-required=(index.html 404.html contact.html resource.html robots.txt sitemap.xml site.webmanifest .htaccess)
+required=(index.html 404.html contact.html resource.html \
+          autonomous-racing-robotics-kit.html specifications.html \
+          getting-started.html use-cases.html \
+          robots.txt sitemap.xml site.webmanifest .htaccess)
 for f in "${required[@]}"; do
     if [[ -f "${OUT}/${f}" ]]; then
         printf "  OK      %s\n" "${f}"

@@ -43,6 +43,10 @@ describe("deployable artifact", () => {
   test("contains every file the web server needs", () => {
     for (const name of [
       "index.html",
+      "autonomous-racing-robotics-kit.html",
+      "specifications.html",
+      "getting-started.html",
+      "use-cases.html",
       "contact.html",
       "resource.html",
       "404.html",
@@ -115,7 +119,7 @@ describe("site audit gate", () => {
     const out = run("python3", ["tools/audit-site.py", "--json"]);
     const report = JSON.parse(out);
     assert.deepEqual(report.errors, [], `audit errors: ${report.errors.join(" | ")}`);
-    assert.ok(report.pages.length >= 4, "expected at least 4 pages");
+    assert.ok(report.pages.length >= 8, "expected at least 8 pages");
   });
 
   test("the built artifact passes audit-site.py", () => {

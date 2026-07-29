@@ -17,7 +17,16 @@ import { existsSync } from "node:fs";
 import puppeteer from "puppeteer-core";
 
 const BASE = process.argv[2] || "http://localhost:8099";
-const PAGES = ["/index.html", "/contact.html", "/resource.html", "/404.html"];
+const PAGES = [
+  "/index.html",
+  "/autonomous-racing-robotics-kit.html",
+  "/specifications.html",
+  "/getting-started.html",
+  "/use-cases.html",
+  "/contact.html",
+  "/resource.html",
+  "/404.html",
+];
 const WIDTHS = [320, 375, 768, 1024, 1440];
 
 const CHROME_CANDIDATES = [

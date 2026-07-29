@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <title>RoboRacer Use Cases — Universities, Teams and Research Labs</title>
+    <meta
+      name="description"
+      content="How the RoboRacer Core Kit is used: teaching autonomy courses at cohort scale, preparing RoboRacer and F1TENTH competition entries, and running reproducible robotics research on real hardware."
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://roboracer.ambimat.com/use-cases.html" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="RoboRacer" />
+    <meta property="og:title" content="RoboRacer Use Cases — Universities, Teams and Research Labs" />
+    <meta
+      property="og:description"
+      content="Teaching autonomy at cohort scale, competing in the RoboRacer / F1TENTH Autonomous Grand Prix, and running reproducible robotics research on a standard 1:10-scale platform."
+    />
+    <meta property="og:url" content="https://roboracer.ambimat.com/use-cases.html" />
+    <meta property="og:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RoboRacer Use Cases — Universities, Teams and Research Labs" />
+    <meta
+      name="twitter:description"
+      content="Teaching, competition and research applications for the RoboRacer Core Kit 1:10-scale autonomous racing platform."
+    />
+    <meta name="twitter:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta
+      name="twitter:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+
+    <link rel="preload" href="/assets/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/assets/css/fonts.css?v=1" />
+    <link rel="stylesheet" href="/assets/css/main.css?v=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#E31C2B" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://roboracer.ambimat.com/" },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Autonomous racing robotics kit",
+                "item": "https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Use cases",
+                "item": "https://roboracer.ambimat.com/use-cases.html"
+              }
+            ]
+          },
+          {
+            "@type": "ItemList",
+            "@id": "https://roboracer.ambimat.com/use-cases.html#uses",
+            "name": "RoboRacer Core Kit use cases",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "University teaching and laboratory courses",
+                "url": "https://roboracer.ambimat.com/use-cases.html#universities"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "RoboRacer and F1TENTH competition teams",
+                "url": "https://roboracer.ambimat.com/use-cases.html#competition"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Robotics research laboratories",
+                "url": "https://roboracer.ambimat.com/use-cases.html#research"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Industry skills training and applied R&D",
+                "url": "https://roboracer.ambimat.com/use-cases.html#industry"
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="/">
+          <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+          <span class="brand-text">
+            <span class="brand-line">Robo<span class="accent">Racer</span></span>
+            <span class="brand-tag">Autonomous racing platform</span>
+          </span>
+        </a>
+
+        <div class="nav-links" id="nav-menu">
+          <a href="/autonomous-racing-robotics-kit.html">Core Kit</a>
+          <a href="/specifications.html">Specs</a>
+          <a href="/getting-started.html">Get Started</a>
+          <a href="/use-cases.html" aria-current="page">Use Cases</a>
+          <a href="/resource.html">Resources</a>
+          <a href="/contact.html">Contact</a>
+          <a class="nav-cta secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-cta" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-btn secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+          <button
+            class="hamburger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="nav-menu"
+            aria-label="Open navigation menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <div class="page-header">
+        <p class="eyebrow">Applications</p>
+        <h1 class="page-title">RoboRacer Core Kit Use Cases</h1>
+        <hr class="section-line" />
+        <p class="section-desc">
+          A 1:10-scale autonomous racing vehicle is one of the few platforms where teaching, competition and publishable
+          research all sit on identical hardware. Here is what each of those looks like in practice.
+        </p>
+      </div>
+
+      <!-- UNIVERSITIES -->
+      <section class="section" id="universities" aria-labelledby="uni-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Use case 01</p>
+            <h2 class="section-title" id="uni-title">Universities: teaching autonomy at cohort scale</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="prose">
+            <p>
+              Autonomous systems teaching has a structural problem. The concepts — state estimation, SLAM, motion
+              planning, control — are best learned on real hardware, but real hardware absorbs the semester. A course
+              that begins with twelve teams assembling twelve vehicles ends with twelve different vehicles, several of
+              which do not work, and a lecturer who has become a hardware technician.
+            </p>
+            <p>
+              A pre-integrated platform inverts that. Every group starts from a vehicle that already localises and
+              drives, so week one is an algorithms week rather than a wiring week, and a demonstrator's time goes to
+              teaching rather than to fault-finding.
+            </p>
+
+            <h3>A representative twelve-week structure</h3>
+            <ul>
+              <li>
+                <strong>Weeks 1–2 — ROS 2 fundamentals.</strong> Nodes, topics, transforms and <code>ros2 bag</code> on
+                hardware that is already publishing. Students read a live <code>sensor_msgs/LaserScan</code> in their
+                first session.
+              </li>
+              <li>
+                <strong>Weeks 3–4 — reactive control.</strong> Wall following and follow-the-gap from the raw scan. The
+                first time a student's own code drives a physical vehicle is the moment the course earns its enrolment.
+              </li>
+              <li>
+                <strong>Weeks 5–7 — mapping and localisation.</strong> Occupancy grids with <code>slam_toolbox</code> or
+                Cartographer, then particle-filter localisation against a saved map.
+              </li>
+              <li>
+                <strong>Weeks 8–10 — planning and tracking.</strong> Raceline generation, pure pursuit, Frenet-frame
+                local planning, and the practical business of tuning look-ahead against speed.
+              </li>
+              <li>
+                <strong>Weeks 11–12 — assessed head-to-head races.</strong> A competitive assessment students actually
+                prepare for, on a track the whole cohort has been developing against.
+              </li>
+            </ul>
+
+            <h3>What matters to the department, not just the lecturer</h3>
+            <ul>
+              <li>
+                <strong>Procurement is one line item.</strong> A purchase order for an assembled kit clears a finance
+                process that a bill of materials spanning eight international suppliers does not.
+              </li>
+              <li>
+                <strong>Results are comparable.</strong> Identical builds mean a marking scheme can rest on measured lap
+                times, because the vehicles are not a confounding variable.
+              </li>
+              <li>
+                <strong>The skills are transferable.</strong> ROS 2, Ubuntu, NVIDIA Jetson, CUDA and SLAM are the tools
+                graduates meet again in autonomous vehicle, drone and warehouse robotics roles.
+              </li>
+              <li>
+                <strong>The platform outlives the course.</strong> The same vehicles carry final-year projects and
+                master's dissertations without a second procurement round.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPETITION -->
+      <section class="section alt" id="competition" aria-labelledby="comp-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Use case 02</p>
+            <h2 class="section-title" id="comp-title">Competition teams: RoboRacer and F1TENTH racing</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="prose">
+            <p>
+              The RoboRacer community — the international autonomous racing programme widely known by its earlier name,
+              F1TENTH — runs head-to-head Autonomous Grand Prix events alongside robotics conferences such as IEEE ICRA
+              and IROS. Entries are 1:10-scale vehicles built to a common specification, racing on a closed circuit with
+              no human in the loop.
+            </p>
+            <p>
+              A competition season is short, and it is decided by algorithms. Teams that spend the first two months
+              sourcing a VESC and debugging a power tree arrive at the event having tested a controller on the track
+              twice. Starting from a vehicle that already drives moves that budget to where it decides results.
+            </p>
+
+            <h3>Where a season actually goes</h3>
+            <ul>
+              <li>
+                <strong>Raceline optimisation.</strong> Computing a minimum-curvature or minimum-time line for the
+                circuit, then discovering how much of it the vehicle can actually hold.
+              </li>
+              <li>
+                <strong>Control at the limit.</strong> Pure pursuit is where teams start and rarely where they finish;
+                model-predictive control with an identified tyre model is where the last tenths live.
+              </li>
+              <li>
+                <strong>Opponent handling.</strong> Detecting and tracking another vehicle in the LiDAR scan, then
+                planning an overtake in the Frenet frame without a collision penalty.
+              </li>
+              <li>
+                <strong>Sim-to-real transfer.</strong> Training and regression-testing in the
+                <code>f1tenth_gym</code> simulator, then closing the gap between simulated and measured behaviour — the
+                discipline that separates a fast simulator result from a fast lap.
+              </li>
+              <li>
+                <strong>Reliability.</strong> Races are lost to a loose connector or a brown-out far more often than to
+                a suboptimal planner.
+              </li>
+            </ul>
+
+            <div class="callout">
+              <strong>Two things in the box that competition teams notice.</strong> The spare MDF base plate, because
+              vehicles crash and a rebuild between heats is measured in minutes rather than days. And the open-source
+              AE170 power board design, because a team that wants to add a depth camera or a custom board can see
+              exactly what the power tree is doing — <a href="/resource.html#downloads">the files are published</a>.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESEARCH -->
+      <section class="section" id="research" aria-labelledby="research-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Use case 03</p>
+            <h2 class="section-title" id="research-title">Research laboratories: reproducible experiments</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="prose">
+            <p>
+              Reviewers of robotics and control papers increasingly want a hardware demonstration next to the simulation
+              results, and they want it on a platform other groups can reproduce. A standard 1:10-scale autonomous
+              racing vehicle answers both: it is small enough to run indoors, fast enough to reach the dynamic regimes
+              that make control research interesting, and common enough that a described experiment can actually be
+              repeated elsewhere.
+            </p>
+
+            <h3>Research directions the platform supports</h3>
+            <ul>
+              <li>
+                <strong>Learning-based control.</strong> Reinforcement and imitation learning policies trained in
+                simulation and deployed onboard, with GPU inference on the Jetson's Ampere cores through PyTorch or
+                TensorRT.
+              </li>
+              <li>
+                <strong>Model-predictive and adaptive control.</strong> Real-time optimisation against an identified
+                vehicle model, at the tyre-friction limit where linearisations stop being honest.
+              </li>
+              <li>
+                <strong>State estimation and SLAM.</strong> Scan matching, particle filters and sensor fusion between
+                the LiDAR, wheel odometry and the VESC's integrated IMU, evaluated under genuine wheel slip.
+              </li>
+              <li>
+                <strong>Multi-agent interaction.</strong> Two or more vehicles on one circuit — game-theoretic planning,
+                intent prediction and cooperative or adversarial behaviour.
+              </li>
+              <li>
+                <strong>Safety and verification.</strong> Runtime monitors, control barrier functions and safe
+                reinforcement learning, demonstrated where a violation is a scuffed bumper rather than a casualty.
+              </li>
+              <li>
+                <strong>Sim-to-real methodology.</strong> Domain randomisation and system identification studies, with
+                the simulator and the vehicle exposing the same ROS 2 interfaces.
+              </li>
+            </ul>
+
+            <h3>Why the electronics matter to a laboratory</h3>
+            <p>
+              Research vehicles accumulate hardware. The AE170 power distribution unit is designed for that: it takes
+              battery or wall-adapter input and provides regulated 19 V, 12 V and 5 V rails with spare outputs, and its
+              schematic, Gerber, DXF and bill-of-materials files are published as open source. A laboratory adding a
+              depth camera, an external IMU or its own sensor board can design against the real power tree instead of
+              measuring it with a multimeter.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- INDUSTRY -->
+      <section class="section alt" id="industry" aria-labelledby="industry-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Use case 04</p>
+            <h2 class="section-title" id="industry-title">Industry: skills training and applied R&amp;D</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="prose">
+            <p>
+              Companies building autonomous vehicles, warehouse robots, agricultural machinery or delivery platforms
+              face a hiring and onboarding problem: engineers need to be fluent in ROS 2, sensor integration and
+              real-time control, and a production vehicle is an expensive and slow place to become fluent.
+            </p>
+            <ul>
+              <li>
+                <strong>Onboarding new engineers.</strong> A two-week programme on a 1:10 vehicle teaches the ROS 2
+                graph, transform trees, sensor timing and the difference between a controller that works in simulation
+                and one that works — at a fraction of the cost of a full-size test vehicle.
+              </li>
+              <li>
+                <strong>Algorithm de-risking.</strong> Trying a planner or estimator on a small platform before it is
+                scheduled onto a full-size test programme, where a bad week costs a great deal more.
+              </li>
+              <li>
+                <strong>Demonstrations and recruitment.</strong> A vehicle that races autonomously is a considerably
+                better trade-show exhibit, open-day demonstration or investor demonstration than a slide.
+              </li>
+              <li>
+                <strong>Hardware prototyping.</strong> With the power board design published, a company can prototype
+                its own sensor or compute module against a known, documented power tree.
+              </li>
+            </ul>
+            <p>
+              Ambimat Electronics has forty years of electronics design and manufacturing behind it, across wearables,
+              medical devices, home and building automation, contactless payment and robotics. Requirements that go
+              beyond the standard kit are worth
+              <a href="/contact.html">a conversation with the team</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMMON THREAD -->
+      <section class="section" id="common" aria-labelledby="common-title">
+        <div class="section-container">
+          <div class="section-head">
+            <p class="eyebrow">The common thread</p>
+            <h2 class="section-title" id="common-title">Different goals, the same bottleneck</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              A lecturer, a competition captain and a principal investigator want very different outcomes. They lose
+              time to exactly the same three things.
+            </p>
+          </div>
+
+          <div class="grid-3">
+            <article class="card">
+              <span class="card-meta">Bottleneck 01</span>
+              <h3>Procurement</h3>
+              <p>
+                Eight or more suppliers, several countries, independent lead times and customs. One late component
+                stalls everything downstream of it, and nothing on the critical path is intellectually interesting.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-meta">Bottleneck 02</span>
+              <h3>Integration</h3>
+              <p>
+                Power tree design, connector choice, driver and kernel version conflicts, VESC calibration, LiDAR
+                networking. This work is real engineering — it is simply not the engineering most teams are being funded
+                or assessed to do.
+              </p>
+            </article>
+            <article class="card">
+              <span class="card-meta">Bottleneck 03</span>
+              <h3>Inconsistency</h3>
+              <p>
+                Vehicles that differ subtly between builds make results incomparable, defeat a marking scheme and turn
+                every regression into an argument about which car it was on.
+              </p>
+            </article>
+          </div>
+
+          <div class="order-actions section-cta">
+            <a class="btn btn-primary" href="/contact.html#order">Order the Core Kit</a>
+            <a class="btn btn-outline" href="/autonomous-racing-robotics-kit.html">Read the full platform guide</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+            <p>
+              RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
+              1:10-scale autonomy system running ROS 2 on NVIDIA Jetson, with LiDAR perception and VESC drive.
+            </p>
+          </div>
+
+          <nav aria-labelledby="footer-explore">
+            <h2 id="footer-explore">Explore</h2>
+            <ul>
+              <li><a href="/autonomous-racing-robotics-kit.html">Autonomous racing kit</a></li>
+              <li><a href="/specifications.html">Specifications</a></li>
+              <li><a href="/getting-started.html">Getting started</a></li>
+              <li><a href="/use-cases.html">Use cases</a></li>
+              <li><a href="/resource.html">Resources</a></li>
+              <li><a href="/contact.html">Contact</a></li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-community">
+            <h2 id="footer-community">Community</h2>
+            <ul>
+              <li><a href="https://github.com/f1tenth" rel="noopener">F1TENTH on GitHub</a></li>
+              <li>
+                <a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">RoboRacer on Slack</a>
+              </li>
+              <li><a href="/resource.html#downloads">Open-source board files</a></li>
+              <li><a href="/contact.html#order">Order the Core Kit</a></li>
+            </ul>
+          </nav>
+
+          <div>
+            <h2>Contact</h2>
+            <address>
+              1005 &amp; 1006, 10th Floor,<br />
+              Shivalik Shilp II,<br />
+              Ahmedabad, Gujarat 380015, India<br /><br />
+              India: <a href="tel:+917925501989">+91&nbsp;79255&nbsp;01989</a><br />
+              Global: <a href="tel:+12153973819">+1&nbsp;215&nbsp;397&nbsp;3819</a><br />
+              <a href="mailto:support@ambimat.com">support@ambimat.com</a>
+            </address>
+          </div>
+        </div>
+
+        <div class="footer-base">
+          <span>&copy; 2026 Ambimat Electronics. All rights reserved.</span>
+          <span>Part of the <a href="https://ambimat.com/" rel="noopener">Ambimat Electronics</a> group.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Google tag (gtag.js) — GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-03T01GG8K1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-03T01GG8K1");
+    </script>
+    <script src="/assets/js/nav.js" defer></script>
+  </body>
+</html>

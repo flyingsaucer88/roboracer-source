@@ -72,7 +72,7 @@ section copy) so line length stays readable independent of viewport.
 | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | `.site-header` / `.navbar`                                             | Sticky header, red gradient hairline, brand lockup               |
 | `.nav-links` / `.nav-cta`                                              | Primary nav; `.nav-cta` items appear only inside the mobile menu |
-| `.nav-actions` / `.nav-btn`                                            | Desktop CTA buttons; hidden ≤1080px                              |
+| `.nav-actions` / `.nav-btn`                                            | Desktop CTA buttons; hidden ≤1240px                              |
 | `.hamburger`                                                           | Mobile toggle; animates to an X via `aria-expanded`              |
 | `.hero` / `.hero-container`                                            | Grid-paper background with a red radial wash; two-column         |
 | `.eyebrow` / `.hero-tag`                                               | Uppercase red kicker above a heading                             |
@@ -98,18 +98,28 @@ section copy) so line length stays readable independent of viewport.
 
 | Width      | What changes                                                                                                             |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `≤ 1080px` | **Nav collapses to the hamburger**; both CTAs move into the menu; hero stacks; `.grid-4` → 2-up; footer → 2 columns      |
+| `≤ 1400px` | `.brand-tag` ("Autonomous racing platform") hides, freeing ~170px for the link row                                       |
+| `≤ 1240px` | **Nav collapses to the hamburger**; both CTAs move into the menu; hero stacks; `.grid-4` → 2-up; footer → 2 columns      |
 | `≤ 880px`  | Section padding tightens to 24px; type steps down; all grids → 1 column; `.resource-row` stacks with a full-width button |
 | `≤ 520px`  | Brand wordmark hidden (logo only); further type step-down; footer → 1 column; buttons go full width                      |
 
-The nav collapses at **1080**, not the more usual 880: measured at 1024px the desktop
-bar (brand lockup + five links + two CTAs) needed ~1208px and overflowed the viewport.
-Rather than drop the CTAs, they move into the menu so every destination stays reachable
-at every width.
+The nav collapses at **1240**, not the more usual 880. The bar carries a brand lockup,
+six links and two CTAs; measured in Chrome across 1181 → 1920px, the link labels start
+wrapping onto a second line below ~1200px, and 1240 is the first width with comfortable
+slack (~40px either side of the link row). `.nav-links a` also carries `white-space:
+nowrap` so a two-word label can never break and double the header height. Rather than
+drop the CTAs, they move into the menu so every destination stays reachable at every
+width.
 
 Verified with `node tools/check-responsive.mjs` at 320 / 375 / 768 / 1024 / 1440 on all
-four pages: no horizontal overflow, no console errors, no failed same-origin requests,
+eight pages: no horizontal overflow, no console errors, no failed same-origin requests,
 no interactive target under 24×24 CSS px.
+
+> **Inline links and target size.** Body copy at 16.5px/1.75 gives an inline link a 21px
+> box, under the WCAG 2.2 AA 2.5.8 24px floor. `.prose`, `.callout`, `.faq-item`,
+> `.steps`, `.section-desc` and in-card links therefore carry `padding-block: 3px` —
+> padding rather than `display: inline-block`, which would stop a link breaking across
+> lines mid-sentence. Same technique as the footer and `.contact-box` links.
 
 ---
 

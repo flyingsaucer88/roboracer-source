@@ -52,8 +52,14 @@ bash tools/verify-production.sh           # post-deployment checks against the l
 ```
 /
 ├── index.html                  home — Core Kit overview, parts, services, price
-├── contact.html                order routes + contact details + company story
-├── resource.html               open-source power board files and manual
+├── autonomous-racing-robotics-kit.html
+│                               cornerstone — what the kit is, who for, BOM, specs,
+│                               assembled-vs-from-parts comparison, FAQ
+├── specifications.html         full hardware + software reference tables
+├── getting-started.html        crate → first autonomous lap, safety, troubleshooting
+├── use-cases.html              universities, competition teams, research, industry
+├── contact.html                order routes + contact details + company story + FAQ
+├── resource.html               open-source power board files, manual and how to use them
 ├── 404.html                    custom error page (noindex)
 ├── robots.txt · sitemap.xml · site.webmanifest
 ├── .htaccess                   HTTPS, redirects, security headers, caching (LiteSpeed)

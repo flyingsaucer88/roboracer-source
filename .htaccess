@@ -36,6 +36,14 @@ RewriteRule ^contact/?$ /contact.html [R=301,L]
 RewriteRule ^resource/?$ /resource.html [R=301,L]
 RewriteRule ^resources/?$ /resource.html [R=301,L]
 
+# Extensionless and shorthand forms of the pages added in the content build-out.
+RewriteRule ^autonomous-racing-robotics-kit/?$ /autonomous-racing-robotics-kit.html [R=301,L]
+RewriteRule ^core-kit/?$ /autonomous-racing-robotics-kit.html [R=301,L]
+RewriteRule ^specifications/?$ /specifications.html [R=301,L]
+RewriteRule ^specs/?$ /specifications.html [R=301,L]
+RewriteRule ^getting-started/?$ /getting-started.html [R=301,L]
+RewriteRule ^use-cases/?$ /use-cases.html [R=301,L]
+
 # -------------------------------------------------------------
 # Custom error document
 # -------------------------------------------------------------

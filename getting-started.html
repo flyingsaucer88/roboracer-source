@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <title>Getting Started with the RoboRacer Core Kit</title>
+    <meta
+      name="description"
+      content="From crate to first autonomous lap: unpacking, charging the 3S pack, powering the AE170 board, connecting over SSH, checking the ROS 2 graph, mapping with SLAM and running wall following."
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://roboracer.ambimat.com/getting-started.html" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="RoboRacer" />
+    <meta property="og:title" content="Getting Started with the RoboRacer Core Kit" />
+    <meta
+      property="og:description"
+      content="A step-by-step first-day guide for the RoboRacer Core Kit — power-up, network, ROS 2 checks, teleoperation, SLAM mapping and a first autonomous lap."
+    />
+    <meta property="og:url" content="https://roboracer.ambimat.com/getting-started.html" />
+    <meta property="og:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Getting Started with the RoboRacer Core Kit" />
+    <meta
+      name="twitter:description"
+      content="Power-up, network, ROS 2 checks, teleoperation, SLAM mapping and a first autonomous lap on the RoboRacer Core Kit."
+    />
+    <meta name="twitter:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta
+      name="twitter:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+
+    <link rel="preload" href="/assets/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/assets/css/fonts.css?v=1" />
+    <link rel="stylesheet" href="/assets/css/main.css?v=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#E31C2B" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://roboracer.ambimat.com/" },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Autonomous racing robotics kit",
+                "item": "https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Getting started",
+                "item": "https://roboracer.ambimat.com/getting-started.html"
+              }
+            ]
+          },
+          {
+            "@type": "HowTo",
+            "@id": "https://roboracer.ambimat.com/getting-started.html#howto",
+            "name": "Getting started with the RoboRacer Core Kit",
+            "description": "How to take a RoboRacer Core Kit from its packaging to a first autonomous lap: charging, power-up, network access, ROS 2 verification, teleoperation, SLAM mapping and reactive control.",
+            "url": "https://roboracer.ambimat.com/getting-started.html",
+            "inLanguage": "en",
+            "publisher": { "@id": "https://roboracer.ambimat.com/#org" },
+            "tool": [
+              { "@type": "HowToTool", "name": "RoboRacer Core Kit" },
+              { "@type": "HowToTool", "name": "Balance charger and 3S lithium-polymer battery" },
+              { "@type": "HowToTool", "name": "Laptop with SSH and ROS 2 Humble for RViz2 visualisation" },
+              { "@type": "HowToTool", "name": "Wi-Fi network or Ethernet switch" }
+            ],
+            "step": [
+              {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Unpack and inspect the vehicle",
+                "text": "Lift the vehicle out by the chassis rather than the equipment deck. Check that the LiDAR, Jetson Orin Nano, VESC and AE170 power board are all seated, that connectors are latched, and that nothing has worked loose in transit. Keep the spare MDF base plate with the vehicle."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Charge the 3S battery",
+                "text": "Charge the 3S lithium-polymer pack on the supplied balance charger on a non-flammable surface, and never leave it charging unattended. Use a bench supply through the AE170 board's DC jack for desk work so the traction pack is reserved for driving."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Power the vehicle",
+                "text": "Set SW1 on the AE170 power board to select the source: VJACK for a wall adapter, VBAT for the battery. Then switch SW2 on. The board raises the 19 V rail for the Jetson, 12 V for the LiDAR and 5 V for accessories. With SW2 off, the position of SW1 does not matter."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "Connect to the Jetson",
+                "text": "Put the vehicle and your laptop on the same network, then connect to the Jetson over SSH. Ubuntu 22.04 LTS with NVIDIA JetPack is already installed, so no flashing is required."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 5,
+                "name": "Verify the ROS 2 graph",
+                "text": "Start the vehicle launch file supplied with the kit and confirm the graph is healthy: list topics with ros2 topic list, check the LiDAR is publishing sensor_msgs/LaserScan with ros2 topic echo, and confirm odometry from the VESC. Open RViz2 on your laptop to see the live scan."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 6,
+                "name": "Drive under teleoperation first",
+                "text": "Before enabling any autonomy, drive the vehicle manually in an open space to confirm steering direction, throttle response and the emergency stop. Establish who holds the stop control and keep the area clear."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 7,
+                "name": "Build a map with SLAM",
+                "text": "Drive the vehicle slowly around the closed circuit while a SLAM package such as slam_toolbox or Cartographer builds an occupancy grid from the LiDAR scans, then save the map for reuse. Localise against the saved map with a particle filter on later runs."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 8,
+                "name": "Run a first autonomous lap",
+                "text": "Start with a reactive controller that needs only the raw laser scan — wall following or follow-the-gap — at a conservative speed limit. Record the run with ros2 bag so the lap can be replayed and analysed offline."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 9,
+                "name": "Move to planning, control and learning",
+                "text": "With mapping and localisation working, progress to pure pursuit path tracking, Frenet-frame local planning and model-predictive control, and train learned policies in the f1tenth_gym simulator before transferring them onto the vehicle."
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="/">
+          <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+          <span class="brand-text">
+            <span class="brand-line">Robo<span class="accent">Racer</span></span>
+            <span class="brand-tag">Autonomous racing platform</span>
+          </span>
+        </a>
+
+        <div class="nav-links" id="nav-menu">
+          <a href="/autonomous-racing-robotics-kit.html">Core Kit</a>
+          <a href="/specifications.html">Specs</a>
+          <a href="/getting-started.html" aria-current="page">Get Started</a>
+          <a href="/use-cases.html">Use Cases</a>
+          <a href="/resource.html">Resources</a>
+          <a href="/contact.html">Contact</a>
+          <a class="nav-cta secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-cta" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-btn secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+          <button
+            class="hamburger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="nav-menu"
+            aria-label="Open navigation menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <div class="page-header">
+        <p class="eyebrow">First day</p>
+        <h1 class="page-title">Getting Started with the RoboRacer Core Kit</h1>
+        <hr class="section-line" />
+        <p class="section-desc">
+          From the crate to a first autonomous lap. Because the vehicle arrives assembled with Ubuntu 22.04 LTS, NVIDIA
+          JetPack and ROS 2 already configured, this is a bring-up guide rather than a build guide.
+        </p>
+      </div>
+
+      <!-- BEFORE -->
+      <section class="section" id="before-you-start" aria-labelledby="before-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Prepare</p>
+            <h2 class="section-title" id="before-title">Before the kit arrives</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="prose">
+            <p>Three things are worth having ready, because each of them can otherwise cost a day:</p>
+            <ul>
+              <li>
+                <strong>A space to drive in.</strong> A corridor, sports hall or laboratory bay with a closed loop
+                bounded by walls or boards. Reactive controllers and SLAM both work from the LiDAR's view of vertical
+                surfaces, so the circuit needs continuous boundaries rather than cones.
+              </li>
+              <li>
+                <strong>A network you control.</strong> The Jetson, the LiDAR and your laptop must reach each other.
+                Many campus networks isolate wireless clients from one another, which silently breaks ROS 2 discovery —
+                a small dedicated router or an Ethernet switch avoids a long argument with IT.
+              </li>
+              <li>
+                <strong>A charging and storage plan for the battery.</strong> A lithium-polymer pack needs a
+                non-flammable charging surface, a safe storage voltage between sessions, and somewhere it is not left
+                unattended on charge.
+              </li>
+            </ul>
+            <p>
+              A laptop running Ubuntu 22.04 LTS with ROS 2 Humble installed is the most comfortable base station,
+              because it can join the vehicle's ROS 2 graph directly and run RViz2 against live topics. Any machine with
+              an SSH client will get you started.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEPS -->
+      <section class="section alt" id="steps" aria-labelledby="steps-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Bring-up</p>
+            <h2 class="section-title" id="steps-title">Nine steps to a first autonomous lap</h2>
+            <hr class="section-line" />
+          </div>
+
+          <ol class="steps">
+            <li>
+              <h3>Unpack and inspect the vehicle</h3>
+              <p>
+                Lift the vehicle out by the chassis, not by the equipment deck. Check that the LiDAR, the Jetson Orin
+                Nano, the VESC 6 MkIV and the AE170 power board are all seated, that connectors are latched, and that
+                nothing has worked loose in transit. Keep the spare MDF base plate with the vehicle — it is there for
+                the day a corner goes badly.
+              </p>
+            </li>
+
+            <li>
+              <h3>Charge the 3S battery</h3>
+              <p>
+                Charge the 3S lithium-polymer pack on the supplied balance charger, on a non-flammable surface, and
+                never unattended. For desk work, power the vehicle from a wall adapter through the AE170 board's DC jack
+                instead, so the traction pack is reserved for driving.
+              </p>
+            </li>
+
+            <li>
+              <h3>Power the vehicle</h3>
+              <p>
+                The AE170 power board has two switches. <strong>SW1</strong> selects the source — VJACK for the wall
+                adapter, VBAT for the battery. <strong>SW2</strong> is power on and off. Set SW1, then switch SW2 on;
+                the board brings up 19 V for the Jetson, 12 V for the LiDAR and 5 V for accessories. With SW2 off, SW1's
+                position is immaterial to the circuit.
+              </p>
+              <p>
+                Wheels off the ground for this first power-up. A motor configuration that is still being checked should
+                not be able to launch the vehicle across the room.
+              </p>
+            </li>
+
+            <li>
+              <h3>Connect to the Jetson</h3>
+              <p>
+                Put the vehicle and your laptop on the same network and open a shell on the Jetson over SSH. Ubuntu
+                22.04 LTS with NVIDIA JetPack is already installed and the ROS 2 environment is already configured, so
+                there is no flashing step.
+              </p>
+              <span class="cmd"><code>ssh &lt;user&gt;@&lt;vehicle-address&gt;</code></span>
+              <p>
+                The credentials and hostname supplied with your vehicle are the ones to use here. Change the password
+                before the vehicle goes onto a shared network.
+              </p>
+            </li>
+
+            <li>
+              <h3>Verify the ROS 2 graph</h3>
+              <p>
+                Start the vehicle launch file supplied with the kit, then confirm the graph is healthy before trusting
+                anything above it:
+              </p>
+              <span class="cmd"><code>ros2 topic list ros2 topic hz /scan ros2 topic echo /scan --once</code></span>
+              <p>
+                You are looking for the LiDAR publishing <code>sensor_msgs/LaserScan</code> at roughly 40 Hz, odometry
+                arriving from the VESC, and a complete transform tree. On the laptop, open <code>rviz2</code>, add a
+                LaserScan display and watch the room appear as a 270° arc of points. If the scan looks right and
+                odometry moves when you push the vehicle, the hardware layer is sound.
+              </p>
+            </li>
+
+            <li>
+              <h3>Drive under teleoperation first</h3>
+              <p>
+                Before any autonomy, drive manually in an open space. Confirm that steering goes the way you expect,
+                that throttle response is sane, and — most importantly — that the emergency stop works from wherever the
+                operator will be standing.
+              </p>
+              <p>
+                Agree who holds the stop control before the first autonomous run, and keep that person's only job the
+                stop control.
+              </p>
+            </li>
+
+            <li>
+              <h3>Build a map with SLAM</h3>
+              <p>
+                Drive slowly around the closed circuit while a SLAM package builds an occupancy grid from the LiDAR
+                scans — <code>slam_toolbox</code> and Cartographer are both well travelled on this platform. Save the
+                map once the loop closes cleanly.
+              </p>
+              <p>
+                On subsequent runs, localise against the saved map with a particle filter rather than re-mapping. That
+                is what makes lap times comparable between sessions, and it is the foundation every path-tracking
+                controller builds on.
+              </p>
+            </li>
+
+            <li>
+              <h3>Run a first autonomous lap</h3>
+              <p>
+                Start with a reactive controller that needs only the raw scan — wall following or follow-the-gap — with
+                a conservative speed limit. These are the traditional first algorithms on a RoboRacer / F1TENTH vehicle
+                precisely because they need neither a map nor a localiser, so a failure has only one place to hide.
+              </p>
+              <p>Record everything:</p>
+              <span class="cmd"><code>ros2 bag record -a -o first-lap</code></span>
+              <p>
+                A recorded run can be replayed against a modified controller offline, which turns a scarce resource —
+                track time — into a repeatable test.
+              </p>
+            </li>
+
+            <li>
+              <h3>Move to planning, control and learning</h3>
+              <p>
+                With mapping and localisation working, the platform stops being the constraint. The usual progression is
+                pure pursuit path tracking on a recorded raceline, then Frenet-frame local planning for overtaking, then
+                model-predictive control once a vehicle model has been identified from the logs.
+              </p>
+              <p>
+                Learned policies are trained in the <code>f1tenth_gym</code> simulator and transferred to the vehicle,
+                with inference running on the Jetson's Ampere GPU through PyTorch or TensorRT. Because simulator and
+                vehicle expose the same ROS 2 interfaces, the transfer is a change of machine rather than a rewrite.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- SAFETY -->
+      <section class="section" id="safety" aria-labelledby="safety-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Operating safely</p>
+            <h2 class="section-title" id="safety-title">Safety practices worth adopting on day one</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              A 1:10-scale vehicle at ten metres per second carries real energy, and a lithium-polymer pack carries
+              more. None of the following is onerous; all of it is easier to adopt before an incident than after.
+            </p>
+          </div>
+
+          <div class="grid-3">
+            <article class="card">
+              <span class="card-meta">Battery</span>
+              <h3>Lithium-polymer handling</h3>
+              <ul>
+                <li>Charge on a non-flammable surface, never unattended</li>
+                <li>Balance charge; stop using a pack that has puffed or been damaged</li>
+                <li>Store at storage voltage, not fully charged, between sessions</li>
+                <li>Use a bench supply through the DC jack for desk work</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <span class="card-meta">Vehicle</span>
+              <h3>Running the car</h3>
+              <ul>
+                <li>Wheels off the ground for every first power-up after a change</li>
+                <li>One person on the emergency stop, with no other task</li>
+                <li>Speed limits in software before speed on the track</li>
+                <li>Bystanders outside the circuit, not inside it</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <span class="card-meta">Electrical</span>
+              <h3>Power and wiring</h3>
+              <ul>
+                <li>Respect the AE170 rail totals — 19 V at 4 A, 12 V at 2 A, 5 V at 1 A</li>
+                <li>Switch SW2 off before changing any connector</li>
+                <li>Check strain relief after crashes; intermittent faults start here</li>
+                <li>Consult the power board manual before adding loads</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- TROUBLESHOOTING -->
+      <section class="section alt" id="troubleshooting" aria-labelledby="trouble-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Diagnostics</p>
+            <h2 class="section-title" id="trouble-title">Common first-week problems</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="prose">
+            <h3>Nothing powers up</h3>
+            <p>
+              Check SW2 first, then SW1 against the source you are actually using — a battery plugged into J9 with SW1
+              set to VJACK is the classic version of this. Confirm the pack is charged; a 3S pack that has been sitting
+              at storage voltage will not hold up the 19 V rail under load.
+            </p>
+
+            <h3>The Jetson resets when the motor spins up</h3>
+            <p>
+              This is a power problem, not a software one. Motor current draw is pulling the shared supply down. Confirm
+              you are within the AE170 rail totals, that any devices you have added are on the correct rail, and that
+              the battery is healthy under load rather than merely charged.
+            </p>
+
+            <h3>No LiDAR scan on the topic</h3>
+            <p>
+              The Hokuyo unit is an Ethernet device with its own address. Confirm the 12 V rail is up, that the vehicle
+              can reach the scanner's IP address, and that the network interface on the Jetson has not been reconfigured
+              by a network manager that thinks it knows better. <code>ros2 topic hz /scan</code> distinguishes "no
+              publisher" from "publishing slowly".
+            </p>
+
+            <h3>The laptop cannot see the vehicle's topics</h3>
+            <p>
+              Almost always network isolation or a domain mismatch rather than ROS 2 itself. Check that both machines
+              are on the same subnet and that client isolation is off, then that <code>ROS_DOMAIN_ID</code> matches on
+              both sides. Campus wireless is the usual culprit; a dedicated router is the usual fix.
+            </p>
+
+            <h3>Odometry drifts badly during mapping</h3>
+            <p>
+              Wheel odometry on a racing chassis is optimistic — tyres slip. Drive the mapping lap slowly and smoothly,
+              let the SLAM package close the loop, and rely on scan matching rather than dead reckoning. Aggressive
+              driving is for after the map exists, not during its construction.
+            </p>
+
+            <div class="callout">
+              <strong>Still stuck?</strong> Every kit includes remote hardware and software technical support for up to
+              60 days after delivery. <a href="/contact.html">Contact the Ambimat Electronics team</a>, or ask the wider
+              community through the
+              <a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">RoboRacer Slack workspace</a>
+              and the <a href="https://github.com/f1tenth" rel="noopener">f1tenth GitHub organisation</a>.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEXT -->
+      <section class="section" id="next" aria-labelledby="next-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <h2 class="section-title" id="next-title">Where to go next</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="grid-3">
+            <article class="card">
+              <h3>Full specifications</h3>
+              <p>Rails, connectors, compute, sensor and software versions in one reference table.</p>
+              <p class="section-cta"><a class="btn btn-ghost btn-small" href="/specifications.html">Open specs</a></p>
+            </article>
+            <article class="card">
+              <h3>Power board files</h3>
+              <p>Open-source schematic, Gerber, DXF and bill of materials for the AE170 PDU, plus the user manual.</p>
+              <p class="section-cta"><a class="btn btn-ghost btn-small" href="/resource.html">Open resources</a></p>
+            </article>
+            <article class="card">
+              <h3>Use cases</h3>
+              <p>How universities, competition teams and research laboratories put the platform to work.</p>
+              <p class="section-cta"><a class="btn btn-ghost btn-small" href="/use-cases.html">Read use cases</a></p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+            <p>
+              RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
+              1:10-scale autonomy system running ROS 2 on NVIDIA Jetson, with LiDAR perception and VESC drive.
+            </p>
+          </div>
+
+          <nav aria-labelledby="footer-explore">
+            <h2 id="footer-explore">Explore</h2>
+            <ul>
+              <li><a href="/autonomous-racing-robotics-kit.html">Autonomous racing kit</a></li>
+              <li><a href="/specifications.html">Specifications</a></li>
+              <li><a href="/getting-started.html">Getting started</a></li>
+              <li><a href="/use-cases.html">Use cases</a></li>
+              <li><a href="/resource.html">Resources</a></li>
+              <li><a href="/contact.html">Contact</a></li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-community">
+            <h2 id="footer-community">Community</h2>
+            <ul>
+              <li><a href="https://github.com/f1tenth" rel="noopener">F1TENTH on GitHub</a></li>
+              <li>
+                <a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">RoboRacer on Slack</a>
+              </li>
+              <li><a href="/resource.html#downloads">Open-source board files</a></li>
+              <li><a href="/contact.html#order">Order the Core Kit</a></li>
+            </ul>
+          </nav>
+
+          <div>
+            <h2>Contact</h2>
+            <address>
+              1005 &amp; 1006, 10th Floor,<br />
+              Shivalik Shilp II,<br />
+              Ahmedabad, Gujarat 380015, India<br /><br />
+              India: <a href="tel:+917925501989">+91&nbsp;79255&nbsp;01989</a><br />
+              Global: <a href="tel:+12153973819">+1&nbsp;215&nbsp;397&nbsp;3819</a><br />
+              <a href="mailto:support@ambimat.com">support@ambimat.com</a>
+            </address>
+          </div>
+        </div>
+
+        <div class="footer-base">
+          <span>&copy; 2026 Ambimat Electronics. All rights reserved.</span>
+          <span>Part of the <a href="https://ambimat.com/" rel="noopener">Ambimat Electronics</a> group.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Google tag (gtag.js) — GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-03T01GG8K1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-03T01GG8K1");
+    </script>
+    <script src="/assets/js/nav.js" defer></script>
+  </body>
+</html>

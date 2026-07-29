@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <title>Autonomous Racing Robotics Kit — RoboRacer Core Kit</title>
+    <meta
+      name="description"
+      content="A complete guide to the RoboRacer Core Kit: the 1:10-scale autonomous racing robotics kit with NVIDIA Jetson Orin Nano, Hokuyo LiDAR, VESC 6 MkIV and ROS 2, assembled and tested."
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="RoboRacer" />
+    <meta property="og:title" content="Autonomous Racing Robotics Kit — RoboRacer Core Kit" />
+    <meta
+      property="og:description"
+      content="What an autonomous racing robotics kit is, who it is for, what ships in the box, and how a pre-integrated RoboRacer Core Kit compares with building from parts."
+    />
+    <meta property="og:url" content="https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html" />
+    <meta property="og:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Autonomous Racing Robotics Kit — RoboRacer Core Kit" />
+    <meta
+      name="twitter:description"
+      content="The 1:10-scale autonomous racing robotics kit: NVIDIA Jetson Orin Nano, Hokuyo LiDAR, VESC 6 MkIV and ROS 2, assembled and validated."
+    />
+    <meta name="twitter:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta
+      name="twitter:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+
+    <link rel="preload" href="/assets/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/assets/css/fonts.css?v=1" />
+    <link rel="stylesheet" href="/assets/css/main.css?v=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#E31C2B" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://roboracer.ambimat.com/" },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Autonomous racing robotics kit",
+                "item": "https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html"
+              }
+            ]
+          },
+          {
+            "@type": "Product",
+            "@id": "https://roboracer.ambimat.com/#core-kit",
+            "name": "RoboRacer Core Kit",
+            "alternateName": "RoboRacer autonomous racing robotics kit",
+            "category": "Autonomous racing robotics kit",
+            "description": "A fully assembled, pre-tested 1:10-scale autonomous racing robotics kit for the RoboRacer / F1TENTH platform, integrating an NVIDIA Jetson Orin Nano compute module, a Hokuyo 2D LiDAR, a VESC 6 MkIV motor controller, the Ambimat AE170 power distribution board and a ROS 2 software stack on a Traxxas Slash 4x4 chassis.",
+            "image": "https://roboracer.ambimat.com/assets/img/roboracer-core-kit.jpg",
+            "url": "https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html",
+            "brand": { "@type": "Brand", "name": "RoboRacer" },
+            "manufacturer": { "@id": "https://roboracer.ambimat.com/#org" },
+            "audience": {
+              "@type": "Audience",
+              "audienceType": "Universities, robotics research laboratories and RoboRacer / F1TENTH competition teams"
+            },
+            "isRelatedTo": [
+              { "@type": "Thing", "name": "F1TENTH autonomous racing" },
+              { "@type": "Thing", "name": "ROS 2" },
+              { "@type": "Thing", "name": "Simultaneous localisation and mapping (SLAM)" }
+            ],
+            "additionalProperty": [
+              { "@type": "PropertyValue", "name": "Scale", "value": "1:10" },
+              { "@type": "PropertyValue", "name": "Compute", "value": "NVIDIA Jetson Orin Nano Super" },
+              { "@type": "PropertyValue", "name": "Motor controller", "value": "VESC 6 MkIV" },
+              { "@type": "PropertyValue", "name": "Perception", "value": "Hokuyo 2D LiDAR, 270-degree field of view" },
+              { "@type": "PropertyValue", "name": "Chassis", "value": "Traxxas Slash 4x4 Ultimate" },
+              { "@type": "PropertyValue", "name": "Middleware", "value": "ROS 2 Humble on Ubuntu 22.04 LTS" },
+              {
+                "@type": "PropertyValue",
+                "name": "Power distribution",
+                "value": "Ambimat AE170 PDU V02.04 — 19 V, 12 V and 5 V rails"
+              }
+            ],
+            "offers": [
+              {
+                "@type": "Offer",
+                "name": "Domestic (India)",
+                "url": "https://roboracer.ambimat.com/contact.html#order",
+                "price": "628000",
+                "priceCurrency": "INR",
+                "valueAddedTaxIncluded": false,
+                "eligibleRegion": { "@type": "Country", "name": "India" }
+              },
+              {
+                "@type": "Offer",
+                "name": "Ex-works India",
+                "url": "https://roboracer.ambimat.com/contact.html#order",
+                "price": "6100",
+                "priceCurrency": "USD",
+                "valueAddedTaxIncluded": false
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is an autonomous racing robotics kit?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "An autonomous racing robotics kit is a small-scale vehicle that carries everything needed to drive itself: a sensor for perception, an onboard computer for planning and control, a motor controller for actuation, regulated power for all three, and a software stack that ties them together. The RoboRacer Core Kit is a 1:10-scale example built to the RoboRacer / F1TENTH specification, using a Hokuyo 2D LiDAR, an NVIDIA Jetson Orin Nano, a VESC 6 MkIV motor controller and ROS 2 on a Traxxas Slash 4x4 chassis."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is the RoboRacer Core Kit compatible with F1TENTH?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. The kit is built to the 1:10-scale RoboRacer / F1TENTH vehicle specification and uses the component classes that community's open-source stack expects — a Traxxas Slash 4x4 chassis, a VESC motor controller, a 2D scanning LiDAR and an NVIDIA Jetson compute module. Code published under the f1tenth GitHub organisation, including the f1tenth_gym simulator, runs against it without a hardware redesign."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which compute module and sensors does the kit use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The standard build pairs an NVIDIA Jetson Orin Nano Super — a 1024-core Ampere GPU with 32 tensor cores, a 6-core Arm Cortex-A78AE CPU and 8 GB of LPDDR5 — with a Hokuyo 2D laser scanner giving a 270-degree field of view at 40 Hz, and the inertial measurement unit integrated into the VESC 6 MkIV motor controller. Exact sensor and compute variants are confirmed on your quotation."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does the RoboRacer Core Kit run ROS 2?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Every kit is delivered with the Jetson operating system already flashed — Ubuntu 22.04 LTS with NVIDIA JetPack — and a configured ROS 2 stack, so the LiDAR, VESC and vehicle transform tree are publishing on first boot. Teams work in rclpy or rclcpp, visualise in RViz2, record runs with ros2 bag and build with colcon exactly as they would on any other ROS 2 robot."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do I need to assemble anything?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. Component selection, procurement, mechanical assembly, wiring, power distribution and software validation are all completed by Ambimat Electronics before dispatch. The vehicle arrives built and tested; the remaining work is charging the battery, joining the vehicle to your network and starting the stack."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What does the RoboRacer Core Kit cost?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "INR 628,000 plus 18% GST for delivery within India, or USD 6,100 ex-works India for export orders. The price covers the assembled vehicle and its major parts — Jetson Orin Nano Super, VESC 6 MkIV, Hokuyo LiDAR, Traxxas Slash 4x4 Ultimate chassis, power distribution unit, MDF base plates with a spare, 3S battery and charger — plus operating-system and ROS stack setup and 60 days of remote technical support."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can we use our own algorithms and add our own sensors?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. The kit is a platform, not a closed product. The ROS 2 stack is ordinary open-source software you can replace node by node, and the Ambimat AE170 power distribution board exposes spare regulated 12 V and 5 V outputs for additional hardware such as a depth camera or a separate IMU. The board's design files are published as open source on the resources page."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What support is included with the kit?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Every kit includes loading of the Jetson operating system and a complete ROS stack configuration, plus remote hardware and software technical support for up to 60 days after delivery to assist with deployment and setup."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="/">
+          <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+          <span class="brand-text">
+            <span class="brand-line">Robo<span class="accent">Racer</span></span>
+            <span class="brand-tag">Autonomous racing platform</span>
+          </span>
+        </a>
+
+        <div class="nav-links" id="nav-menu">
+          <a href="/autonomous-racing-robotics-kit.html" aria-current="page">Core Kit</a>
+          <a href="/specifications.html">Specs</a>
+          <a href="/getting-started.html">Get Started</a>
+          <a href="/use-cases.html">Use Cases</a>
+          <a href="/resource.html">Resources</a>
+          <a href="/contact.html">Contact</a>
+          <a class="nav-cta secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-cta" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-btn secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+          <button
+            class="hamburger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="nav-menu"
+            aria-label="Open navigation menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <div class="page-header">
+        <p class="eyebrow">Platform guide</p>
+        <h1 class="page-title">Autonomous Racing Robotics Kit</h1>
+        <hr class="section-line" />
+        <p class="section-desc">
+          Everything a university, research laboratory or competition team needs to know about the RoboRacer Core Kit —
+          the 1:10-scale autonomous racing robotics kit that arrives assembled, wired and running ROS 2 on an NVIDIA
+          Jetson Orin Nano.
+        </p>
+      </div>
+
+      <section class="section" aria-labelledby="contents-title">
+        <nav class="toc" aria-labelledby="contents-title">
+          <h2 id="contents-title">On this page</h2>
+          <ol>
+            <li><a href="#what">What it is</a></li>
+            <li><a href="#who">Who it is for</a></li>
+            <li><a href="#in-the-box">What is in the box</a></li>
+            <li><a href="#specs">Specifications</a></li>
+            <li><a href="#software">Software stack</a></li>
+            <li><a href="#compare">Assembled vs from parts</a></li>
+            <li><a href="#pricing">Pricing and ordering</a></li>
+            <li><a href="#faq">Questions</a></li>
+          </ol>
+        </nav>
+      </section>
+
+      <!-- WHAT IT IS -->
+      <section class="section alt" id="what" aria-labelledby="what-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Definition</p>
+            <h2 class="section-title" id="what-title">What an autonomous racing robotics kit is</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="prose">
+            <p>
+              An autonomous racing robotics kit is a small-scale vehicle carrying the complete sense–plan–act loop of a
+              full-size self-driving car. A scanning sensor measures the track, an onboard computer localises the
+              vehicle and plans a trajectory, a motor controller executes steering and throttle commands, and a power
+              distribution board keeps all three supplied from a single battery. Because the vehicle is 1:10 scale, a
+              team can run genuinely aggressive control experiments — at the limit of tyre grip, at ten metres per
+              second — in a corridor or a sports hall rather than on a proving ground.
+            </p>
+            <p>
+              The <strong>RoboRacer Core Kit</strong> from Ambimat Electronics is that vehicle, delivered finished. It
+              is built to the 1:10-scale specification used by the RoboRacer community — the international autonomous
+              racing programme widely known by its earlier name, <strong>F1TENTH</strong>, whose open-source code still
+              lives under the <code>f1tenth</code> GitHub organisation and whose Autonomous Grand Prix events run
+              alongside robotics conferences such as IEEE ICRA and IROS. Choosing that specification matters more than
+              it first appears: it is what makes published research, competition code and teaching material from other
+              institutions run on your vehicle without a hardware redesign.
+            </p>
+
+            <h3>The four subsystems</h3>
+            <dl class="deflist">
+              <dt>Perception</dt>
+              <dd>
+                A <strong>Hokuyo 2D LiDAR</strong> sweeps a 270° field of view at 40 Hz over Ethernet, producing the
+                planar scan that wall-following, gap-following and SLAM algorithms consume. It is the same sensor class
+                the RoboRacer / F1TENTH reference stack assumes.
+              </dd>
+              <dt>Compute</dt>
+              <dd>
+                An <strong>NVIDIA Jetson Orin Nano Super</strong> runs perception, localisation, planning and control on
+                the vehicle itself — 1024 Ampere CUDA cores and 32 tensor cores alongside a 6-core Arm Cortex-A78AE CPU,
+                so CUDA and TensorRT workloads such as a learned policy or an object detector run in the same loop as
+                classical control.
+              </dd>
+              <dt>Actuation</dt>
+              <dd>
+                A <strong>VESC 6 MkIV</strong> from Trampa Boards drives the Traxxas Velineon brushless motor under
+                field-oriented control, closes the servo loop for steering, reports wheel odometry back to ROS 2 and
+                carries the inertial measurement unit used for state estimation.
+              </dd>
+              <dt>Power</dt>
+              <dd>
+                The <strong>Ambimat AE170 power distribution unit</strong> takes the 3S lithium-polymer pack or a wall
+                adapter and produces the regulated 19 V, 12 V and 5 V rails the Jetson, the LiDAR and the accessories
+                need. Its design files are <a href="/resource.html#downloads">published as open source</a>.
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHO IT IS FOR -->
+      <section class="section" id="who" aria-labelledby="who-title">
+        <div class="section-container">
+          <div class="section-head">
+            <p class="eyebrow">Audience</p>
+            <h2 class="section-title" id="who-title">Who the RoboRacer Core Kit is for</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              Three groups buy this kit, and they buy it for the same underlying reason: the interesting work is in the
+              algorithms, and hardware integration is the tax standing in front of it.
+            </p>
+          </div>
+
+          <div class="grid-3">
+            <article class="card">
+              <span class="card-meta">Universities</span>
+              <h3>Teaching autonomy at cohort scale</h3>
+              <p>
+                A robotics, mechatronics or control course needs every team on the same platform, or laboratory sessions
+                become hardware debugging sessions. Identical, pre-validated vehicles mean a lecturer writes one set of
+                notes, one marking scheme and one reproducible baseline that behaves the same in week one and week
+                twelve.
+              </p>
+              <ul>
+                <li>Standardised across cohorts and semesters</li>
+                <li>ROS 2 skills that transfer to industry</li>
+                <li>Procurement is a single line item, not a bill of materials</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <span class="card-meta">Competition teams</span>
+              <h3>RoboRacer and F1TENTH entries</h3>
+              <p>
+                Teams preparing for a RoboRacer / F1TENTH Autonomous Grand Prix are judged on lap time and overtaking,
+                not on soldering. Starting from a vehicle that already localises and drives means the season is spent
+                tuning pure pursuit, disparity extension, Frenet-frame planning or a reinforcement-learning policy
+                against the clock.
+              </p>
+              <ul>
+                <li>Runs code from the f1tenth GitHub organisation</li>
+                <li>Sim-to-real transfer from the f1tenth_gym simulator</li>
+                <li>Spare MDF base plate included for crash recovery</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <span class="card-meta">Research laboratories</span>
+              <h3>Publishable experiments on real hardware</h3>
+              <p>
+                Reviewers increasingly expect a physical demonstration alongside simulation results. A standard 1:10
+                platform gives a laboratory a hardware baseline other groups can reproduce, and enough compute headroom
+                on the Jetson to run learned perception, model-predictive control or multi-agent experiments onboard.
+              </p>
+              <ul>
+                <li>Onboard CUDA and TensorRT inference</li>
+                <li>Open power board design for custom electronics</li>
+                <li>Reproducible platform for peer review</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="order-actions section-cta">
+            <a class="btn btn-outline" href="/use-cases.html">Read the detailed use cases</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- IN THE BOX -->
+      <section class="section alt" id="in-the-box" aria-labelledby="box-title">
+        <div class="section-container">
+          <div class="section-head">
+            <p class="eyebrow">Bill of materials</p>
+            <h2 class="section-title" id="box-title">What is in the box</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              The kit ships as one assembled vehicle. Every item below arrives mounted, wired and tested together rather
+              than as loose parts to integrate.
+            </p>
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                RoboRacer Core Kit — major parts included
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Component</th>
+                  <th scope="col">What it does on the vehicle</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">NVIDIA Jetson Orin Nano Super</th>
+                  <td>
+                    Onboard compute. Runs Ubuntu, the ROS 2 graph and any GPU-accelerated perception or learned policy.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Hokuyo 2D LiDAR</th>
+                  <td>
+                    Primary perception. 270° planar scan over Ethernet, feeding SLAM, localisation and obstacle
+                    avoidance.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">VESC 6 MkIV</th>
+                  <td>
+                    Motor controller. Field-oriented drive of the brushless motor, steering servo control, wheel
+                    odometry and the onboard IMU.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Power distribution unit</th>
+                  <td>
+                    The Ambimat AE170 PDU. Converts battery or wall-adapter input into the regulated 19 V, 12 V and 5 V
+                    rails the rest of the vehicle runs on.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Traxxas Slash Ultimate 4x4 chassis</th>
+                  <td>
+                    The 1:10-scale rolling platform — four-wheel drive, oil-filled shocks and the Velineon brushless
+                    power system.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">MDF base plate, plus a spare</th>
+                  <td>
+                    The deck that carries the compute, sensor and power hardware above the chassis. A second plate ships
+                    with every kit because racing vehicles crash.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">3S lithium-polymer battery</th>
+                  <td>Vehicle power for both traction and, through the PDU, the electronics.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Battery charger</th>
+                  <td>Balance charger for the 3S pack.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout">
+            <strong>Also included, and easy to overlook:</strong> the Jetson arrives with its operating system already
+            flashed and a complete ROS stack configured, and every kit carries 60 days of remote hardware and software
+            support after delivery. Those two items are usually the difference between a vehicle that drives in week one
+            and one that drives in week six.
+          </div>
+        </div>
+      </section>
+
+      <!-- SPECS -->
+      <section class="section" id="specs" aria-labelledby="specs-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Technical summary</p>
+            <h2 class="section-title" id="specs-title">Specifications at a glance</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                Headline specifications
+              </caption>
+              <tbody>
+                <tr>
+                  <th scope="row">Vehicle class</th>
+                  <td>1:10-scale autonomous racing vehicle, RoboRacer / F1TENTH specification</td>
+                </tr>
+                <tr>
+                  <th scope="row">Compute</th>
+                  <td>
+                    NVIDIA Jetson Orin Nano Super — 1024-core Ampere GPU with 32 tensor cores, 6-core Arm Cortex-A78AE
+                    CPU, 8 GB LPDDR5
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Perception</th>
+                  <td>Hokuyo 2D laser scanner — 270° field of view, 40 Hz scan rate, Ethernet interface</td>
+                </tr>
+                <tr>
+                  <th scope="row">Actuation</th>
+                  <td>
+                    VESC 6 MkIV field-oriented motor controller with integrated IMU; Traxxas Velineon brushless drive
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Power rails</th>
+                  <td>Ambimat AE170 PDU V02.04 — 19 V at 4 A, 12 V at 2 A, 5 V at 1 A</td>
+                </tr>
+                <tr>
+                  <th scope="row">Operating system</th>
+                  <td>Ubuntu 22.04 LTS with NVIDIA JetPack, pre-flashed</td>
+                </tr>
+                <tr>
+                  <th scope="row">Middleware</th>
+                  <td>ROS 2 Humble Hawksbill, configured and validated before dispatch</td>
+                </tr>
+                <tr>
+                  <th scope="row">Support</th>
+                  <td>60 days of remote hardware and software technical support after delivery</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="order-actions section-cta">
+            <a class="btn btn-outline" href="/specifications.html">Full specifications, rails and interfaces</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOFTWARE -->
+      <section class="section alt" id="software" aria-labelledby="software-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Software</p>
+            <h2 class="section-title" id="software-title">The software stack you inherit</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="prose">
+            <p>
+              Nothing in the stack is proprietary to Ambimat Electronics. The value is that it is already installed,
+              already talking to the hardware and already validated on the exact vehicle you receive.
+            </p>
+
+            <h3>Base layer</h3>
+            <p>
+              <strong>Ubuntu 22.04 LTS</strong> with <strong>NVIDIA JetPack</strong>, which brings the Linux for Tegra
+              kernel, CUDA, cuDNN and TensorRT. That pairing is deliberate: 22.04 is the Tier 1 platform for
+              <strong>ROS 2 Humble Hawksbill</strong>, so binary ROS packages install with <code>apt</code> rather than
+              being built from source.
+            </p>
+
+            <h3>ROS 2 layer</h3>
+            <p>
+              The vehicle boots with its ROS 2 graph configured — the LiDAR driver publishing
+              <code>sensor_msgs/LaserScan</code>, the VESC driver publishing odometry and accepting drive commands, and
+              a transform tree describing the vehicle's frames. Work proceeds through the ordinary ROS 2 toolchain:
+              <code>rclpy</code> or <code>rclcpp</code> for nodes, <code>colcon</code> for builds,
+              <code>ros2 bag</code> for recording experiments, and <strong>RViz2</strong> for visualising scans, maps
+              and planned paths. DDS handles transport, so a laptop on the same network joins the graph as a monitoring
+              station.
+            </p>
+
+            <h3>Autonomy layer</h3>
+            <p>
+              What runs on top is your research. The platform is the one the RoboRacer / F1TENTH community targets, so
+              the standard progression of algorithms is directly available:
+            </p>
+            <ul>
+              <li>
+                <strong>Reactive control</strong> — wall following, follow-the-gap and the disparity extender, which
+                need only the raw laser scan and are where most courses begin.
+              </li>
+              <li>
+                <strong>Mapping and localisation</strong> — <strong>SLAM</strong> with <code>slam_toolbox</code> or
+                Cartographer to build an occupancy grid, then particle-filter localisation against that map at race
+                speed.
+              </li>
+              <li>
+                <strong>Planning and tracking</strong> — pure pursuit and Stanley controllers, Frenet-frame local
+                planners, and <strong>model-predictive control</strong> once a vehicle model is identified.
+              </li>
+              <li>
+                <strong>Learning</strong> — imitation and reinforcement learning policies trained in the
+                <code>f1tenth_gym</code> simulator and transferred to the vehicle, with inference accelerated on the
+                Jetson's GPU through PyTorch or TensorRT.
+              </li>
+            </ul>
+
+            <div class="callout">
+              <strong>Simulate first.</strong> The community simulator and the physical kit expose the same ROS 2
+              interfaces, so a policy developed in simulation can be moved onto the vehicle by changing which machine it
+              runs on. <a href="/getting-started.html">The getting-started guide</a> walks through first boot, network
+              setup and a first autonomous lap.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPARE -->
+      <section class="section" id="compare" aria-labelledby="compare-title">
+        <div class="section-container">
+          <div class="section-head">
+            <p class="eyebrow">Decision</p>
+            <h2 class="section-title" id="compare-title">Assembled kit vs building from parts</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              Sourcing the same bill of materials yourself is entirely possible — the RoboRacer / F1TENTH build
+              documentation is public. The honest comparison is not about capability, it is about where a team's first
+              two months go.
+            </p>
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                Two routes to the same vehicle
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Consideration</th>
+                  <th scope="col">Building from parts</th>
+                  <th scope="col">RoboRacer Core Kit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Procurement</th>
+                  <td>
+                    Eight or more suppliers across several countries, each with its own lead time, import duty and
+                    minimum order. A single back-ordered part stalls the build.
+                  </td>
+                  <td>One purchase order, one supplier, one delivery.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Power electronics</th>
+                  <td>
+                    Design or adapt a distribution board that feeds 19 V, 12 V and 5 V from one pack without browning
+                    out the Jetson under motor current draw. A common source of intermittent, hard-to-diagnose faults.
+                  </td>
+                  <td>The AE170 PDU, already specified, built and tested against this exact load.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Assembly and wiring</th>
+                  <td>
+                    Mechanical fit-out, connector crimping, strain relief and cable routing that survives a crash.
+                  </td>
+                  <td>Done, on a laser-cut base plate, with a spare plate in the box.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Software bring-up</th>
+                  <td>
+                    Flash JetPack, resolve driver and kernel version conflicts, calibrate the VESC, configure the LiDAR
+                    network interface, build the ROS 2 workspace.
+                  </td>
+                  <td>Pre-flashed and pre-configured; the graph publishes on first boot.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Time to first autonomous lap</th>
+                  <td>Typically several weeks of elapsed calendar time, concentrated in whoever knows the hardware.</td>
+                  <td>The same afternoon the crate is opened.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Fleet consistency</th>
+                  <td>
+                    Vehicles drift apart as parts are substituted between orders, so results stop being comparable
+                    across teams.
+                  </td>
+                  <td>Identical builds, so a result on one vehicle means something on another.</td>
+                </tr>
+                <tr>
+                  <th scope="row">When it is the wrong choice</th>
+                  <td>
+                    If the integration <em>is</em> the syllabus — an electronics or systems-engineering course where
+                    students should design the harness and the power tree themselves.
+                  </td>
+                  <td>
+                    If the autonomy is the syllabus, or the deadline is a competition date rather than an end of term.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING -->
+      <section class="section alt" id="pricing" aria-labelledby="pricing-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Commercial</p>
+            <h2 class="section-title" id="pricing-title">Pricing and how to order</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              One price covers the assembled vehicle, its major parts, operating-system and ROS stack setup, and 60 days
+              of remote technical support.
+            </p>
+          </div>
+
+          <div class="price-panel">
+            <h3>Total Cost</h3>
+            <div class="price-grid">
+              <div class="price-item">
+                <p class="price-value">INR 628,000</p>
+                <p class="price-note">+ 18% GST · India</p>
+              </div>
+              <div class="price-item">
+                <p class="price-value">USD 6,100</p>
+                <p class="price-note">Ex-works India</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="prose">
+            <p>
+              Orders within India are placed through the Ambimat Electronics business development team; orders from the
+              rest of the world go through the Ambimat online store. Both routes, and the addresses and telephone
+              numbers behind them, are on the <a href="/contact.html#order">contact and order page</a>. Lead times
+              depend on component availability at the time of order and are confirmed on your quotation, so contact the
+              team early if the kit has to arrive before a semester or a competition date.
+            </p>
+          </div>
+
+          <div class="order-actions section-cta">
+            <a class="btn btn-primary" href="/contact.html#order">Order the Core Kit</a>
+            <a class="btn btn-outline" href="/resource.html">Open-source board resources</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section" id="faq" aria-labelledby="faq-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Questions</p>
+            <h2 class="section-title" id="faq-title">Frequently asked questions</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="faq-list">
+            <div class="faq-item">
+              <h3>What is an autonomous racing robotics kit?</h3>
+              <p>
+                An autonomous racing robotics kit is a small-scale vehicle that carries everything needed to drive
+                itself: a sensor for perception, an onboard computer for planning and control, a motor controller for
+                actuation, regulated power for all three, and a software stack that ties them together. The RoboRacer
+                Core Kit is a 1:10-scale example built to the RoboRacer / F1TENTH specification, using a Hokuyo 2D
+                LiDAR, an NVIDIA Jetson Orin Nano, a VESC 6 MkIV motor controller and ROS 2 on a Traxxas Slash 4x4
+                chassis.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3>Is the RoboRacer Core Kit compatible with F1TENTH?</h3>
+              <p>
+                Yes. The kit is built to the 1:10-scale RoboRacer / F1TENTH vehicle specification and uses the component
+                classes that community's open-source stack expects — a Traxxas Slash 4x4 chassis, a VESC motor
+                controller, a 2D scanning LiDAR and an NVIDIA Jetson compute module. Code published under the
+                <code>f1tenth</code> GitHub organisation, including the <code>f1tenth_gym</code> simulator, runs against
+                it without a hardware redesign.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3>Which compute module and sensors does the kit use?</h3>
+              <p>
+                The standard build pairs an NVIDIA Jetson Orin Nano Super — a 1024-core Ampere GPU with 32 tensor cores,
+                a 6-core Arm Cortex-A78AE CPU and 8 GB of LPDDR5 — with a Hokuyo 2D laser scanner giving a 270° field of
+                view at 40 Hz, and the inertial measurement unit integrated into the VESC 6 MkIV motor controller. Exact
+                sensor and compute variants are confirmed on your quotation.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3>Does the RoboRacer Core Kit run ROS 2?</h3>
+              <p>
+                Yes. Every kit is delivered with the Jetson operating system already flashed — Ubuntu 22.04 LTS with
+                NVIDIA JetPack — and a configured ROS 2 stack, so the LiDAR, VESC and vehicle transform tree are
+                publishing on first boot. Teams work in <code>rclpy</code> or <code>rclcpp</code>, visualise in RViz2,
+                record runs with <code>ros2 bag</code> and build with <code>colcon</code> exactly as they would on any
+                other ROS 2 robot.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3>Do I need to assemble anything?</h3>
+              <p>
+                No. Component selection, procurement, mechanical assembly, wiring, power distribution and software
+                validation are all completed by Ambimat Electronics before dispatch. The vehicle arrives built and
+                tested; the remaining work is charging the battery, joining the vehicle to your network and starting the
+                stack.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3>What does the RoboRacer Core Kit cost?</h3>
+              <p>
+                INR 628,000 plus 18% GST for delivery within India, or USD 6,100 ex-works India for export orders. The
+                price covers the assembled vehicle and its major parts — Jetson Orin Nano Super, VESC 6 MkIV, Hokuyo
+                LiDAR, Traxxas Slash 4x4 Ultimate chassis, power distribution unit, MDF base plates with a spare, 3S
+                battery and charger — plus operating-system and ROS stack setup and 60 days of remote technical support.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3>Can we use our own algorithms and add our own sensors?</h3>
+              <p>
+                Yes. The kit is a platform, not a closed product. The ROS 2 stack is ordinary open-source software you
+                can replace node by node, and the Ambimat AE170 power distribution board exposes spare regulated 12 V
+                and 5 V outputs for additional hardware such as a depth camera or a separate IMU. The board's design
+                files are <a href="/resource.html#downloads">published as open source</a>.
+              </p>
+            </div>
+
+            <div class="faq-item">
+              <h3>What support is included with the kit?</h3>
+              <p>
+                Every kit includes loading of the Jetson operating system and a complete ROS stack configuration, plus
+                remote hardware and software technical support for up to 60 days after delivery to assist with
+                deployment and setup.
+              </p>
+            </div>
+          </div>
+
+          <div class="order-actions section-cta">
+            <a class="btn btn-primary" href="/contact.html#order">Order the Core Kit</a>
+            <a class="btn btn-outline" href="/getting-started.html">Start with the setup guide</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+            <p>
+              RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
+              1:10-scale autonomy system running ROS 2 on NVIDIA Jetson, with LiDAR perception and VESC drive.
+            </p>
+          </div>
+
+          <nav aria-labelledby="footer-explore">
+            <h2 id="footer-explore">Explore</h2>
+            <ul>
+              <li><a href="/autonomous-racing-robotics-kit.html">Autonomous racing kit</a></li>
+              <li><a href="/specifications.html">Specifications</a></li>
+              <li><a href="/getting-started.html">Getting started</a></li>
+              <li><a href="/use-cases.html">Use cases</a></li>
+              <li><a href="/resource.html">Resources</a></li>
+              <li><a href="/contact.html">Contact</a></li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-community">
+            <h2 id="footer-community">Community</h2>
+            <ul>
+              <li><a href="https://github.com/f1tenth" rel="noopener">F1TENTH on GitHub</a></li>
+              <li>
+                <a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">RoboRacer on Slack</a>
+              </li>
+              <li><a href="/resource.html#downloads">Open-source board files</a></li>
+              <li><a href="/contact.html#order">Order the Core Kit</a></li>
+            </ul>
+          </nav>
+
+          <div>
+            <h2>Contact</h2>
+            <address>
+              1005 &amp; 1006, 10th Floor,<br />
+              Shivalik Shilp II,<br />
+              Ahmedabad, Gujarat 380015, India<br /><br />
+              India: <a href="tel:+917925501989">+91&nbsp;79255&nbsp;01989</a><br />
+              Global: <a href="tel:+12153973819">+1&nbsp;215&nbsp;397&nbsp;3819</a><br />
+              <a href="mailto:support@ambimat.com">support@ambimat.com</a>
+            </address>
+          </div>
+        </div>
+
+        <div class="footer-base">
+          <span>&copy; 2026 Ambimat Electronics. All rights reserved.</span>
+          <span>Part of the <a href="https://ambimat.com/" rel="noopener">Ambimat Electronics</a> group.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Google tag (gtag.js) — GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-03T01GG8K1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-03T01GG8K1");
+    </script>
+    <script src="/assets/js/nav.js" defer></script>
+  </body>
+</html>

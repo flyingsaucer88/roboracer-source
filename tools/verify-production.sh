@@ -37,7 +37,9 @@ body() { curl -sS -L --max-time 20 "$1" 2>/dev/null; }
 
 # ---------------------------------------------------------------------
 head1 "1. Core routes return 200"
-for path in "/" "/contact.html" "/resource.html" "/robots.txt" "/sitemap.xml" \
+for path in "/" "/autonomous-racing-robotics-kit.html" "/specifications.html" \
+            "/getting-started.html" "/use-cases.html" \
+            "/contact.html" "/resource.html" "/robots.txt" "/sitemap.xml" \
             "/site.webmanifest" "/assets/css/main.css" "/assets/js/nav.js" \
             "/assets/img/roboracer-og.png" "/assets/fonts/montserrat.woff2" \
             "/files/roboracer-board.pdf" "/files/roboracer-board.zip"; do
@@ -68,7 +70,7 @@ case "$loc" in
     *)                     bad "/index.html redirected to ${loc} (expected ${BASE}/)" ;;
 esac
 
-for alias in "/contact" "/resource" "/resources"; do
+for alias in "/contact" "/resource" "/resources" "/core-kit" "/specs" "/getting-started" "/use-cases"; do
     loc="$(location "${BASE}${alias}")"
     if [ -n "$loc" ]; then ok "${alias} -> ${loc}"; else bad "${alias} did not redirect"; fi
 done
@@ -82,7 +84,8 @@ esac
 
 # ---------------------------------------------------------------------
 head1 "4. Canonical URLs, robots and sitemap"
-for path in "/" "/contact.html" "/resource.html"; do
+for path in "/" "/autonomous-racing-robotics-kit.html" "/specifications.html" \
+            "/getting-started.html" "/use-cases.html" "/contact.html" "/resource.html"; do
     expected="${BASE}${path}"
     [ "$path" = "/" ] && expected="${BASE}/"
     found="$(body "${BASE}${path}" | grep -o '<link rel="canonical" href="[^"]*"' | head -1 | sed 's/.*href="//;s/"//')"
@@ -147,7 +150,8 @@ fi
 
 # ---------------------------------------------------------------------
 head1 "7. No development artefacts in production HTML"
-for path in "/" "/contact.html" "/resource.html"; do
+for path in "/" "/autonomous-racing-robotics-kit.html" "/specifications.html" \
+            "/getting-started.html" "/use-cases.html" "/contact.html" "/resource.html"; do
     page="$(body "${BASE}${path}")"
     if printf '%s' "$page" | grep -qiE 'https?://(localhost|127\.0\.0\.1)'; then
         bad "${path} contains a localhost URL"

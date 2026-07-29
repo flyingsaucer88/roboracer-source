@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <title>RoboRacer Core Kit Specifications — Hardware and Software</title>
+    <meta
+      name="description"
+      content="Full technical specifications for the RoboRacer Core Kit: NVIDIA Jetson Orin Nano compute, Hokuyo 2D LiDAR, VESC 6 MkIV, the AE170 power board rails and connectors, and the ROS 2 software stack."
+    />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://roboracer.ambimat.com/specifications.html" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="RoboRacer" />
+    <meta property="og:title" content="RoboRacer Core Kit Specifications — Hardware and Software" />
+    <meta
+      property="og:description"
+      content="Compute, perception, actuation, power rails, connectors and software versions for the RoboRacer Core Kit 1:10-scale autonomous racing platform."
+    />
+    <meta property="og:url" content="https://roboracer.ambimat.com/specifications.html" />
+    <meta property="og:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RoboRacer Core Kit Specifications — Hardware and Software" />
+    <meta
+      name="twitter:description"
+      content="Compute, perception, actuation, power rails, connectors and software versions for the RoboRacer Core Kit."
+    />
+    <meta name="twitter:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
+    <meta
+      name="twitter:image:alt"
+      content="RoboRacer Core Kit — an assembled 1:10-scale autonomous racing vehicle with LiDAR, compute board and power distribution mounted on a Traxxas chassis."
+    />
+
+    <link rel="preload" href="/assets/fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/assets/css/fonts.css?v=1" />
+    <link rel="stylesheet" href="/assets/css/main.css?v=1" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#E31C2B" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://roboracer.ambimat.com/" },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Autonomous racing robotics kit",
+                "item": "https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Specifications",
+                "item": "https://roboracer.ambimat.com/specifications.html"
+              }
+            ]
+          },
+          {
+            "@type": "TechArticle",
+            "@id": "https://roboracer.ambimat.com/specifications.html#article",
+            "headline": "RoboRacer Core Kit specifications",
+            "description": "Hardware and software specifications for the RoboRacer Core Kit 1:10-scale autonomous racing platform, including compute, perception, actuation, power rails and connectors.",
+            "url": "https://roboracer.ambimat.com/specifications.html",
+            "about": { "@id": "https://roboracer.ambimat.com/#core-kit" },
+            "publisher": { "@id": "https://roboracer.ambimat.com/#org" },
+            "inLanguage": "en",
+            "keywords": "RoboRacer, F1TENTH, ROS 2, NVIDIA Jetson Orin Nano, Hokuyo LiDAR, VESC 6 MkIV, Traxxas Slash 4x4, SLAM, power distribution unit, autonomous racing"
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary">
+        <a class="brand" href="/">
+          <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+          <span class="brand-text">
+            <span class="brand-line">Robo<span class="accent">Racer</span></span>
+            <span class="brand-tag">Autonomous racing platform</span>
+          </span>
+        </a>
+
+        <div class="nav-links" id="nav-menu">
+          <a href="/autonomous-racing-robotics-kit.html">Core Kit</a>
+          <a href="/specifications.html" aria-current="page">Specs</a>
+          <a href="/getting-started.html">Get Started</a>
+          <a href="/use-cases.html">Use Cases</a>
+          <a href="/resource.html">Resources</a>
+          <a href="/contact.html">Contact</a>
+          <a class="nav-cta secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-cta" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-btn secondary" href="https://github.com/f1tenth" rel="noopener">Access Directory</a>
+          <a class="nav-btn" href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener"
+            >Access Community</a
+          >
+          <button
+            class="hamburger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="nav-menu"
+            aria-label="Open navigation menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <div class="page-header">
+        <p class="eyebrow">Technical reference</p>
+        <h1 class="page-title">RoboRacer Core Kit Specifications</h1>
+        <hr class="section-line" />
+        <p class="section-desc">
+          Compute, perception, actuation, power and software for the RoboRacer Core Kit — the assembled 1:10-scale
+          autonomous racing platform from Ambimat Electronics.
+        </p>
+      </div>
+
+      <!-- VEHICLE -->
+      <section class="section" id="vehicle" aria-labelledby="vehicle-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Platform</p>
+            <h2 class="section-title" id="vehicle-title">Vehicle and chassis</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                Vehicle
+              </caption>
+              <tbody>
+                <tr>
+                  <th scope="row">Class</th>
+                  <td>1:10-scale autonomous racing vehicle, RoboRacer / F1TENTH specification</td>
+                </tr>
+                <tr>
+                  <th scope="row">Chassis</th>
+                  <td>Traxxas Slash Ultimate 4x4 — four-wheel drive, independent suspension, oil-filled shocks</td>
+                </tr>
+                <tr>
+                  <th scope="row">Drive system</th>
+                  <td>Traxxas Velineon brushless motor, driven under field-oriented control by the VESC</td>
+                </tr>
+                <tr>
+                  <th scope="row">Steering</th>
+                  <td>Ackermann steering through the chassis servo, commanded over the VESC servo output</td>
+                </tr>
+                <tr>
+                  <th scope="row">Equipment deck</th>
+                  <td>Laser-cut MDF base plate carrying compute, LiDAR and power hardware; one spare plate included</td>
+                </tr>
+                <tr>
+                  <th scope="row">Traction battery</th>
+                  <td>3S lithium-polymer pack, 11.1 V nominal, supplied with a balance charger</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout">
+            <strong>On exact variants.</strong> Component families are fixed by the platform specification, but specific
+            model and revision numbers depend on what is current and available when your order is placed. The exact
+            build is confirmed on your quotation — ask the <a href="/contact.html">Ambimat Electronics team</a> if a
+            particular sensor or compute variant is a requirement for your work.
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPUTE -->
+      <section class="section alt" id="compute" aria-labelledby="compute-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Onboard computer</p>
+            <h2 class="section-title" id="compute-title">Compute — NVIDIA Jetson Orin Nano Super</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              All perception, localisation, planning and control run on the vehicle. Nothing depends on a link back to a
+              base station once the stack is started.
+            </p>
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                Compute module
+              </caption>
+              <tbody>
+                <tr>
+                  <th scope="row">Module</th>
+                  <td>NVIDIA Jetson Orin Nano Super</td>
+                </tr>
+                <tr>
+                  <th scope="row">GPU</th>
+                  <td>NVIDIA Ampere architecture, 1024 CUDA cores and 32 third-generation tensor cores</td>
+                </tr>
+                <tr>
+                  <th scope="row">CPU</th>
+                  <td>6-core Arm Cortex-A78AE, 64-bit</td>
+                </tr>
+                <tr>
+                  <th scope="row">Memory</th>
+                  <td>8 GB LPDDR5</td>
+                </tr>
+                <tr>
+                  <th scope="row">AI performance</th>
+                  <td>Up to 67 sparse INT8 TOPS, accessible through CUDA, cuDNN and TensorRT</td>
+                </tr>
+                <tr>
+                  <th scope="row">Supply</th>
+                  <td>19 V, taken from the AE170 power distribution unit's 19 V rail</td>
+                </tr>
+                <tr>
+                  <th scope="row">Interfaces used</th>
+                  <td>Gigabit Ethernet to the LiDAR, USB to the VESC, Wi-Fi for SSH and remote visualisation</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PERCEPTION -->
+      <section class="section" id="perception" aria-labelledby="perception-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Sensing</p>
+            <h2 class="section-title" id="perception-title">Perception — Hokuyo 2D LiDAR</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                Primary sensor
+              </caption>
+              <tbody>
+                <tr>
+                  <th scope="row">Sensor</th>
+                  <td>Hokuyo 2D scanning laser range finder (UST-10LX class)</td>
+                </tr>
+                <tr>
+                  <th scope="row">Field of view</th>
+                  <td>270°, planar, mounted forward on the equipment deck</td>
+                </tr>
+                <tr>
+                  <th scope="row">Scan rate</th>
+                  <td>40 Hz</td>
+                </tr>
+                <tr>
+                  <th scope="row">Interface</th>
+                  <td>Ethernet, addressed over the vehicle's onboard network</td>
+                </tr>
+                <tr>
+                  <th scope="row">Supply</th>
+                  <td>12 V from the AE170 power distribution unit</td>
+                </tr>
+                <tr>
+                  <th scope="row">ROS 2 interface</th>
+                  <td>
+                    Publishes <code>sensor_msgs/LaserScan</code>, consumed directly by SLAM, particle-filter
+                    localisation, gap-following and wall-following nodes
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Additional sensing</th>
+                  <td>
+                    Inertial measurement unit integrated into the VESC 6 MkIV; spare 12 V and 5 V rails are available
+                    for a depth camera such as an Intel RealSense, or a separate IMU
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTUATION -->
+      <section class="section alt" id="actuation" aria-labelledby="actuation-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Motion</p>
+            <h2 class="section-title" id="actuation-title">Actuation — VESC 6 MkIV</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                Motor controller
+              </caption>
+              <tbody>
+                <tr>
+                  <th scope="row">Controller</th>
+                  <td>VESC 6 MkIV (Trampa Boards), open-source BLDC controller</td>
+                </tr>
+                <tr>
+                  <th scope="row">Control mode</th>
+                  <td>Field-oriented control (FOC), with duty-cycle, current, speed and position modes available</td>
+                </tr>
+                <tr>
+                  <th scope="row">Steering</th>
+                  <td>Servo output driven from the controller, so steering and throttle share one command path</td>
+                </tr>
+                <tr>
+                  <th scope="row">Feedback</th>
+                  <td>Wheel odometry from motor electrical revolutions, plus the controller's integrated IMU</td>
+                </tr>
+                <tr>
+                  <th scope="row">Interfaces</th>
+                  <td>USB to the Jetson; CAN and UART available for expansion</td>
+                </tr>
+                <tr>
+                  <th scope="row">Configuration</th>
+                  <td>
+                    Motor detection and limits are set during pre-delivery validation; the VESC Tool desktop application
+                    can be used to re-tune them
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Supply</th>
+                  <td>Directly from the 3S traction pack, separate from the regulated electronics rails</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- POWER -->
+      <section class="section" id="power" aria-labelledby="power-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Electrical</p>
+            <h2 class="section-title" id="power-title">Power distribution — Ambimat AE170 PDU</h2>
+            <hr class="section-line" />
+            <p class="section-desc">
+              Designed by Ambimat Electronics for autonomous racing systems and released as open hardware. Version
+              V02.04 is the revision documented here and shipped with the kit.
+            </p>
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                Rails and totals
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Rail</th>
+                  <th scope="col">Maximum current</th>
+                  <th scope="col">Typical load on the kit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">19 V DC</th>
+                  <td>4 A</td>
+                  <td>NVIDIA Jetson Orin Nano Super</td>
+                </tr>
+                <tr>
+                  <th scope="row">12 V DC</th>
+                  <td>2 A</td>
+                  <td>Hokuyo LiDAR, plus spare capacity for added sensors</td>
+                </tr>
+                <tr>
+                  <th scope="row">5 V DC</th>
+                  <td>1 A</td>
+                  <td>Low-power accessories, hubs and logic</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="prose">
+            <h3>Connectors</h3>
+            <p>
+              The board takes power on the input side and fans it out across seven regulated outputs. Currents in the
+              table above are the totals across all outputs on a rail taken together, not per connector.
+            </p>
+            <dl class="deflist">
+              <dt>J9</dt>
+              <dd>Battery connector / socket — input side.</dd>
+              <dt>J10</dt>
+              <dd>
+                DC power jack for a wall adapter — input side. J10 also accepts input from a battery connector with no
+                other change to the board.
+              </dd>
+              <dt>J1, J2, J5, J6</dt>
+              <dd>12 V DC outputs.</dd>
+              <dt>J3, J4</dt>
+              <dd>5 V DC outputs.</dd>
+              <dt>J7</dt>
+              <dd>19 V DC output.</dd>
+            </dl>
+
+            <h3>Switches</h3>
+            <dl class="deflist">
+              <dt>SW1</dt>
+              <dd>Source selection — VJACK (wall adapter) or VBAT (battery powered).</dd>
+              <dt>SW2</dt>
+              <dd>
+                Power on and off. With SW2 off, the position of SW1 is immaterial to the circuit — useful when the
+                vehicle is being worked on with a bench supply connected.
+              </dd>
+            </dl>
+
+            <div class="callout">
+              The full switching scenarios, connector pin detail and mechanical outline are in the
+              <a href="/resource.html#downloads">ROBORACER Power Board User Manual</a>, and the schematic, Gerber, DXF
+              and bill-of-materials files are published as open source on the same page.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOFTWARE -->
+      <section class="section alt" id="software" aria-labelledby="software-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Stack</p>
+            <h2 class="section-title" id="software-title">Software and interfaces</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="table-scroll">
+            <table class="spec-table">
+              <caption>
+                Delivered software
+              </caption>
+              <tbody>
+                <tr>
+                  <th scope="row">Operating system</th>
+                  <td>Ubuntu 22.04 LTS with NVIDIA JetPack (Linux for Tegra kernel, CUDA, cuDNN, TensorRT)</td>
+                </tr>
+                <tr>
+                  <th scope="row">Middleware</th>
+                  <td>ROS 2 Humble Hawksbill, with DDS transport</td>
+                </tr>
+                <tr>
+                  <th scope="row">Client libraries</th>
+                  <td><code>rclpy</code> (Python) and <code>rclcpp</code> (C++)</td>
+                </tr>
+                <tr>
+                  <th scope="row">Build and tooling</th>
+                  <td><code>colcon</code>, <code>ros2 launch</code>, <code>ros2 bag</code>, RViz2</td>
+                </tr>
+                <tr>
+                  <th scope="row">Drivers configured</th>
+                  <td>
+                    LiDAR scan publisher, VESC driver with odometry and drive-command topics, vehicle transform tree
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Compatible open-source stacks</th>
+                  <td>
+                    Packages published under the <code>f1tenth</code> GitHub organisation, including the
+                    <code>f1tenth_gym</code> simulator; SLAM packages such as <code>slam_toolbox</code> and Cartographer
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Remote access</th>
+                  <td>
+                    SSH over Wi-Fi or Ethernet; a laptop on the same network joins the ROS 2 graph for visualisation
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">GPU workloads</th>
+                  <td>PyTorch, TensorRT and OpenCV pipelines run onboard for learned perception and policies</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="section" id="services" aria-labelledby="services-title">
+        <div class="section-narrow">
+          <div class="section-head">
+            <p class="eyebrow">Included</p>
+            <h2 class="section-title" id="services-title">Services delivered with every kit</h2>
+            <hr class="section-line" />
+          </div>
+
+          <div class="grid-2">
+            <article class="card">
+              <h3>Software setup</h3>
+              <p>
+                Loading of the operating system for the NVIDIA Jetson and complete ROS stack configuration, validated on
+                the vehicle before it is dispatched.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Technical support</h3>
+              <p>
+                Remote hardware and software technical support for up to 60 days post delivery, to assist with
+                deployment and setup.
+              </p>
+            </article>
+          </div>
+
+          <div class="order-actions section-cta">
+            <a class="btn btn-primary" href="/contact.html#order">Order the Core Kit</a>
+            <a class="btn btn-outline" href="/getting-started.html">Getting started guide</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
+            <p>
+              RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
+              1:10-scale autonomy system running ROS 2 on NVIDIA Jetson, with LiDAR perception and VESC drive.
+            </p>
+          </div>
+
+          <nav aria-labelledby="footer-explore">
+            <h2 id="footer-explore">Explore</h2>
+            <ul>
+              <li><a href="/autonomous-racing-robotics-kit.html">Autonomous racing kit</a></li>
+              <li><a href="/specifications.html">Specifications</a></li>
+              <li><a href="/getting-started.html">Getting started</a></li>
+              <li><a href="/use-cases.html">Use cases</a></li>
+              <li><a href="/resource.html">Resources</a></li>
+              <li><a href="/contact.html">Contact</a></li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-community">
+            <h2 id="footer-community">Community</h2>
+            <ul>
+              <li><a href="https://github.com/f1tenth" rel="noopener">F1TENTH on GitHub</a></li>
+              <li>
+                <a href="https://robo-racer.slack.com/signup#/domain-signup" rel="noopener">RoboRacer on Slack</a>
+              </li>
+              <li><a href="/resource.html#downloads">Open-source board files</a></li>
+              <li><a href="/contact.html#order">Order the Core Kit</a></li>
+            </ul>
+          </nav>
+
+          <div>
+            <h2>Contact</h2>
+            <address>
+              1005 &amp; 1006, 10th Floor,<br />
+              Shivalik Shilp II,<br />
+              Ahmedabad, Gujarat 380015, India<br /><br />
+              India: <a href="tel:+917925501989">+91&nbsp;79255&nbsp;01989</a><br />
+              Global: <a href="tel:+12153973819">+1&nbsp;215&nbsp;397&nbsp;3819</a><br />
+              <a href="mailto:support@ambimat.com">support@ambimat.com</a>
+            </address>
+          </div>
+        </div>
+
+        <div class="footer-base">
+          <span>&copy; 2026 Ambimat Electronics. All rights reserved.</span>
+          <span>Part of the <a href="https://ambimat.com/" rel="noopener">Ambimat Electronics</a> group.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Google tag (gtag.js) — GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-03T01GG8K1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-03T01GG8K1");
+    </script>
+    <script src="/assets/js/nav.js" defer></script>
+  </body>
+</html>

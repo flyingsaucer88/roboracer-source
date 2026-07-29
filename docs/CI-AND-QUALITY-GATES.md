@@ -93,12 +93,16 @@ scores the code under review.
 
 ### Routes
 
-| Route            | Template it represents           |
-| ---------------- | -------------------------------- |
-| `/index.html`    | Home — hero, grids, cards, price |
-| `/resource.html` | Content + figure + download rows |
-| `/contact.html`  | Contact cards + CTA routes       |
-| `/404.html`      | Error page                       |
+| Route                                  | Template it represents                          |
+| -------------------------------------- | ----------------------------------------------- |
+| `/index.html`                          | Home — hero, grids, cards, price, FAQ           |
+| `/autonomous-racing-robotics-kit.html` | Cornerstone — TOC, prose, spec + compare tables |
+| `/specifications.html`                 | Reference tables and definition lists           |
+| `/getting-started.html`                | Numbered steps, command blocks, callouts        |
+| `/use-cases.html`                      | Long-form prose sections + card grids           |
+| `/resource.html`                       | Content + figure + download rows + file table   |
+| `/contact.html`                        | Contact cards + CTA routes + FAQ                |
+| `/404.html`                            | Error page                                      |
 
 **3 runs per URL per profile**, asserted on the median.
 
