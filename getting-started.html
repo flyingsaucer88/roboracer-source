@@ -201,8 +201,10 @@
         <h1 class="page-title">Getting Started with the RoboRacer Core Kit</h1>
         <hr class="section-line" />
         <p class="section-desc">
-          From the crate to a first autonomous lap. Because the vehicle arrives assembled with Ubuntu 22.04 LTS, NVIDIA
-          JetPack and ROS 2 already configured, this is a bring-up guide rather than a build guide.
+          From the crate to a first autonomous lap. This is a bring-up guide rather than a build guide. It assumes
+          Software Setup / Technical Support was included with your order, so the vehicle arrives with Ubuntu 22.04 LTS,
+          NVIDIA JetPack and ROS 2 already configured; without that service, steps 4 and 5 are where you install and
+          configure that stack yourself.
         </p>
       </div>
 
@@ -289,9 +291,10 @@
             <li>
               <h3>Connect to the Jetson</h3>
               <p>
-                Put the vehicle and your laptop on the same network and open a shell on the Jetson over SSH. Ubuntu
-                22.04 LTS with NVIDIA JetPack is already installed and the ROS 2 environment is already configured, so
-                there is no flashing step.
+                Put the vehicle and your laptop on the same network and open a shell on the Jetson over SSH. Where
+                Software Setup / Technical Support was included, Ubuntu 22.04 LTS with NVIDIA JetPack is already
+                installed and the ROS 2 environment is already configured, so there is no flashing step. Otherwise,
+                flash JetPack and install ROS 2 first.
               </p>
               <span class="cmd"><code>ssh &lt;user&gt;@&lt;vehicle-address&gt;</code></span>
               <p>
@@ -517,7 +520,7 @@
             <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
             <p>
               RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
-              1:10-scale autonomy system running ROS 2 on NVIDIA Jetson, with LiDAR perception and VESC drive.
+              1:10-scale vehicle built on NVIDIA Jetson, LiDAR perception and VESC drive, for ROS 2 autonomy work.
             </p>
           </div>
 

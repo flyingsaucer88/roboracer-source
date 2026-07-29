@@ -75,7 +75,7 @@
             "name": "RoboRacer Core Kit",
             "alternateName": "RoboRacer autonomous racing robotics kit",
             "category": "Autonomous racing robotics kit",
-            "description": "A fully assembled, pre-tested 1:10-scale autonomous racing robotics kit for the RoboRacer / F1TENTH platform, integrating an NVIDIA Jetson Orin Nano compute module, a Hokuyo 2D LiDAR, a VESC 6 MkIV motor controller, the Ambimat AE170 power distribution board and a ROS 2 software stack on a Traxxas Slash 4x4 chassis.",
+            "description": "A fully assembled, pre-tested 1:10-scale autonomous racing robotics kit for the RoboRacer / F1TENTH platform, integrating an NVIDIA Jetson Orin Nano compute module, a Hokuyo 2D LiDAR, a VESC 6 MkIV motor controller and the Ambimat AE170 power distribution board on a Traxxas Slash 4x4 chassis, for ROS 2 autonomy work. Software Setup / Technical Support, which loads the operating system and configures the ROS stack and drivers, is a separately priced option.",
             "image": "https://roboracer.ambimat.com/assets/img/roboracer-core-kit.jpg",
             "url": "https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html",
             "brand": { "@type": "Brand", "name": "RoboRacer" },
@@ -106,7 +106,7 @@
               {
                 "@type": "Offer",
                 "name": "RoboRacer Core Kit - India",
-                "description": "The complete physical Core Kit, including the Traxxas chassis, compatible battery and corresponding battery charger. Software Setup / Technical Support is not included in this option. GST is charged in addition. Flat-rate shipping within India is charged separately at the rate below.",
+                "description": "The complete physical Core Kit, including the Traxxas chassis, compatible battery and corresponding battery charger, supplied for customer-managed software setup and integration. Software Setup / Technical Support is not included in this option: the Jetson is supplied without the operating system flashed, the ROS stack and LiDAR and VESC drivers are not configured, and the 60-day remote technical-support period does not apply. GST is charged in addition. Flat-rate shipping to any destination within India is charged separately at the rate below.",
                 "url": "https://roboracer.ambimat.com/contact.html#order",
                 "price": "580000",
                 "priceCurrency": "INR",
@@ -121,7 +121,7 @@
               {
                 "@type": "Offer",
                 "name": "RoboRacer Core Kit with Software Setup / Technical Support - India",
-                "description": "The same complete physical Core Kit, plus Software Setup / Technical Support: loading of the operating system for the NVIDIA Jetson and complete ROS stack configuration, validated on the vehicle before dispatch, and remote hardware and software technical support for up to 60 days post delivery. GST is charged in addition. Flat-rate shipping within India is charged separately at the rate below.",
+                "description": "The same complete physical Core Kit, plus Software Setup / Technical Support: loading of the operating system for the NVIDIA Jetson, complete ROS stack configuration including the LiDAR and VESC drivers, validated on the vehicle before dispatch, and remote hardware and software technical support for up to 60 days post delivery. GST is charged in addition. Flat-rate shipping to any destination within India is charged separately at the rate below.",
                 "url": "https://roboracer.ambimat.com/contact.html#order",
                 "price": "628000",
                 "priceCurrency": "INR",
@@ -136,7 +136,7 @@
               {
                 "@type": "Offer",
                 "name": "Complete RoboRacer Core Kit - international",
-                "description": "The complete physical Core Kit, including the Traxxas chassis, compatible battery and corresponding battery charger. International quotations are supplied on FOB terms; the applicable FOB location and full commercial terms are confirmed in the quotation. Shipping is charged separately at a flat US$500, which does not include destination customs clearance, import duties, local taxes or related destination charges. An optional configuration excluding the chassis, battery and charger for local purchase attracts a discount of approximately US$725; that configuration is quoted individually.",
+                "description": "The complete physical Core Kit, including the Traxxas chassis, compatible battery and corresponding battery charger, supplied for customer-managed software setup and integration. Software Setup / Technical Support is not included in this price; international customers may request it separately for an additional fee, with scope and pricing confirmed in the quotation. International quotations are supplied on FOB terms; the applicable FOB location and full commercial terms are confirmed in the quotation. Shipping is charged separately at a flat US$500, which covers shipping only; destination customs clearance, import duties, local taxes and related destination charges are the buyer's responsibility. An optional configuration excluding the chassis, battery and charger for local purchase attracts a discount of approximately US$725; that configuration is quoted individually.",
                 "url": "https://roboracer.ambimat.com/contact.html#order",
                 "price": "5900",
                 "priceCurrency": "USD",
@@ -221,7 +221,7 @@
                 "name": "What is Software Setup / Technical Support?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "It covers loading of the operating system for the NVIDIA Jetson and complete ROS stack configuration, validated on the vehicle before dispatch, plus remote hardware and software technical support for up to 60 days post delivery to assist with deployment and setup. It is included in the INR 628,000 + GST option; INR 580,000 + GST is the same complete Core Kit without it. For international orders the configuration supplied is confirmed on your quotation."
+                  "text": "It covers loading of the operating system for the NVIDIA Jetson, complete ROS stack configuration including the LiDAR and VESC drivers, validated on the vehicle before dispatch, plus remote hardware and software technical support for up to 60 days post delivery to assist with deployment and setup. It is included in the INR 628,000 + GST option. INR 580,000 + GST is the same complete physical kit supplied for customer-managed software setup and integration: the Jetson arrives without the operating system flashed, the ROS stack and drivers are not configured, and the 60-day support period does not apply. The US$5,900 international price is on the same customer-managed basis; international customers may request the service separately for an additional fee, with scope and pricing confirmed in the quotation."
                 }
               }
             ]
@@ -721,7 +721,10 @@
                     Flash JetPack, resolve driver and kernel version conflicts, calibrate the VESC, configure the LiDAR
                     network interface, build the ROS 2 workspace.
                   </td>
-                  <td>Pre-flashed and pre-configured; the graph publishes on first boot.</td>
+                  <td>
+                    Hardware bring-up is done. With Software Setup / Technical Support the Jetson is also flashed and
+                    the ROS graph publishes on first boot; without it, the software stack is yours to build.
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">Time to first autonomous lap</th>
@@ -771,7 +774,9 @@
               <p>Quoted in INR. Every figure below excludes GST.</p>
               <ul class="price-lines" role="list">
                 <li class="is-primary">
-                  <span class="price-line-label">RoboRacer Core Kit</span>
+                  <span class="price-line-label"
+                    >RoboRacer Core Kit — for customer-managed software setup and integration</span
+                  >
                   <span class="price-line-value">INR 580,000 <span class="price-line-tax">+ GST</span></span>
                 </li>
                 <li>
@@ -779,15 +784,21 @@
                   <span class="price-line-value">INR 628,000 <span class="price-line-tax">+ GST</span></span>
                 </li>
                 <li>
-                  <span class="price-line-label">Flat-rate shipping within India</span>
+                  <span class="price-line-label">Flat-rate shipping to any destination within India</span>
                   <span class="price-line-value">INR 4,500 <span class="price-line-tax">+ GST</span></span>
                 </li>
               </ul>
               <p class="price-card-note">
                 <strong>The INR 48,000 difference is the price of Software Setup / Technical Support.</strong> It is not
                 a different or reduced kit: both options include the complete RoboRacer Core Kit, including the Traxxas
-                chassis, compatible battery and corresponding battery charger. Flat-rate shipping within India is
-                charged separately at INR 4,500 + GST and is not included in either kit price.
+                chassis, compatible battery and corresponding battery charger. Flat-rate shipping to any destination
+                within India is charged separately at INR 4,500 + GST and is not included in either kit price.
+              </p>
+              <p class="price-card-note">
+                <strong>At INR 580,000 + GST</strong> the vehicle is supplied for customer-managed software setup and
+                integration: the Jetson is supplied without the operating system flashed, the ROS stack and the LiDAR
+                and VESC drivers are not configured, and the 60-day remote technical-support period is not included.
+                Teams who prefer to build and own their own software stack choose this option.
               </p>
             </article>
 
@@ -796,7 +807,9 @@
               <p>Quoted in USD. Shipping is a separate flat rate.</p>
               <ul class="price-lines" role="list">
                 <li class="is-primary">
-                  <span class="price-line-label">Complete RoboRacer Core Kit</span>
+                  <span class="price-line-label"
+                    >Complete RoboRacer Core Kit — for customer-managed software setup and integration</span
+                  >
                   <span class="price-line-value">US$5,900</span>
                 </li>
                 <li>
@@ -822,24 +835,33 @@
                 approximately US$725; the discount is an approximation and the final quotation controls.
               </p>
               <p class="price-card-note">
+                <strong>Software Setup / Technical Support is not included in the US$5,900 kit price.</strong> The
+                vehicle is supplied for customer-managed software setup and integration: the Jetson is supplied without
+                the operating system flashed, the ROS stack and the LiDAR and VESC drivers are not configured, and the
+                60-day remote technical-support period is not included. International customers may request this service
+                separately for an additional fee; scope and pricing will be confirmed in the quotation.
+              </p>
+              <p class="price-card-note">
                 International quotations are supplied on <strong>FOB terms</strong>. Ambimat does not pay destination
                 customs-clearance charges, import duties, local taxes or related destination charges. The applicable FOB
                 location and full commercial terms will be confirmed in the quotation.
               </p>
               <p class="price-card-note">
-                The US$500 shipping charge does not include destination customs clearance, import duties, local taxes or
-                related destination charges.
+                The US$500 charge covers shipping only. Destination customs clearance, import duties, local taxes and
+                related destination charges are the buyer's responsibility, not Ambimat's.
               </p>
             </article>
           </div>
 
           <div class="callout">
             <strong>Software Setup / Technical Support.</strong> This covers loading of the operating system for the
-            NVIDIA Jetson and complete ROS stack configuration, validated on the vehicle before dispatch, plus remote
-            hardware and software technical support for up to 60 days post delivery to assist with deployment and setup.
-            INR 628,000 + GST is the complete Core Kit with Software Setup / Technical Support; INR 580,000 + GST is the
-            same complete Core Kit without it. For international orders the configuration supplied is confirmed on your
-            quotation — <a href="/contact.html#order">request one</a> before ordering.
+            NVIDIA Jetson, complete ROS stack configuration including the LiDAR and VESC drivers, validated on the
+            vehicle before dispatch, plus remote hardware and software technical support for up to 60 days post delivery
+            to assist with deployment and setup. INR 628,000 + GST is the complete Core Kit with Software Setup /
+            Technical Support; INR 580,000 + GST is the same complete Core Kit without it. It is not included in the
+            US$5,900 kit price; international customers may request this service separately for an additional fee, and
+            scope and pricing will be confirmed in the quotation.
+            <a href="/contact.html#order">Request a quotation</a> before ordering.
           </div>
 
           <div class="callout">
@@ -976,14 +998,20 @@
             <div class="faq-item">
               <h3>What is Software Setup / Technical Support?</h3>
               <p>
-                It covers loading of the operating system for the NVIDIA Jetson and complete ROS stack configuration,
-                validated on the vehicle before dispatch, plus remote hardware and software technical support for up to
-                60 days post delivery to assist with deployment and setup.
+                It covers loading of the operating system for the NVIDIA Jetson, complete ROS stack configuration
+                including the LiDAR and VESC drivers, validated on the vehicle before dispatch, plus remote hardware and
+                software technical support for up to 60 days post delivery to assist with deployment and setup.
               </p>
               <p>
-                Software Setup / Technical Support is included in the INR 628,000 + GST option; INR 580,000 + GST is the
-                same complete Core Kit without it. For international orders the configuration supplied is confirmed on
-                your quotation.
+                Software Setup / Technical Support is included in the INR 628,000 + GST option. INR 580,000 + GST is the
+                same complete physical kit supplied for customer-managed software setup and integration: the Jetson
+                arrives without the operating system flashed, the ROS stack and the LiDAR and VESC drivers are not
+                configured, and the 60-day support period does not apply.
+              </p>
+              <p>
+                The US$5,900 international price is on the same customer-managed basis. International customers may
+                request Software Setup / Technical Support separately for an additional fee; scope and pricing will be
+                confirmed in the quotation.
               </p>
             </div>
           </div>
@@ -1003,7 +1031,7 @@
             <img src="/assets/img/ambimat-logo.png" width="209" height="48" alt="Ambimat Electronics" />
             <p>
               RoboRacer is an autonomous racing platform from Ambimat Electronics — a fully assembled, pre-tested
-              1:10-scale autonomy system running ROS 2 on NVIDIA Jetson, with LiDAR perception and VESC drive.
+              1:10-scale vehicle built on NVIDIA Jetson, LiDAR perception and VESC drive, for ROS 2 autonomy work.
             </p>
           </div>
 

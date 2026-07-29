@@ -1075,6 +1075,8 @@ ol {
 .faq-item a,
 .steps a,
 .section-desc a,
+.hero-desc a,
+.price-card-note a,
 .card p a:not(.btn) {
   padding-block: 3px;
 }
