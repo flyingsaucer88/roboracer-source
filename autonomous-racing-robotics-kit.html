@@ -136,9 +136,9 @@
               {
                 "@type": "Offer",
                 "name": "Complete RoboRacer Core Kit - international",
-                "description": "The complete physical Core Kit, including the Traxxas chassis, compatible battery and corresponding battery charger, supplied for customer-managed software setup and integration. Software Setup / Technical Support is not included in this price; international customers may request it separately for an additional fee, with scope and pricing confirmed in the quotation. International quotations are supplied on FOB terms; the applicable FOB location and full commercial terms are confirmed in the quotation. Shipping is charged separately at a flat US$500, which covers shipping only; destination customs clearance, import duties, local taxes and related destination charges are the buyer's responsibility. An optional configuration excluding the chassis, battery and charger for local purchase attracts a discount of approximately US$725; that configuration is quoted individually.",
+                "description": "The complete physical Core Kit, supplied for customer-managed software setup and integration. Due to international shipping restrictions the battery and charger cannot be exported with the kit and must be sourced locally by the customer; the Traxxas chassis may be supplied with the kit or sourced locally, where available. Software Setup / Technical Support is not included in this price; international customers may request it separately for an additional fee, with scope and pricing confirmed in the quotation. International quotations are supplied on FOB terms; the applicable FOB location and full commercial terms are confirmed in the quotation. Shipping is charged separately at a flat US$500, which covers shipping only; destination customs clearance, import duties, local taxes and related destination charges are the buyer's responsibility. An optional configuration in which the Traxxas chassis is sourced locally attracts a discount of approximately US$464; that configuration is quoted individually.",
                 "url": "https://roboracer.ambimat.com/contact.html#order",
-                "price": "5900",
+                "price": "5639",
                 "priceCurrency": "USD",
                 "valueAddedTaxIncluded": false,
                 "shippingDetails": {
@@ -197,7 +197,7 @@
                 "name": "What does the RoboRacer Core Kit cost?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "In India the Core Kit is INR 580,000 + GST, or INR 628,000 + GST with Software Setup / Technical Support; the INR 48,000 difference is the price of that service. Flat-rate shipping is INR 4,500 + GST and is charged separately. Internationally the complete kit is US$5,900 with flat shipping at US$500. Every one of these prices is for the same complete physical kit and its major parts — Jetson Orin Nano Super, VESC 6 MkIV, Hokuyo LiDAR, Traxxas Slash 4x4 VXL chassis, power distribution unit, MDF base plates, 3S battery and charger (for India only). Software Setup / Technical Support — operating-system and ROS stack setup, and 60 days of remote technical support — is included in the INR 628,000 + GST option."
+                  "text": "In India the Core Kit is INR 580,000 + GST, or INR 628,000 + GST with Software Setup / Technical Support; the INR 48,000 difference is the price of that service. Flat-rate shipping is INR 4,500 + GST and is charged separately. Internationally the complete kit is US$5,639 with flat shipping at US$500. Every one of these prices is for the same complete physical kit and its major parts — Jetson Orin Nano Super, VESC 6 MkIV, Hokuyo LiDAR, Traxxas Slash 4x4 VXL chassis, power distribution unit, MDF base plate, 3S battery and charger (for India only). Software Setup / Technical Support — operating-system and ROS stack setup, and 60 days of remote technical support — is included in the INR 628,000 + GST option."
                 }
               },
               {
@@ -205,7 +205,7 @@
                 "name": "Can I buy the chassis, battery and charger locally instead?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "On international orders, yes. In some countries it is easier and more economical to buy the Traxxas chassis, a compatible battery and the corresponding battery charger from a local Traxxas reseller. If those three items are excluded from the supplied kit, a discount of approximately US$725 applies, giving an indicative price of approximately US$5,175 before shipping. The discount is approximate and the final quotation controls. This is an optional configuration: the INR 580,000, INR 628,000 and US$5,900 prices are all for the complete kit with the chassis, battery and charger included."
+                  "text": "On international orders, the battery and charger cannot be shipped internationally due to shipping restrictions and must be sourced locally by the customer. The Traxxas chassis may be supplied with the kit or sourced locally, depending on the customer's preference and local availability. If the Traxxas chassis is sourced locally, an optional discount of approximately US$464 applies, giving an indicative international price of approximately US$5,175 before shipping. The discount is approximate and the final quotation controls. This is an optional configuration. The INR 580,000 price, the INR 628,000 price with Software Setup / Technical Support, and the US$5,639 international price are all based on the complete kit configuration, with the battery and charger sourced locally for international orders due to shipping restrictions."
                 }
               },
               {
@@ -221,7 +221,7 @@
                 "name": "What is Software Setup / Technical Support?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "It covers loading of the operating system for the NVIDIA Jetson, complete ROS stack configuration including the LiDAR and VESC drivers, validated on the vehicle before dispatch, plus remote hardware and software technical support for up to 60 days post delivery to assist with deployment and setup. It is included in the INR 628,000 + GST option. INR 580,000 + GST is the same complete physical kit supplied for customer-managed software setup and integration: the Jetson arrives without the operating system flashed, the ROS stack and drivers are not configured, and the 60-day support period does not apply. The US$5,900 international price is on the same customer-managed basis; international customers may request the service separately for an additional fee, with scope and pricing confirmed in the quotation."
+                  "text": "It covers loading of the operating system for the NVIDIA Jetson, complete ROS stack configuration including the LiDAR and VESC drivers, validated on the vehicle before dispatch, plus remote hardware and software technical support for up to 60 days post delivery to assist with deployment and setup. It is included in the INR 628,000 + GST option. INR 580,000 + GST is the same complete physical kit supplied for customer-managed software setup and integration: the Jetson arrives without the operating system flashed, the ROS stack and drivers are not configured, and the 60-day support period does not apply. The US$5,639 international price is on the same customer-managed basis; international customers may request the service separately for an additional fee, with scope and pricing confirmed in the quotation."
                 }
               }
             ]
@@ -511,12 +511,11 @@
           </div>
 
           <div class="callout">
-            <strong>Optional international configuration.</strong> The table above is the complete kit, and the chassis,
-            battery and charger are part of it at every listed price. On international orders only, you may instead
-            source three of those items locally — the <strong>Traxxas chassis</strong>, a
-            <strong>compatible battery</strong> and the <strong>corresponding battery charger</strong> — from a Traxxas
-            reseller, which in some countries is easier and more economical. Excluding exactly those three items earns a
-            discount of approximately US$725. Everything else in the table ships as listed. See
+            <strong>Optional international configuration.</strong> The table above shows the complete kit, including the
+            chassis, battery and charger. Due to international shipping restrictions, the battery and charger cannot be
+            exported with the kit and must be sourced locally by the customer. The Traxxas chassis may be supplied with
+            the kit or sourced locally, where available. If the chassis is sourced locally, an optional discount of
+            approximately US$464 applies. Everything else in the table ships as listed. See
             <a href="#pricing">pricing</a> for the figures.
           </div>
         </div>
@@ -800,20 +799,17 @@
 
             <article class="price-card">
               <h3>International</h3>
-              <p>Quoted in USD. Shipping is a separate flat rate.</p>
+              <p>Quoted in USD (without battery &amp; charger). Shipping is a separate flat rate.</p>
               <ul class="price-lines" role="list">
                 <li class="is-primary">
                   <span class="price-line-label"
-                    >Complete RoboRacer Core Kit — for customer-managed software setup and integration</span
+                    >RoboRacer Core Kit (with Chessis) — for customer-managed software setup and integration</span
                   >
-                  <span class="price-line-value">US$5,900</span>
+                  <span class="price-line-value">US$5,639</span>
                 </li>
                 <li>
-                  <span class="price-line-label">
-                    Optional discount when the Traxxas chassis, compatible battery and corresponding battery charger are
-                    sourced locally
-                  </span>
-                  <span class="price-line-value">approximately US$725</span>
+                  <span class="price-line-label"> Optional discount when the Traxxas chassis are sourced locally </span>
+                  <span class="price-line-value">approximately US$464</span>
                 </li>
                 <li class="is-indicative">
                   <span class="price-line-label">Indicative price for that locally sourced configuration</span>
@@ -827,11 +823,11 @@
                 </li>
               </ul>
               <p class="price-card-note">
-                <strong>The approximately US$5,175 figure is indicative only.</strong> It is US$5,900 less a discount of
-                approximately US$725; the discount is an approximation and the final quotation controls.
+                <strong>The approximately US$5,175 figure is indicative only.</strong> It is US$5,639 less a discount of
+                approximately US$464; the discount is an approximation and the final quotation controls.
               </p>
               <p class="price-card-note">
-                <strong>Software Setup / Technical Support is not included in the US$5,900 kit price.</strong> The
+                <strong>Software Setup / Technical Support is not included in the US$5,639 kit price.</strong> The
                 vehicle is supplied for customer-managed software setup and integration: the Jetson is supplied without
                 the operating system flashed, the ROS stack and the LiDAR and VESC drivers are not configured, and the
                 60-day remote technical-support period is not included. International customers may request this service
@@ -855,17 +851,17 @@
             vehicle before dispatch, plus remote hardware and software technical support for up to 60 days post delivery
             to assist with deployment and setup. INR 628,000 + GST is the complete Core Kit with Software Setup /
             Technical Support; INR 580,000 + GST is the same complete Core Kit without it. It is not included in the
-            US$5,900 kit price; international customers may request this service separately for an additional fee, and
+            US$5,639 kit price; international customers may request this service separately for an additional fee, and
             scope and pricing will be confirmed in the quotation.
             <a href="/contact.html#order">Request a quotation</a> before ordering.
           </div>
 
           <div class="callout">
-            <strong>Sourcing the chassis, battery and charger locally.</strong> In some countries it is easier and more
-            economical to buy the <strong>Traxxas chassis</strong>, a <strong>compatible battery</strong> and the
-            <strong>corresponding battery charger</strong> from a local Traxxas reseller. Excluding exactly those three
-            items from the supplied kit earns a discount of approximately US$725. This is an optional international
-            configuration only — every other price on this page is for the complete kit, with all three items included.
+            The battery and charger are excluded from international shipment due to shipping restrictions and must be
+            sourced locally by the customer. The Traxxas chassis may be supplied with the kit or sourced locally,
+            depending on the customer's preference and local availability. If the Traxxas chassis is sourced locally, an
+            optional discount of approximately US$464 applies. Everything else on this page is included in the complete
+            kit as listed, with the battery and charger sourced locally by the customer.
           </div>
 
           <div class="prose">
@@ -954,30 +950,31 @@
               <p>
                 In India the Core Kit is INR 580,000 + GST, or INR 628,000 + GST with Software Setup / Technical
                 Support; the INR 48,000 difference is the price of that service. Flat-rate shipping is INR 4,500 + GST
-                and is charged separately. Internationally the complete kit is US$5,900 with flat shipping at US$500.
+                and is charged separately. Internationally the complete kit is US$5,639 with flat shipping at US$500.
               </p>
               <p>
                 Every one of these prices is for the same complete physical kit and its major parts — Jetson Orin Nano
                 Super, VESC 6 MkIV, Hokuyo LiDAR, Traxxas Slash 4x4 VXL chassis, power distribution unit, MDF base
-                plates, 3S battery and charger (for India only). Software Setup / Technical Support — operating-system
-                and ROS stack setup, and 60 days of remote technical support — is included in the INR 628,000 + GST
-                option. The <a href="#pricing">pricing section</a> sets out every line item.
+                plate, <strong>3S battery and charger (for India only).</strong> Software Setup / Technical Support —
+                operating-system and ROS stack setup, and 60 days of remote technical support — is included in the INR
+                628,000 + GST option. The <a href="#pricing">pricing section</a> sets out every line item.
               </p>
             </div>
 
             <div class="faq-item">
               <h3>Can I buy the chassis, battery and charger locally instead?</h3>
               <p>
-                On international orders, yes. In some countries it is easier and more economical to buy the Traxxas
-                chassis, a compatible battery and the corresponding battery charger from a local Traxxas reseller. If
-                those three items are excluded from the supplied kit, a discount of approximately US$725 applies, giving
-                an indicative price of approximately US$5,175 before shipping. The discount is approximate and the final
+                On international orders, the battery and charger cannot be shipped internationally due to shipping
+                restrictions and must be sourced locally by the customer. The Traxxas chassis may be supplied with the
+                kit or sourced locally, depending on the customer's preference and local availability. If the Traxxas
+                chassis is sourced locally, an optional discount of approximately US$464 applies, giving an indicative
+                international price of approximately US$5,175 before shipping. The discount is approximate and the final
                 quotation controls.
               </p>
               <p>
                 This is an optional configuration. The INR 580,000 price, the INR 628,000 price with Software Setup /
-                Technical Support, and the US$5,900 international price are all for the complete kit, with the chassis,
-                battery and charger included.
+                Technical Support, and the US$5,639 international price are all based on the complete kit configuration,
+                with the battery and charger sourced locally for international orders due to shipping restrictions.
               </p>
             </div>
 
@@ -1005,7 +1002,7 @@
                 configured, and the 60-day support period does not apply.
               </p>
               <p>
-                The US$5,900 international price is on the same customer-managed basis. International customers may
+                The US$5,639 international price is on the same customer-managed basis. International customers may
                 request Software Setup / Technical Support separately for an additional fee; scope and pricing will be
                 confirmed in the quotation.
               </p>

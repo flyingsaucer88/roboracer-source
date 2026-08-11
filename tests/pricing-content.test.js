@@ -217,10 +217,10 @@ describe("international terms are FOB and destination charges stay with the buye
 
 describe("confirmed international facts", () => {
   for (const file of PRICING_PAGES) {
-    test(`${file} states the service is not included in US$5,900`, () => {
+    test(`${file} states the service is not included in US$5,639`, () => {
       assert.match(
         visibleText(read(file)),
-        /not included in the US\$5,900 (international|kit) price|US\$5,900, which does not include\s+Software Setup \/ Technical Support/i,
+        /not included in the US\$5,639 (international|kit) price|US\$5,639, which does not include\s+Software Setup \/ Technical Support/i,
         `${file} does not say Software Setup / Technical Support is excluded from the USD price`,
       );
     });
@@ -320,13 +320,13 @@ describe("the three configurations are unambiguous", () => {
       );
     });
 
-    test(`${file} positions the US$5,900 row as customer-managed`, () => {
-      const line = priceLines(read(file)).find((l) => l.value.includes("US$5,900"));
-      assert.ok(line, `${file} has no US$5,900 row`);
+    test(`${file} positions the US$5,639 row as customer-managed`, () => {
+      const line = priceLines(read(file)).find((l) => l.value.includes("US$5,639"));
+      assert.ok(line, `${file} has no US$5,639 row`);
       assert.match(
         line.label,
         /customer-managed software setup and integration/i,
-        `the US$5,900 row in ${file} is not positioned as customer-managed:\n${line.label}`,
+        `the US$5,639 row in ${file} is not positioned as customer-managed:\n${line.label}`,
       );
     });
 
@@ -351,8 +351,8 @@ describe("the three configurations are unambiguous", () => {
       assert.ok(card, `${file} has no International price card`);
       for (const [what, re] of [
         [
-          "service excluded from US$5,900",
-          /Software Setup \/ Technical Support is not included in the US\$5,900 kit price/i,
+          "service excluded from US$5,639",
+          /Software Setup \/ Technical Support is not included in the US\$5,639 kit price/i,
         ],
         ["operating system not flashed", /without\s+the operating system flashed/i],
         [
@@ -369,7 +369,7 @@ describe("the three configurations are unambiguous", () => {
     test(`${file} never asserts inclusion inside a customer-managed card`, () => {
       for (const card of priceCards(read(file))) {
         for (const re of [
-          /Software Setup \/ Technical Support is included in the US\$5,900/i,
+          /Software Setup \/ Technical Support is included in the US\$5,639/i,
           /the 60-day remote technical-support period is included/i,
           /the Jetson is supplied with the operating system flashed/i,
         ]) {
@@ -378,11 +378,11 @@ describe("the three configurations are unambiguous", () => {
       }
     });
 
-    test(`${file} never claims 580,000 or 5,900 include the setup activities`, () => {
+    test(`${file} never claims 580,000 or 5,639 include the setup activities`, () => {
       const text = visibleText(read(file));
       const forbidden = [
         /INR 580,000(?:(?!not|without|excluding)[^.]){0,140}\b(operating system (is )?flashed|ROS stack (is )?configured|drivers (are )?(pre-)?configured|60 days of remote)/i,
-        /US\$5,900(?:(?!not|without|excluding)[^.]){0,140}\b(operating system (is )?flashed|ROS stack (is )?configured|drivers (are )?(pre-)?configured|60 days of remote)/i,
+        /US\$5,639(?:(?!not|without|excluding)[^.]){0,140}\b(operating system (is )?flashed|ROS stack (is )?configured|drivers (are )?(pre-)?configured|60 days of remote)/i,
       ];
       for (const re of forbidden) {
         assert.ok(!re.test(text), `${file} attaches setup activities to a customer-managed price: ${re}`);
@@ -400,7 +400,7 @@ describe("the three configurations are unambiguous", () => {
 
     test(`${file} invents no price for the international service`, () => {
       // The sentence offering the service separately must carry no figure.
-      const APPROVED = new Set(["US$5,900", "US$725", "US$5,175", "US$500"]);
+      const APPROVED = new Set(["US$5,639", "US$464", "US$5,175", "US$500"]);
       const sentences = visibleText(read(file)).split(/(?<=\.)\s+/);
       for (const s of sentences.filter((x) => /separately for an additional fee/i.test(x))) {
         // Anchor on a digit so a trailing comma is not read as part of the figure.
@@ -419,7 +419,7 @@ describe("the three configurations are unambiguous", () => {
       for (const re of [
         /without Software Setup[^.]{0,80}(fewer|reduced|missing) (parts|components|hardware)/i,
         /INR 580,000[^.]{0,100}(without|no) (the )?(Traxxas )?chassis/i,
-        /US\$5,900[^.]{0,100}(without|no) (the )?(Traxxas )?chassis/i,
+        /US\$5,639[^.]{0,100}(without|no) (the )?(Traxxas )?chassis/i,
       ]) {
         assert.ok(!re.test(text), `${file} conflates the service distinction with the physical kit: ${re}`);
       }
@@ -602,19 +602,19 @@ describe("India pricing is stated with the service relationship intact", () => {
 
 describe("international pricing is stated with the discount qualified", () => {
   for (const file of PRICING_PAGES) {
-    test(`${file} quotes US$5,900 for the complete kit`, () => {
-      assert.match(visibleText(read(file)), /US\$5,900/);
+    test(`${file} quotes US$5,639 for the complete kit`, () => {
+      assert.match(visibleText(read(file)), /US\$5,639/);
     });
 
     test(`${file} quotes the US$500 flat shipping`, () => {
       assert.match(visibleText(read(file)), /US\$500/);
     });
 
-    test(`${file} presents the US$725 discount as approximate`, () => {
+    test(`${file} presents the US$464 discount as approximate`, () => {
       const text = visibleText(read(file));
-      for (const m of text.matchAll(/US\$725/g)) {
+      for (const m of text.matchAll(/US\$464/g)) {
         const w = text.slice(Math.max(0, m.index - 60), m.index + 20);
-        assert.match(w, /approximately/i, `US$725 appears unqualified in ${file}:\n${w}`);
+        assert.match(w, /approximately/i, `US$464 appears unqualified in ${file}:\n${w}`);
       }
     });
 
@@ -624,40 +624,40 @@ describe("international pricing is stated with the discount qualified", () => {
         const w = text.slice(Math.max(0, m.index - 120), m.index + 200);
         assert.match(w, /approximately/i, `US$5,175 appears unqualified in ${file}:\n${w}`);
       }
-      // 5900 - 725 = 5175. Guard the arithmetic itself.
-      assert.equal(5900 - 725, 5175);
+      // 5639 - 464 = 5175. Guard the arithmetic itself.
+      assert.equal(5639 - 464, 5175);
     });
   }
 });
 
-describe("the locally sourced configuration names all three excluded items", () => {
+describe("the locally sourced configuration names the discounted item", () => {
   for (const file of PRICING_PAGES) {
-    test(`${file} names all three excluded items on the discount price row`, () => {
-      // Structural: the row carrying the discount must itself enumerate what
-      // is excluded. A word appearing elsewhere in the callout does not count.
-      const line = priceLines(read(file)).find((l) => l.value.includes("US$725"));
-      assert.ok(line, `${file} has no US$725 price line`);
-      for (const item of ["Traxxas chassis", "compatible battery", "corresponding battery charger"]) {
+    test(`${file} names the discounted item on the discount price row`, () => {
+      // Structural: the row carrying the discount must itself name what is
+      // locally sourced. A word appearing elsewhere in the callout does not count.
+      const line = priceLines(read(file)).find((l) => l.value.includes("US$464"));
+      assert.ok(line, `${file} has no US$464 price line`);
+      for (const item of ["Traxxas chassis"]) {
         assert.ok(
           line.label.includes(item),
-          `the US$725 row in ${file} does not name "${item}":\n${line.label}`,
+          `the US$464 row in ${file} does not name "${item}":\n${line.label}`,
         );
       }
     });
 
-    test(`${file} names all three excluded items in every discount sentence`, () => {
+    test(`${file} names the discounted item in every discount sentence`, () => {
       // For each mention of the discount, the sentence it sits in — plus the
-      // two before it — must enumerate all three items by their full names.
+      // two before it — must name the item that is locally sourced.
       const text = visibleText(read(file));
       const sentences = text.split(/(?<=\.)\s+/);
-      const mentions = sentences.map((s, i) => [s, i]).filter(([s]) => s.includes("US$725"));
+      const mentions = sentences.map((s, i) => [s, i]).filter(([s]) => s.includes("US$464"));
       assert.ok(mentions.length > 0, `${file} never mentions the local-sourcing discount`);
       for (const [, i] of mentions) {
         const context = sentences.slice(Math.max(0, i - 2), i + 1).join(" ");
-        for (const item of ["Traxxas chassis", "compatible battery", "corresponding battery charger"]) {
+        for (const item of ["Traxxas chassis"]) {
           assert.ok(
             context.includes(item),
-            `a US$725 mention in ${file} does not name "${item}" in context:\n${context}`,
+            `a US$464 mention in ${file} does not name "${item}" in context:\n${context}`,
           );
         }
       }
@@ -743,7 +743,7 @@ describe("structured data carries the current commerce facts", () => {
     test(`${file} Product offers are exactly the three firm configurations`, () => {
       const offers = offersIn(read(file));
       const priced = offers.map((o) => `${o.priceCurrency} ${o.price}`).sort();
-      assert.deepEqual(priced, ["INR 580000", "INR 628000", "USD 5900"], `unexpected offers in ${file}`);
+      assert.deepEqual(priced, ["INR 580000", "INR 628000", "USD 5639"], `unexpected offers in ${file}`);
     });
 
     test(`${file} offers declare tax as not included`, () => {
@@ -823,7 +823,7 @@ describe("structured data carries the current commerce facts", () => {
 });
 
 describe("pricing pages stay in agreement", () => {
-  const FIGURES = ["INR 580,000", "INR 628,000", "INR 4,500", "US$5,900", "US$725", "US$5,175", "US$500"];
+  const FIGURES = ["INR 580,000", "INR 628,000", "INR 4,500", "US$5,639", "US$464", "US$5,175", "US$500"];
   for (const figure of FIGURES) {
     test(`every pricing page shows ${figure}`, () => {
       for (const file of PRICING_PAGES) {
