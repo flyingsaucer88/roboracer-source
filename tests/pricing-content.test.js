@@ -124,7 +124,7 @@ describe("retired pricing never reappears", () => {
         const w = text.slice(Math.max(0, m.index - 200), m.index + 60);
         assert.match(
           w,
-          /With Tech Support|Software Setup ?\/ ?Technical Support/i,
+          /Core Kit Pro|With Tech Support|Software Setup ?\/ ?Technical Support/i,
           `${file} quotes US$6,100 without naming the Tech Support configuration:\n${w}`,
         );
       }
@@ -186,7 +186,7 @@ describe("international terms are FOB and destination charges stay with the buye
       const text = visibleText(read(file));
       assert.match(
         text,
-        /US\$500 charge covers shipping only|US\$500 shipping charge does not include destination customs clearance/i,
+        /US\$500 charge covers shipping only|US\$500, and that charge covers shipping only|US\$500 shipping charge does not include destination customs clearance/i,
         `${file} does not scope the US$500 charge`,
       );
       assert.match(
@@ -373,7 +373,7 @@ describe("the three configurations are unambiguous", () => {
         ["60-day support not included", /60-day remote technical-support period is not included/i],
         [
           "Tech Support available as a priced configuration",
-          /RoboRacer Core Kit \(With Tech Support\) for US\$6,100/i,
+          /RoboRacer Core Kit Pro[^.]{0,60}for US\$6,100/i,
         ],
       ]) {
         assert.match(card.text, re, `the International card in ${file} does not state: ${what}`);
@@ -415,7 +415,7 @@ describe("the three configurations are unambiguous", () => {
     test(`${file} offers the service to international buyers at a published price`, () => {
       assert.match(
         visibleText(read(file)),
-        /RoboRacer Core Kit \(With Tech Support\) for US\$6,100/i,
+        /RoboRacer Core Kit Pro[^.]{0,60}for US\$6,100/i,
         `${file} does not offer international buyers the Tech Support configuration`,
       );
     });
@@ -787,8 +787,8 @@ describe("structured data carries the current commerce facts", () => {
       assert.equal(tech.length, 1, `${file} does not have exactly one USD 6100 offer`);
       assert.match(
         tech[0].name,
-        /With Tech Support/i,
-        `the USD 6100 offer in ${file} is not named as the Tech Support configuration:\n${tech[0].name}`,
+        /Core Kit Pro/i,
+        `the USD 6100 offer in ${file} is not named as the Pro configuration:\n${tech[0].name}`,
       );
       assert.match(
         tech[0].description,
