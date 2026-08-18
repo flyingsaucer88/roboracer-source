@@ -116,11 +116,22 @@ function machineText(html) {
 
 describe("retired pricing never reappears", () => {
   for (const file of ALL_HTML) {
-    test(`${file} contains no US$6,100 in any form`, () => {
-      const raw = read(file);
-      for (const stale of ["6,100", "6100", "USD 6,100", "US$6,100"]) {
-        assert.ok(!raw.includes(stale), `${file} still contains the retired price token "${stale}"`);
+    test(`${file} only uses US$6,100 for the Tech Support configuration`, () => {
+      // US$6,100 is the international kit *with* Software Setup / Technical
+      // Support. It must never be presented as the standard kit price.
+      const text = visibleText(read(file));
+      for (const m of text.matchAll(/US\$6,?100/g)) {
+        const w = text.slice(Math.max(0, m.index - 200), m.index + 60);
+        assert.match(
+          w,
+          /With Tech Support|Software Setup ?\/ ?Technical Support/i,
+          `${file} quotes US$6,100 without naming the Tech Support configuration:\n${w}`,
+        );
       }
+    });
+
+    test(`${file} never says "with is not included"`, () => {
+      assert.ok(!/with is not included/i.test(read(file)), `${file} still contains the "with is" typo`);
     });
 
     test(`${file} does not quote the kit ex-works`, () => {
@@ -360,10 +371,22 @@ describe("the three configurations are unambiguous", () => {
           /(ROS stack and(?: the)? LiDAR and VESC drivers are not configured)/i,
         ],
         ["60-day support not included", /60-day remote technical-support period is not included/i],
-        ["service available separately", /may request this service\s+separately for an additional fee/i],
+        [
+          "Tech Support available as a priced configuration",
+          /RoboRacer Core Kit \(With Tech Support\) for US\$6,100/i,
+        ],
       ]) {
         assert.match(card.text, re, `the International card in ${file} does not state: ${what}`);
       }
+    });
+
+    test(`${file} states the service exclusion in correct English`, () => {
+      const card = priceCards(read(file)).find((c) => /International/i.test(c.heading));
+      assert.match(
+        card.text,
+        /Software Setup \/ Technical Support is not included in the US\$5,639 kit price\./,
+        `the International card in ${file} does not carry the corrected exclusion sentence`,
+      );
     });
 
     test(`${file} never asserts inclusion inside a customer-managed card`, () => {
@@ -389,13 +412,12 @@ describe("the three configurations are unambiguous", () => {
       }
     });
 
-    test(`${file} offers the service separately to international buyers`, () => {
+    test(`${file} offers the service to international buyers at a published price`, () => {
       assert.match(
         visibleText(read(file)),
-        /may request (this|that|it) service separately for an additional fee|may request this service separately for an additional fee/i,
-        `${file} does not say international buyers can request the service separately`,
+        /RoboRacer Core Kit \(With Tech Support\) for US\$6,100/i,
+        `${file} does not offer international buyers the Tech Support configuration`,
       );
-      assert.match(visibleText(read(file)), /scope and pricing will be confirmed in the quotation/i);
     });
 
     test(`${file} invents no price for the international service`, () => {
@@ -451,12 +473,22 @@ describe("the three configurations are unambiguous", () => {
     }
   });
 
-  test("the optional international service is not modelled as an Offer", () => {
+  test("the service is only ever sold as a kit configuration, never on its own", () => {
+    // The Tech Support tier is now a published Offer (USD 6100), but it is a
+    // *kit* configuration. The bare service must never be an Offer by itself.
     for (const file of ["index.html", "autonomous-racing-robotics-kit.html"]) {
       const offers = offersIn(read(file));
-      assert.equal(offers.length, 3, `${file} should carry exactly three Offers`);
+      assert.equal(offers.length, 4, `${file} should carry exactly four Offers`);
       for (const o of offers) {
-        assert.ok(!/^Software Setup/i.test(o.name ?? ""), `${file} models the optional service as an Offer`);
+        assert.ok(
+          !/^Software Setup/i.test(o.name ?? ""),
+          `${file} models the optional service as a standalone Offer: ${o.name}`,
+        );
+        assert.match(
+          o.name ?? "",
+          /RoboRacer Core Kit/i,
+          `${file} has an Offer that is not a Core Kit configuration: ${o.name}`,
+        );
       }
     }
   });
@@ -731,19 +763,68 @@ describe("structured data carries the current commerce facts", () => {
       assert.doesNotThrow(() => jsonLd(read(file)));
     });
 
-    test(`${file} JSON-LD has no stale pricing`, () => {
+    test(`${file} JSON-LD carries no retired USD 5900 price`, () => {
       const machine = machineText(read(file));
-      for (const stale of ['"6100"', "6,100", "US$6,100", "USD 6,100"]) {
+      for (const stale of ['"price": "5900"', '"price":"5900"', "US$5,900", "USD 5,900"]) {
         assert.ok(!machine.includes(stale), `${file} JSON-LD still advertises ${stale}`);
       }
     });
   }
 
   for (const file of ["index.html", "autonomous-racing-robotics-kit.html"]) {
-    test(`${file} Product offers are exactly the three firm configurations`, () => {
+    test(`${file} Product offers are exactly the four firm configurations`, () => {
       const offers = offersIn(read(file));
       const priced = offers.map((o) => `${o.priceCurrency} ${o.price}`).sort();
-      assert.deepEqual(priced, ["INR 580000", "INR 628000", "USD 5639"], `unexpected offers in ${file}`);
+      assert.deepEqual(
+        priced,
+        ["INR 580000", "INR 628000", "USD 5639", "USD 6100"],
+        `unexpected offers in ${file}`,
+      );
+    });
+
+    test(`${file} the USD 6100 offer is the Tech Support configuration`, () => {
+      const tech = offersIn(read(file)).filter((o) => o.priceCurrency === "USD" && o.price === "6100");
+      assert.equal(tech.length, 1, `${file} does not have exactly one USD 6100 offer`);
+      assert.match(
+        tech[0].name,
+        /With Tech Support/i,
+        `the USD 6100 offer in ${file} is not named as the Tech Support configuration:\n${tech[0].name}`,
+      );
+      assert.match(
+        tech[0].description,
+        /Software Setup \/ Technical Support/i,
+        `the USD 6100 offer in ${file} does not describe the service it includes`,
+      );
+      // It must not be presented as the plain/base international kit.
+      assert.ok(
+        !/^Complete RoboRacer Core Kit - international$/i.test(tech[0].name),
+        `the USD 6100 offer in ${file} is presented as the standard international kit`,
+      );
+    });
+
+    test(`${file} the USD 6100 offer did not replace the USD 5639 offer`, () => {
+      const usd = offersIn(read(file)).filter((o) => o.priceCurrency === "USD");
+      const prices = usd.map((o) => o.price).sort();
+      assert.deepEqual(prices, ["5639", "6100"], `${file} lost or duplicated a USD offer`);
+      const std = usd.find((o) => o.price === "5639");
+      assert.ok(std, `${file} no longer publishes the standard USD 5639 offer`);
+      assert.match(
+        std.description,
+        /not included in this price/i,
+        `the USD 5639 offer in ${file} no longer excludes the service`,
+      );
+    });
+
+    test(`${file} publishes no duplicate offers`, () => {
+      const keys = offersIn(read(file)).map((o) => `${o.priceCurrency} ${o.price} ${o.name}`);
+      assert.equal(new Set(keys).size, keys.length, `${file} has duplicate Offer nodes:\n${keys.join("\n")}`);
+    });
+
+    test(`${file} has exactly one Product node`, () => {
+      const products = jsonLd(read(file))
+        .flatMap((doc) => [...nodes(doc)])
+        .filter((n) => n["@type"] === "Product");
+      assert.equal(products.length, 1, `${file} has ${products.length} Product nodes`);
     });
 
     test(`${file} offers declare tax as not included`, () => {
