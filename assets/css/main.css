@@ -812,6 +812,15 @@ ol {
   justify-content: flex-start;
 }
 
+/* One CTA per pricing card, stretched to the card. Both cards are the same
+   width (.grid-2) and stretch to the same height (align-items: stretch), so
+   this makes the two CTAs identical in size at every breakpoint without
+   pinning a pixel height. */
+.price-card .order-actions .btn {
+  width: 100%;
+  text-align: center;
+}
+
 @media (width <= 520px) {
   .price-card {
     padding: 24px 20px;
@@ -1320,6 +1329,12 @@ code {
 .callout strong {
   color: var(--rr-dark);
 }
+
+/* A callout that carries more than one paragraph needs the spacing back;
+   the global reset zeroes it. */
+.callout p + p {
+  margin-top: 12px;
+}
 .callout a {
   color: var(--rr-red-dark);
   text-decoration: underline;
@@ -1801,6 +1816,7 @@ code {
   height: 100%;
   object-fit: cover;
 }
+
 .video-card .video-play {
   position: absolute;
   inset: 0;

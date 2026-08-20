@@ -984,3 +984,162 @@ describe("inferred component variants keep their caveat", () => {
     }
   });
 });
+
+/* -------------------------------------------------------------------------
+   Contact pricing component — structure.
+
+   The 20-Aug restructure moved content between the four blocks of the
+   Contact pricing section: the Software Setup / Technical Support
+   explanation went into both pricing cards, the FOB/shipping paragraph
+   moved out of the International card into the first callout, and each
+   order CTA moved to the bottom of its own card. These guards pin that
+   arrangement so a later edit cannot quietly duplicate a paragraph, strip
+   a CTA, or split the two buttons back onto different treatments.
+   ---------------------------------------------------------------------- */
+
+/** Raw inner markup of each `.price-card`, keyed by its heading. */
+function priceCardMarkup(html) {
+  const out = {};
+  for (const m of html.matchAll(/<article class="price-card">([\s\S]*?)<\/article>/g)) {
+    const h = m[1].match(/<h3[^>]*>([\s\S]*?)<\/h3>/);
+    out[visibleText(h ? h[1] : "")] = m[1];
+  }
+  return out;
+}
+
+/** Raw inner markup of each `.callout`, in document order. */
+function calloutMarkup(html) {
+  return [...html.matchAll(/<div class="callout">([\s\S]*?)<\/div>/g)].map((m) => m[1]);
+}
+
+const SUPPORT_SENTENCE = "This covers loading of the operating system for the";
+const FOB_SENTENCE = "International quotations are supplied on";
+const SHIPPING_POLICY_HREF = 'href="https://orders.ambimat.com/shipping-policy/"';
+const INDIA_CTA_HREF =
+  'href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=business.development@ambimat.com"';
+const INTL_CTA_HREF = 'href="https://orders.ambimat.com/"';
+
+describe("contact pricing component keeps its restructured layout", () => {
+  const html = read("contact.html");
+  const cards = priceCardMarkup(html);
+  const callouts = calloutMarkup(html);
+
+  test("both pricing cards exist", () => {
+    assert.deepStrictEqual(Object.keys(cards).sort(), ["India", "International"]);
+    assert.strictEqual(callouts.length, 2, "the pricing section should still have exactly two callouts");
+  });
+
+  for (const card of ["India", "International"]) {
+    test(`the ${card} card explains Software Setup / Technical Support exactly once`, () => {
+      const hits = cards[card].split(SUPPORT_SENTENCE).length - 1;
+      assert.strictEqual(hits, 1, `${card} card has ${hits} copies of the support explanation, expected 1`);
+    });
+
+    test(`the ${card} card ends with its own order CTA`, () => {
+      const m = cards[card].match(/<div class="order-actions">([\s\S]*?)<\/div>/);
+      assert.ok(m, `${card} card lost its .order-actions block`);
+      const anchors = [...m[1].matchAll(/<a\b/g)].length;
+      assert.strictEqual(anchors, 1, `${card} card should hold exactly one CTA, found ${anchors}`);
+      // .order-actions is the last element, so `margin-top: auto` pins it to
+      // the bottom of the flex card rather than a hard-coded height.
+      const after = cards[card].slice(cards[card].indexOf('<div class="order-actions">'));
+      assert.ok(!/<p\b|<ul\b|<h3\b/.test(after.replace(/<div class="order-actions">[\s\S]*?<\/div>/, "")));
+    });
+  }
+
+  test("the India CTA keeps its mail destination and sits in the India card", () => {
+    assert.ok(cards.India.includes(INDIA_CTA_HREF), "India CTA href changed or left the India card");
+    assert.ok(cards.India.includes("Request an India quotation"));
+    assert.ok(!cards.International.includes("Request an India quotation"));
+  });
+
+  test("the International CTA keeps its store destination and sits in the International card", () => {
+    assert.ok(cards.International.includes(INTL_CTA_HREF), "International CTA href changed or left the card");
+    assert.ok(cards.International.includes("International orders<"));
+    assert.ok(!cards.India.includes("International orders<"));
+  });
+
+  test("both CTAs use the same button treatment", () => {
+    const classOf = (markup) => markup.match(/<a\s+class="([^"]*btn[^"]*)"/)[1];
+    const inIndia = classOf(cards.India.match(/<div class="order-actions">[\s\S]*?<\/div>/)[0]);
+    const inIntl = classOf(cards.International.match(/<div class="order-actions">[\s\S]*?<\/div>/)[0]);
+    assert.strictEqual(inIndia, inIntl, `pricing CTAs drifted apart: "${inIndia}" vs "${inIntl}"`);
+    assert.match(inIndia, /\bbtn\b/);
+  });
+
+  test("the FOB paragraph lives in the first callout, not the International card", () => {
+    assert.ok(
+      !cards.International.includes(FOB_SENTENCE),
+      "the FOB paragraph is back inside the International card",
+    );
+    assert.ok(callouts[0].includes(FOB_SENTENCE), "the first callout lost the FOB paragraph");
+    assert.ok(
+      callouts[0].includes(SHIPPING_POLICY_HREF),
+      "the shipping-policy link did not travel with the paragraph",
+    );
+    assert.match(callouts[0], /is\s+authoritative\./, "the moved paragraph was truncated");
+  });
+
+  test("the first callout no longer duplicates the support explanation", () => {
+    assert.ok(!callouts[0].includes(SUPPORT_SENTENCE), "support text is duplicated in the first callout");
+  });
+
+  test("the second callout still carries the battery, charger and chassis terms", () => {
+    const text = visibleText(callouts[1]);
+    for (const phrase of [
+      "battery and charger are excluded from international shipment",
+      "must be sourced locally by the customer",
+      "Traxxas chassis may be supplied with the kit or sourced locally",
+      "approximately US$464",
+    ]) {
+      assert.ok(text.includes(phrase), `second callout lost: ${phrase}`);
+    }
+  });
+
+  test("no orphaned CTA row survives below the callouts", () => {
+    assert.ok(
+      !html.includes("order-actions section-cta"),
+      "the old button row below the callouts is still present",
+    );
+    const rows = [...html.matchAll(/class="order-actions"/g)].length;
+    assert.strictEqual(rows, 3, `expected 3 .order-actions rows (Order Now + 2 cards), found ${rows}`);
+  });
+});
+
+describe("assembly video card keeps its destination and structure", () => {
+  const html = read("resource.html");
+  const card = html.match(/<article class="card video-card">([\s\S]*?)<\/article>/)[1];
+  const FULL_VIDEO = "https://www.youtube.com/watch?v=HMK_diuJNmA&amp;t=7s";
+
+  test("the media area and the Watch Video button both open the full video", () => {
+    const hrefs = [...card.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+    assert.strictEqual(hrefs.length, 2, `expected 2 links in the video card, found ${hrefs.length}`);
+    for (const h of hrefs) assert.strictEqual(h, FULL_VIDEO, `video card link changed destination: ${h}`);
+  });
+
+  test("the supplied video title is not renamed", () => {
+    assert.match(card, /<h3>F1Tenth Assembling<\/h3>/, "the video title was renamed");
+  });
+
+  test("the media keeps a 16:9 frame and intrinsic dimensions", () => {
+    assert.match(card, /width="640"/);
+    assert.match(card, /height="360"/);
+    assert.match(card, /alt="F1Tenth Assembling video"/, "the thumbnail lost its accessible alt text");
+  });
+
+  test("new-tab behaviour keeps its opener protection", () => {
+    const targets = [...card.matchAll(/target="_blank"/g)].length;
+    const rels = [...card.matchAll(/rel="noopener noreferrer"/g)].length;
+    assert.strictEqual(targets, 2);
+    assert.strictEqual(rels, 2, "a _blank link lost rel=noopener noreferrer");
+  });
+
+  test("the card never nests an interactive element inside a link", () => {
+    for (const m of card.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)) {
+      assert.ok(
+        !/<a\b|<button\b|<iframe\b/.test(m[1]),
+        "the video card nests an interactive element inside a link",
+      );
+    }
+  });
+});
