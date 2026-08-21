@@ -812,13 +812,13 @@ ol {
   justify-content: flex-start;
 }
 
-/* One CTA per pricing card, stretched to the card. Both cards are the same
-   width (.grid-2) and stretch to the same height (align-items: stretch), so
-   this makes the two CTAs identical in size at every breakpoint without
-   pinning a pixel height. */
+/* The pricing CTAs size to their label rather than the card. They keep the
+   shared .btn padding, so the two read as a pair without being stretched to
+   matching boxes. This outranks the narrow-viewport `.order-actions .btn`
+   full-width rule further down, so these two stay compact at every width
+   while the other action rows still go full width on a phone. */
 .price-card .order-actions .btn {
-  width: 100%;
-  text-align: center;
+  width: fit-content;
 }
 
 @media (width <= 520px) {
@@ -1815,6 +1815,11 @@ code {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+/* Centre the Watch Video action row inside the card. The row is centred, not
+   the button, so the button keeps its own size and padding. */
+.video-card .section-cta {
+  text-align: center;
 }
 
 .video-card .video-play {

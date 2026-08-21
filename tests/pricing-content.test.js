@@ -1143,3 +1143,133 @@ describe("assembly video card keeps its destination and structure", () => {
     }
   });
 });
+
+/* -------------------------------------------------------------------------
+   21-Aug UI pass: compact pricing CTAs, a centred Watch Video row, and the
+   PDU wiring PDF added to the power-board section. These guards pin the
+   parts that are easy to undo by accident — the CTAs must not go back to
+   forced full-width, the video row must stay centred without the button
+   itself being restyled, and the PDF link text, description, destination
+   and placement are all fixed by the request.
+   ---------------------------------------------------------------------- */
+
+const PDU_PDF_HREF = "/files/roboracer-pdu-wiring-connection-guide.pdf";
+const PDU_LINK_TEXT = "RoboRacer PDU Wiring &amp; Connection Guide (PDF)";
+const PDU_DESCRIPTION =
+  "Detailed wiring, power distribution, and PDU connection reference for the RoboRacer build.";
+
+describe("pricing CTAs size to their label", () => {
+  const css = fs.readFileSync(path.join(REPO, "assets/css/main.css"), "utf8");
+  const rule = css.match(/\.price-card \.order-actions \.btn \{([^}]*)\}/);
+
+  test("the pricing-card CTA rule no longer forces full width", () => {
+    assert.ok(rule, ".price-card .order-actions .btn rule disappeared");
+    assert.ok(!/width:\s*100%/.test(rule[1]), "the pricing CTAs are stretched to the card again");
+    assert.match(rule[1], /width:\s*fit-content/, "the pricing CTAs lost their intrinsic width");
+  });
+
+  test("the CTAs keep their card, their labels and their destinations", () => {
+    const html = read("contact.html");
+    const cards = {};
+    for (const m of html.matchAll(/<article class="price-card">([\s\S]*?)<\/article>/g)) {
+      const h = m[1].match(/<h3[^>]*>([\s\S]*?)<\/h3>/);
+      cards[visibleText(h ? h[1] : "")] = m[1];
+    }
+    assert.ok(cards.India.includes("Request an India quotation"));
+    assert.ok(cards.India.includes("mail.google.com/mail/?view=cm"));
+    assert.ok(cards.International.includes("International orders<"));
+    assert.ok(cards.International.includes('href="https://orders.ambimat.com/"'));
+    for (const c of ["India", "International"]) {
+      const row = cards[c].match(/<div class="order-actions">[\s\S]*?<\/div>/);
+      assert.ok(row, `${c} card lost its CTA row`);
+      assert.match(row[0], /class="btn btn-primary"/, `${c} CTA changed treatment`);
+    }
+  });
+});
+
+describe("the Watch Video row is centred without restyling the button", () => {
+  const css = fs.readFileSync(path.join(REPO, "assets/css/main.css"), "utf8");
+
+  test("the alignment is scoped to the video card's action row", () => {
+    assert.match(
+      css,
+      /\.video-card \.section-cta \{[^}]*text-align:\s*center/,
+      "the Watch Video row is no longer centred",
+    );
+  });
+
+  test("no global button or section-cta rule was introduced to do it", () => {
+    // A bare `.btn { ... center }` or `.section-cta { ... center }` would move
+    // every other CTA on the site, which this change must not do.
+    assert.ok(!/^\.btn \{[^}]*text-align:\s*center/m.test(css), "a global .btn centring rule appeared");
+    assert.ok(
+      !/^\.section-cta \{[^}]*text-align:\s*center/m.test(css),
+      "a global .section-cta centring rule appeared",
+    );
+  });
+
+  test("the button itself keeps its classes, size and destination", () => {
+    const card = read("resource.html").match(/<article class="card video-card">([\s\S]*?)<\/article>/)[1];
+    const cta = card.match(/<p class="section-cta">([\s\S]*?)<\/p>/)[1];
+    assert.match(cta, /class="btn btn-primary"/, "the Watch Video button changed treatment");
+    assert.ok(!/style=/.test(cta), "an inline style was added to the Watch Video button");
+    assert.ok(!/width/.test(cta), "a width was pinned on the Watch Video button");
+    assert.ok(cta.includes("https://www.youtube.com/watch?v=HMK_diuJNmA&amp;t=7s"));
+    assert.ok(cta.includes(">Watch Video<"));
+  });
+});
+
+describe("the PDU wiring guide is published and linked", () => {
+  const html = read("resource.html");
+  const section =
+    html.match(/<section class="section" id="about-board">?[\s\S]*?<\/section>/) ||
+    html.match(/<section[^>]*id="about-board"[\s\S]*?<\/section>/);
+
+  test("the PDF asset exists and is a real PDF", () => {
+    const p = path.join(REPO, "files/roboracer-pdu-wiring-connection-guide.pdf");
+    assert.ok(fs.existsSync(p), "the PDU PDF is missing from files/");
+    const fd = fs.openSync(p, "r");
+    const head = Buffer.alloc(5);
+    fs.readSync(fd, head, 0, 5, 0);
+    fs.closeSync(fd);
+    assert.strictEqual(head.toString("latin1"), "%PDF-", "the published asset is not a PDF");
+    assert.ok(fs.statSync(p).size > 100_000, "the published PDF looks truncated");
+  });
+
+  test("the link text and description are exactly as supplied", () => {
+    assert.ok(section, "the power-board section disappeared");
+    assert.ok(section[0].includes(PDU_LINK_TEXT), "the PDF link text drifted from the supplied wording");
+    assert.ok(section[0].includes(PDU_DESCRIPTION), "the PDF description drifted from the supplied wording");
+    assert.ok(section[0].includes("📄"), "the document emoji was dropped");
+  });
+
+  test("the link points at the local asset and opens in a new tab", () => {
+    const a = section[0].match(new RegExp(`<a[^>]*href="${PDU_PDF_HREF}"[^>]*>`));
+    assert.ok(a, "the PDF link does not point at the published asset");
+    assert.match(a[0], /target="_blank"/, "the PDF link does not open in a new tab");
+    assert.match(a[0], /rel="[^"]*noopener/, "the PDF link lost rel=noopener");
+    assert.ok(!/download/.test(a[0]), "the PDF link force-downloads instead of opening");
+  });
+
+  test("the PDF sits before the regulated-output list", () => {
+    const s = section[0];
+    assert.ok(s.indexOf(PDU_PDF_HREF) < s.indexOf("<ul>"), "the PDF block landed after the output bullets");
+  });
+
+  test("the existing power-board copy, diagram and bullets are untouched", () => {
+    const s = section[0];
+    for (const phrase of [
+      "A 1:10-scale autonomous vehicle runs three different supply voltages off one battery",
+      "The board takes input either from the 3S lithium-polymer traction pack",
+      "roboracer-power-board-diagram.png",
+      "RoboRacer AE170 power distribution board V02.04",
+      "19 V, up to 3 A",
+      "12 V, up to 2 A",
+      "5 V, up to 1 A",
+      "Those currents are totals across all outputs on a rail taken together",
+    ]) {
+      assert.ok(s.includes(phrase), `power-board section lost: ${phrase}`);
+    }
+    assert.strictEqual((s.match(/<li>/g) || []).length, 3, "the regulated-output bullet count changed");
+  });
+});
