@@ -1290,6 +1290,40 @@ describe("the PDU wiring guide is published and linked", () => {
 const CLIENTS = JSON.parse(fs.readFileSync(path.join(REPO, "tests/clients.fixture.json"), "utf8"));
 const ALL_NAV_PAGES = ALL_HTML;
 
+describe("the homepage parts grid names components the way the rest of the site does", () => {
+  // The parts grid carried two stale spellings that contradicted the
+  // specifications page and the store. Guard the canonical names so the copy
+  // cannot drift back, and check the whole site rather than Home alone.
+  const STALE = ["Jetson Orin Super Nano", "MK IV VESC"];
+
+  test("no page still carries a stale component spelling", () => {
+    for (const file of ALL_HTML) {
+      const text = read(file);
+      for (const stale of STALE) {
+        assert.ok(!text.includes(stale), `${file} still says ${stale}`);
+      }
+    }
+  });
+
+  test("the Home parts grid uses the canonical names", () => {
+    const home = read("index.html");
+    assert.match(home, /<span class="part-name">Jetson Orin Nano Super<\/span>/);
+    assert.match(home, /<span class="part-name">VESC 6 MkIV<\/span>/);
+  });
+
+  test("the part descriptions beside them were not touched", () => {
+    const home = read("index.html");
+    assert.ok(
+      home.includes("Onboard compute — Ampere GPU, CUDA and TensorRT for perception and control"),
+      "the Jetson part description changed",
+    );
+    assert.ok(
+      home.includes("Field-oriented motor control, steering, wheel odometry and onboard IMU"),
+      "the VESC part description changed",
+    );
+  });
+});
+
 describe("the Home hero CTA opens the India quotation action", () => {
   const home = read("index.html");
   const contact = read("contact.html");
@@ -1479,7 +1513,12 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
     }
     const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
     for (const i of imgs) {
-      assert.match(i[0], /sizes="\(max-width: 520px\) \d+px, \d+px"/, "a client logo has no per-logo sizes");
+      // Every logo carries a per-logo sizes; box-constrained ones additionally
+      // carry min-width branches for the wider grids (see the sizes test above).
+      const sizes = i[0].match(/sizes="([^"]*)"/);
+      assert.ok(sizes, "a client logo has no per-logo sizes");
+      const flat = sizes[1].replace(/\s+/g, " ").trim();
+      assert.match(flat, /^(\((?:min|max)-width: \d+px\) \d+px, )+\d+px$/, `malformed sizes: ${flat}`);
     }
   });
 
@@ -1508,6 +1547,57 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
       assert.ok(!text.includes(c.address), `the address for ${c.name} is published`);
       const tail = c.address.split(",").slice(-2).join(",").trim();
       if (tail.length > 8) assert.ok(!text.includes(tail), `part of ${c.name}'s address is published`);
+    }
+  });
+
+  test("the sizes hint matches the measured grid at every layout", () => {
+    // Measured from the built grid at 1px resolution: the logo box is at most
+    // 194.8px wide once the grid reaches 5 columns (viewport >= 1356px), 238.75
+    // at 4 columns, 259 at 3, 299.5 at 2. A logo is only box-constrained when
+    // 96 * aspect exceeds the box, so most logos need no wide-desktop branch at
+    // all -- their rendered width is the same in every column count.
+    const MAX_5COL = 194.8;
+    const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
+    assert.strictEqual(imgs.length, 48);
+    let withWideBranch = 0;
+    for (const i of imgs) {
+      const sizes = i[0].match(/sizes="([^"]*)"/)[1].replace(/\s+/g, " ");
+      const width = Number(i[0].match(/width="(\d+)"/)[1]);
+      const height = Number(i[0].match(/height="(\d+)"/)[1]);
+      const rendered = Math.min(MAX_5COL, (96 * width) / height);
+      const wide = sizes.match(/\(min-width: 1356px\) (\d+)px/);
+      if (wide) {
+        withWideBranch += 1;
+        const hint = Number(wide[1]);
+        assert.ok(hint <= MAX_5COL, `wide-desktop hint ${hint}px exceeds the measured 5-column box`);
+        assert.ok(hint >= rendered - 1, `wide-desktop hint ${hint}px would undersize a ${rendered}px render`);
+      } else {
+        // No branch is only correct when the box never constrains this logo.
+        assert.ok(
+          (96 * width) / height <= MAX_5COL + 0.5,
+          "a box-constrained logo is missing its wide-desktop sizes branch",
+        );
+      }
+      assert.match(sizes, /\d+px$/, "sizes has no default branch");
+    }
+    assert.strictEqual(withWideBranch, 8, "the set of box-constrained logos changed");
+  });
+
+  test("every logo keeps all three width candidates", () => {
+    const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
+    for (const i of imgs) {
+      const srcset = i[0].match(/srcset="([\s\S]*?)"/)[1].replace(/\s+/g, " ");
+      const cands = [...srcset.matchAll(/\/assets\/img\/clients\/(\S+) (\d+)w/g)];
+      assert.strictEqual(cands.length, 3, "a logo lost a candidate");
+      for (const c of cands) {
+        assert.ok(fs.existsSync(path.join(REPO, "assets/img/clients", c[1])), `missing ${c[1]}`);
+      }
+      const widths = cands.map((c) => Number(c[2]));
+      assert.deepStrictEqual(
+        widths,
+        [...widths].sort((a, b) => a - b),
+        "candidate widths are not ascending",
+      );
     }
   });
 
