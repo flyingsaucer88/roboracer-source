@@ -362,11 +362,12 @@ ol {
   min-width: 0;
 }
 
+/* The hero art is a cutout with a transparent background, so it carries no card
+   treatment -- a radius and drop shadow would frame the empty corners instead of
+   the vehicle. Width and height on the tag reserve the ratio, so nothing shifts. */
 .hero-visual {
   width: 100%;
   max-width: 460px;
-  border-radius: 12px;
-  box-shadow: var(--shadow-lg);
 }
 
 .eyebrow,

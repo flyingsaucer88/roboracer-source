@@ -1324,23 +1324,38 @@ describe("the homepage parts grid names components the way the rest of the site 
   });
 });
 
-describe("the Home hero CTA opens the India quotation action", () => {
+describe("the Home hero CTA opens the Contact pricing section", () => {
   const home = read("index.html");
   const contact = read("contact.html");
 
-  const indiaHref = () => {
-    const card = contact.match(/<article class="price-card">\s*<h3>India<\/h3>([\s\S]*?)<\/article>/)[1];
-    return card.match(/<div class="order-actions">[\s\S]*?href="([^"]+)"/)[1];
-  };
-
-  test("the hero CTA points at the same destination as Request an India quotation", () => {
+  test("the hero CTA lands on the Contact commercial pricing section", () => {
+    // The CTA used to jump straight to the India quotation mail action, which
+    // took the reader past the pricing they came to read. It now stops at the
+    // pricing section, and the quotation action stays one click further on.
     const hero = home.match(/<div class="hero-actions">([\s\S]*?)<\/div>/)[1];
     const first = hero.match(
       /<a[^>]*class="btn btn-primary"[^>]*href="([^"]+)"|<a[^>]*href="([^"]+)"[^>]*class="btn btn-primary"/,
     );
     const href = first[1] || first[2];
-    assert.strictEqual(href, indiaHref(), "the Home CTA no longer matches the India quotation destination");
-    assert.match(href, /mail\.google\.com/, "the India quotation action is not a mail compose link any more");
+    assert.strictEqual(
+      href,
+      "/contact.html#pricing",
+      "the Home CTA does not point at the Contact pricing section",
+    );
+    assert.ok(!/mail\.google\.com/.test(href), "the Home CTA still jumps to the quotation mail action");
+  });
+
+  test("the anchor it points at exists and is the commercial pricing section", () => {
+    const section = contact.match(/<section[^>]*id="pricing"[\s\S]*?<\/section>/);
+    assert.ok(section, "contact.html has no #pricing section for the CTA to land on");
+    assert.match(section[0], /<p class="eyebrow">Commercial<\/p>/, "#pricing is not the commercial block");
+    assert.match(section[0], /id="pricing-title">Pricing</, "#pricing lost its heading");
+  });
+
+  test("the India quotation action still exists on Contact, one step further on", () => {
+    const card = contact.match(/<article class="price-card">\s*<h3>India<\/h3>([\s\S]*?)<\/article>/)[1];
+    const href = card.match(/<div class="order-actions">[\s\S]*?href="([^"]+)"/)[1];
+    assert.match(href, /mail\.google\.com/, "the India quotation action changed");
   });
 
   test("the CTA keeps its label and treatment, and the secondary CTA is untouched", () => {
@@ -1438,9 +1453,12 @@ describe("the Core Kit page is no longer a commercial surface", () => {
 describe("the Our Clients page matches the supplied spreadsheet", () => {
   const page = read("our-clients.html");
 
-  test("the fixture carries all 48 spreadsheet clients, with no duplicates", () => {
-    assert.strictEqual(CLIENTS.length, 48);
-    assert.strictEqual(new Set(CLIENTS.map((c) => c.name)).size, 48);
+  test("the fixture carries every published client, with no duplicates", () => {
+    // The spreadsheet supplied 48 rows; Hanyang University ERICA Campus was
+    // withdrawn on the owner's instruction, so 47 are published. The fixture
+    // tracks what the site shows, and every assertion below runs on all of them.
+    assert.strictEqual(CLIENTS.length, 47);
+    assert.strictEqual(new Set(CLIENTS.map((c) => c.name)).size, 47);
   });
 
   test("the page exists with the exact heading", () => {
@@ -1457,8 +1475,8 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
       visibleText(m[1]).trim(),
     );
     const expected = CLIENTS.map((c) => c.name);
-    assert.strictEqual(shown.length, 48, `expected 48 cards, found ${shown.length}`);
-    assert.strictEqual(new Set(shown).size, 48, "the page repeats a client");
+    assert.strictEqual(shown.length, 47, `expected 47 cards, found ${shown.length}`);
+    assert.strictEqual(new Set(shown).size, 47, "the page repeats a client");
     assert.deepStrictEqual(
       expected.filter((n) => !shown.includes(n)),
       [],
@@ -1534,7 +1552,7 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
       assert.match(a[0], /rel="noopener noreferrer"/, `${c.name} link is missing rel protection`);
     }
     const hrefs = [...page.matchAll(/<a class="client-link" href="([^"]+)"/g)].map((m) => m[1]);
-    assert.strictEqual(hrefs.length, 48);
+    assert.strictEqual(hrefs.length, 47);
     assert.ok(!hrefs.some((h) => h.startsWith("http://")), "an insecure client link survived");
   });
 
@@ -1558,7 +1576,7 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
     // all -- their rendered width is the same in every column count.
     const MAX_5COL = 194.8;
     const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
-    assert.strictEqual(imgs.length, 48);
+    assert.strictEqual(imgs.length, 47);
     let withWideBranch = 0;
     for (const i of imgs) {
       const sizes = i[0].match(/sizes="([^"]*)"/)[1].replace(/\s+/g, " ");
@@ -1603,7 +1621,7 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
 
   test("logos declare intrinsic dimensions and lazy-load below the fold", () => {
     const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
-    assert.strictEqual(imgs.length, 48);
+    assert.strictEqual(imgs.length, 47);
     for (const i of imgs) {
       assert.match(i[0], /width="\d+"/, "a client logo has no intrinsic width");
       assert.match(i[0], /height="\d+"/, "a client logo has no intrinsic height");
@@ -1611,9 +1629,75 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
     }
     assert.strictEqual(
       imgs.filter((i) => i[0].includes('loading="lazy"')).length,
-      42,
+      41,
       "the lazy/eager split for the logo grid changed",
     );
+  });
+});
+
+describe("the 26-Aug client and hero corrections hold", () => {
+  const clients = read("our-clients.html");
+  const home = read("index.html");
+
+  test("Chungnam National University points at its English site", () => {
+    assert.ok(
+      clients.includes('href="https://plus.cnu.ac.kr/html/en/"'),
+      "the Chungnam link was not updated to the English site",
+    );
+    assert.ok(!clients.includes('href="https://plus.cnu.ac.kr/"'), "the old Chungnam link is still present");
+    const row = CLIENTS.find((c) => c.name === "Chungnam National University");
+    assert.strictEqual(row.website, "https://plus.cnu.ac.kr/html/en/");
+  });
+
+  test("Hanyang University ERICA Campus is gone, and only that entry", () => {
+    assert.ok(!clients.includes("Hanyang University ERICA Campus"), "the ERICA entry is still on the page");
+    assert.ok(!clients.includes("hanyang-university-erica-campus"), "an ERICA logo reference survived");
+    assert.ok(
+      !CLIENTS.some((c) => c.name === "Hanyang University ERICA Campus"),
+      "ERICA is still in the fixture",
+    );
+    // The main Hanyang entry is a different client and must stay.
+    assert.ok(clients.includes(">Hanyang University</h2>"), "the main Hanyang entry was removed by mistake");
+    for (const file of ["hanyang-university-erica-campus.png", "hanyang-university-erica-campus@2x.png"]) {
+      assert.ok(!fs.existsSync(path.join(REPO, "assets/img/clients", file)), `${file} is orphaned on disk`);
+    }
+  });
+
+  test("the hero shows the cutout, sized and loaded for above the fold", () => {
+    const pic = home.match(/<picture>[\s\S]*?<\/picture>/)[0].replace(/\s+/g, " ");
+    for (const w of [400, 460, 600]) {
+      assert.match(
+        pic,
+        new RegExp(`/assets/img/roboracer-core-kit-cutout-${w}\\.webp ${w}w`),
+        `the hero is missing its ${w}w cutout candidate`,
+      );
+    }
+    assert.match(
+      pic,
+      /src="\/assets\/img\/roboracer-core-kit-cutout\.png"/,
+      "the hero fallback is not the cutout",
+    );
+    assert.match(pic, /width="600"/, "the hero width no longer matches the asset");
+    assert.match(pic, /height="800"/, "the hero height no longer matches the asset");
+    assert.match(pic, /fetchpriority="high"/, "the above-the-fold hero lost its fetch priority");
+    assert.ok(!/loading="lazy"/.test(pic), "the hero must not lazy-load");
+    assert.match(pic, /alt="[^"]{30,}"/, "the hero alt text is missing or too thin");
+    for (const f of [
+      "roboracer-core-kit-cutout-400.webp",
+      "roboracer-core-kit-cutout-460.webp",
+      "roboracer-core-kit-cutout-600.webp",
+      "roboracer-core-kit-cutout.png",
+    ]) {
+      assert.ok(fs.existsSync(path.join(REPO, "assets/img", f)), `missing hero asset ${f}`);
+    }
+  });
+
+  test("the declared hero ratio matches the asset, so nothing shifts", () => {
+    const css = read("assets/css/main.css");
+    const rule = css.match(/\.hero-visual \{[^}]*\}/)[0];
+    assert.ok(!/box-shadow/.test(rule), "a drop shadow would frame the cutout's empty corners");
+    assert.ok(!/border-radius/.test(rule), "a radius would round the cutout's empty corners");
+    assert.match(rule, /max-width: 460px/, "the hero lost its width cap");
   });
 });
 

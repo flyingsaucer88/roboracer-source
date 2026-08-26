@@ -29,7 +29,7 @@
   },
   {
     "name": "Chungnam National University",
-    "website": "https://plus.cnu.ac.kr/",
+    "website": "https://plus.cnu.ac.kr/html/en/",
     "asset": "chungnam-national-university.png",
     "supplied": "https://plus.cnu.ac.kr/",
     "address": "99 Daehak-ro, Yuseong-gu, Daejeon 34134, South Korea"
@@ -68,13 +68,6 @@
     "asset": "hanyang-university.jpg",
     "supplied": "https://www.hanyang.ac.kr/",
     "address": "222 Wangsimni-ro, Seongdong-gu, Seoul 04763, South Korea"
-  },
-  {
-    "name": "Hanyang University ERICA Campus",
-    "website": "https://www.hanyang.ac.kr/",
-    "asset": "hanyang-university-erica-campus.png",
-    "supplied": "http://www.hanyang.ac.kr/",
-    "address": "55 Hanyangdaehak-ro, Sangnok-gu, Ansan-si, Gyeonggi-do 15588, South Korea"
   },
   {
     "name": "Hochschule München University of Applied Sciences",
