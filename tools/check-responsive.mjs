@@ -25,6 +25,7 @@ const PAGES = [
   "/use-cases.html",
   "/contact.html",
   "/resource.html",
+  "/our-clients.html",
   "/404.html",
 ];
 const WIDTHS = [320, 375, 768, 1024, 1440];

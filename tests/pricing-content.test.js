@@ -21,13 +21,17 @@ import { fileURLToPath } from "node:url";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-/** Every page that quotes a price. Keep in sync with the audit in the commit. */
-const PRICING_PAGES = ["index.html", "contact.html", "autonomous-racing-robotics-kit.html"];
+/** Every page that quotes a price. Keep in sync with the audit in the commit.
+ *  The Core Kit page left this list on 26-Aug when its commercial section was
+ *  removed on the owner's instruction; Home and Contact remain the two
+ *  surfaces that quote figures, and every assertion below still runs on both. */
+const PRICING_PAGES = ["index.html", "contact.html"];
 
 /** Every indexable page, for the metadata regression checks. */
 const INDEXABLE_PAGES = [
   "index.html",
   "autonomous-racing-robotics-kit.html",
+  "our-clients.html",
   "specifications.html",
   "getting-started.html",
   "use-cases.html",
@@ -1271,5 +1275,287 @@ describe("the PDU wiring guide is published and linked", () => {
       assert.ok(s.includes(phrase), `power-board section lost: ${phrase}`);
     }
     assert.strictEqual((s.match(/<li>/g) || []).length, 3, "the regulated-output bullet count changed");
+  });
+});
+
+/* -------------------------------------------------------------------------
+   26-Aug pass. The Core Kit page stopped being a commercial surface, the
+   Home hero CTA now opens the same India quotation action as Contact, and
+   the Our Clients page went up from the supplied spreadsheet and logo pack.
+   clients.fixture.json is generated from that spreadsheet, so these guards
+   compare the published page against the source of truth rather than
+   against a hand-copied list.
+   ---------------------------------------------------------------------- */
+
+const CLIENTS = JSON.parse(fs.readFileSync(path.join(REPO, "tests/clients.fixture.json"), "utf8"));
+const ALL_NAV_PAGES = ALL_HTML;
+
+describe("the Home hero CTA opens the India quotation action", () => {
+  const home = read("index.html");
+  const contact = read("contact.html");
+
+  const indiaHref = () => {
+    const card = contact.match(/<article class="price-card">\s*<h3>India<\/h3>([\s\S]*?)<\/article>/)[1];
+    return card.match(/<div class="order-actions">[\s\S]*?href="([^"]+)"/)[1];
+  };
+
+  test("the hero CTA points at the same destination as Request an India quotation", () => {
+    const hero = home.match(/<div class="hero-actions">([\s\S]*?)<\/div>/)[1];
+    const first = hero.match(
+      /<a[^>]*class="btn btn-primary"[^>]*href="([^"]+)"|<a[^>]*href="([^"]+)"[^>]*class="btn btn-primary"/,
+    );
+    const href = first[1] || first[2];
+    assert.strictEqual(href, indiaHref(), "the Home CTA no longer matches the India quotation destination");
+    assert.match(href, /mail\.google\.com/, "the India quotation action is not a mail compose link any more");
+  });
+
+  test("the CTA keeps its label and treatment, and the secondary CTA is untouched", () => {
+    const hero = home.match(/<div class="hero-actions">([\s\S]*?)<\/div>/)[1];
+    assert.ok(hero.includes(">Order the Core Kit</a"), "the primary CTA label changed");
+    assert.ok(hero.includes("btn btn-primary"), "the primary CTA lost its treatment");
+    assert.ok(
+      hero.includes('href="/autonomous-racing-robotics-kit.html">What is in the kit</a>'),
+      "the secondary hero CTA was altered",
+    );
+  });
+});
+
+describe("the pricing-card CTAs are centred in their cards", () => {
+  const css = fs.readFileSync(path.join(REPO, "assets/css/main.css"), "utf8");
+  test("the pricing card action row centres its content", () => {
+    const rule = css.match(/\.price-card \.order-actions \{([^}]*)\}/);
+    assert.ok(rule, ".price-card .order-actions rule disappeared");
+    assert.match(rule[1], /justify-content:\s*center/, "the pricing CTAs are not centred");
+  });
+  test("no global button rule was used to do it", () => {
+    assert.ok(!/^\.btn \{[^}]*margin(-inline)?:\s*auto/m.test(css), "a global .btn centring rule appeared");
+  });
+  test("the CTA destinations are unchanged", () => {
+    const c = read("contact.html");
+    assert.ok(c.includes("mail.google.com/mail/?view=cm"), "the India CTA destination changed");
+    assert.ok(c.includes('href="https://orders.ambimat.com/"'), "the International CTA destination changed");
+  });
+});
+
+describe("the Core Kit page is no longer a commercial surface", () => {
+  const kit = read("autonomous-racing-robotics-kit.html");
+
+  test("the table of contents drops Pricing and ordering and ends on Questions", () => {
+    const toc = kit.match(/<nav class="toc"[\s\S]*?<\/nav>/)[0];
+    const items = [...toc.matchAll(/<li><a href="[^"]*">([^<]+)<\/a><\/li>/g)].map((m) => m[1]);
+    assert.ok(!items.includes("Pricing and ordering"), "the pricing TOC entry is still there");
+    assert.strictEqual(items.length, 7, `expected 7 TOC items, found ${items.length}`);
+    assert.strictEqual(items[6], "Questions", "Questions is not the seventh item");
+  });
+
+  test("the Commercial pricing section and its four buttons are gone", () => {
+    assert.ok(!/id="pricing"/.test(kit), "the #pricing section still exists");
+    assert.ok(!kit.includes("Pricing and how to order"), "the commercial heading survived");
+    for (const label of [
+      "Core Kit on the store",
+      "Core Kit Pro on the store",
+      "Open-source board resources",
+    ]) {
+      assert.ok(!kit.includes(label), `removed CTA still present: ${label}`);
+    }
+  });
+
+  test("no link on the page points at the deleted #pricing anchor", () => {
+    assert.ok(!/href="#pricing"/.test(kit), "a dead #pricing link remains");
+  });
+
+  test("both removed FAQs are gone from the copy and the schema", () => {
+    const gone = [
+      "What does the RoboRacer Core Kit cost?",
+      "Can I buy the chassis, battery and charger locally instead?",
+    ];
+    const machine = machineText(kit);
+    for (const q of gone) {
+      assert.ok(!kit.includes(q), `FAQ still visible: ${q}`);
+      assert.ok(!machine.includes(q), `FAQ still in schema: ${q}`);
+    }
+  });
+
+  test("the visible FAQ list and the FAQPage schema reconcile", () => {
+    const visible = [...kit.matchAll(/<div class="faq-item">\s*<h3>([\s\S]*?)<\/h3>/g)].map((m) =>
+      visibleText(m[1]).trim(),
+    );
+    const schema = [];
+    const walk = (o) => {
+      if (Array.isArray(o)) o.forEach(walk);
+      else if (o && typeof o === "object") {
+        if (o["@type"] === "Question") schema.push(o.name);
+        Object.values(o).forEach(walk);
+      }
+    };
+    jsonLd(kit).forEach(walk);
+    assert.deepStrictEqual(visible, schema, "visible FAQ order/count does not match the FAQPage schema");
+    assert.strictEqual(visible.length, 7, `expected 7 remaining FAQs, found ${visible.length}`);
+  });
+
+  test("the other pages keep their own copies of the removed questions", () => {
+    assert.ok(
+      read("contact.html").includes("Can I source the chassis, battery and charger locally?"),
+      "the Contact page lost its equivalent chassis question",
+    );
+  });
+});
+
+describe("the Our Clients page matches the supplied spreadsheet", () => {
+  const page = read("our-clients.html");
+
+  test("the fixture carries all 48 spreadsheet clients, with no duplicates", () => {
+    assert.strictEqual(CLIENTS.length, 48);
+    assert.strictEqual(new Set(CLIENTS.map((c) => c.name)).size, 48);
+  });
+
+  test("the page exists with the exact heading", () => {
+    assert.match(page, /<h1 class="page-title">Our Clients<\/h1>/, "the H1 is not exactly 'Our Clients'");
+    assert.match(
+      page,
+      /<link rel="canonical" href="https:\/\/roboracer\.ambimat\.com\/our-clients\.html" \/>/,
+    );
+    assert.match(page, /<meta name="robots" content="index,follow" \/>/);
+  });
+
+  test("every client appears exactly once, with nothing extra", () => {
+    const shown = [...page.matchAll(/<h2 class="client-name">([\s\S]*?)<\/h2>/g)].map((m) =>
+      visibleText(m[1]).trim(),
+    );
+    const expected = CLIENTS.map((c) => c.name);
+    assert.strictEqual(shown.length, 48, `expected 48 cards, found ${shown.length}`);
+    assert.strictEqual(new Set(shown).size, 48, "the page repeats a client");
+    assert.deepStrictEqual(
+      expected.filter((n) => !shown.includes(n)),
+      [],
+      "clients missing from the page",
+    );
+    assert.deepStrictEqual(
+      shown.filter((n) => !expected.includes(n)),
+      [],
+      "clients on the page that are not in the spreadsheet",
+    );
+    assert.deepStrictEqual(shown, expected, "the page no longer follows spreadsheet row order");
+  });
+
+  test("each card carries the logo matched to that client", () => {
+    for (const c of CLIENTS) {
+      const card = page.match(
+        new RegExp(
+          `<li class="client-card">(?:(?!</li>)[\\s\\S])*?${c.name.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}(?:(?!</li>)[\\s\\S])*?</li>`,
+        ),
+      );
+      assert.ok(card, `no card found for ${c.name}`);
+      assert.ok(card[0].includes(`/assets/img/clients/${c.asset}`), `${c.name} is not showing ${c.asset}`);
+      assert.ok(fs.existsSync(path.join(REPO, "assets/img/clients", c.asset)), `missing asset for ${c.name}`);
+    }
+  });
+
+  test("each logo offers candidates sized for every density we serve", () => {
+    // The logo box is 238x96 on desktop but only 152x72 in the narrow grid, so a
+    // density (x) descriptor cannot describe it: the same "2x" file is right for a
+    // retina desktop and far too large for a phone. Width descriptors plus a
+    // per-logo sizes let the browser pick, so each logo ships three candidates --
+    // desktop 1x, the narrow-grid high-density size, and desktop 2x.
+    for (const c of CLIENTS) {
+      const [stem, ext] = [c.asset.replace(/\.[^.]+$/, ""), c.asset.split(".").pop()];
+      const card = page.replace(/\s+/g, " ");
+      const widths = [];
+      for (const suffix of ["", "@mid", "@2x"]) {
+        const file = `${stem}${suffix}.${ext}`;
+        assert.ok(fs.existsSync(path.join(REPO, "assets/img/clients", file)), `missing ${file}`);
+        const m = card.match(
+          new RegExp(`/assets/img/clients/${file.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} (\\d+)w`),
+        );
+        assert.ok(m, `${c.name} does not offer ${file} as a width candidate`);
+        widths.push(Number(m[1]));
+      }
+      assert.deepStrictEqual(
+        widths,
+        [...widths].sort((a, b) => a - b),
+        `${c.name} candidate widths are not ascending`,
+      );
+      assert.strictEqual(new Set(widths).size, 3, `${c.name} has duplicate candidate widths`);
+    }
+    const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
+    for (const i of imgs) {
+      assert.match(i[0], /sizes="\(max-width: 520px\) \d+px, \d+px"/, "a client logo has no per-logo sizes");
+    }
+  });
+
+  test("every website link comes from the spreadsheet and opens safely", () => {
+    for (const c of CLIENTS) {
+      const a = page.match(
+        new RegExp(
+          `<a class="client-link" href="${c.website.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"[^>]*>`,
+        ),
+      );
+      assert.ok(a, `no link for ${c.name} at ${c.website}`);
+      assert.match(a[0], /target="_blank"/, `${c.name} link does not open in a new tab`);
+      assert.match(a[0], /rel="noopener noreferrer"/, `${c.name} link is missing rel protection`);
+    }
+    const hrefs = [...page.matchAll(/<a class="client-link" href="([^"]+)"/g)].map((m) => m[1]);
+    assert.strictEqual(hrefs.length, 48);
+    assert.ok(!hrefs.some((h) => h.startsWith("http://")), "an insecure client link survived");
+  });
+
+  test("no spreadsheet address is published", () => {
+    // The sheet carries an Address column the brief forbids publishing, so
+    // compare against the real values rather than guessing at a postcode
+    // shape: every supplied address, and its distinctive tail, must be absent.
+    const text = visibleText(page).replace(/\s+/g, " ");
+    for (const c of CLIENTS) {
+      assert.ok(!text.includes(c.address), `the address for ${c.name} is published`);
+      const tail = c.address.split(",").slice(-2).join(",").trim();
+      if (tail.length > 8) assert.ok(!text.includes(tail), `part of ${c.name}'s address is published`);
+    }
+  });
+
+  test("logos declare intrinsic dimensions and lazy-load below the fold", () => {
+    const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
+    assert.strictEqual(imgs.length, 48);
+    for (const i of imgs) {
+      assert.match(i[0], /width="\d+"/, "a client logo has no intrinsic width");
+      assert.match(i[0], /height="\d+"/, "a client logo has no intrinsic height");
+      assert.match(i[0], /alt="[^"]+ logo"/, "a client logo has no meaningful alt text");
+    }
+    assert.strictEqual(
+      imgs.filter((i) => i[0].includes('loading="lazy"')).length,
+      42,
+      "the lazy/eager split for the logo grid changed",
+    );
+  });
+});
+
+describe("Our Clients is wired into the site", () => {
+  test("every page lists Our Clients immediately before Contact", () => {
+    for (const file of ALL_NAV_PAGES) {
+      const nav = read(file).match(/<div class="nav-links"[^>]*>([\s\S]*?)<\/div>/)[1];
+      const items = [...nav.matchAll(/<a[^>]*href="(\/[^"]*)"[^>]*>([^<]*)/g)].map((m) => m[2].trim());
+      assert.deepStrictEqual(items.slice(-2), ["Our Clients", "Contact"], `${file} nav order is wrong`);
+    }
+  });
+
+  test("the footer mirrors it in the same position", () => {
+    for (const file of ALL_NAV_PAGES) {
+      const nav = read(file).match(/<nav aria-labelledby="footer-explore">([\s\S]*?)<\/nav>/)[1];
+      const items = [...nav.matchAll(/<a[^>]*href="[^"]*"[^>]*>([^<]*)/g)].map((m) => m[1].trim());
+      assert.deepStrictEqual(items.slice(-2), ["Our clients", "Contact"], `${file} footer order is wrong`);
+    }
+  });
+
+  test("the page marks itself current in its own nav", () => {
+    assert.match(
+      read("our-clients.html"),
+      /<a href="\/our-clients\.html" aria-current="page">Our Clients<\/a>/,
+    );
+  });
+
+  test("the sitemap lists it", () => {
+    const sm = fs.readFileSync(path.join(REPO, "sitemap.xml"), "utf8");
+    assert.ok(
+      sm.includes("https://roboracer.ambimat.com/our-clients.html"),
+      "the sitemap is missing the page",
+    );
   });
 });

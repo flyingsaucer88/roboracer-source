@@ -1,0 +1,338 @@
+[
+  {
+    "name": "Arizona State University",
+    "website": "https://www.asu.edu/",
+    "asset": "arizona-state-university.png",
+    "supplied": "https://www.asu.edu/",
+    "address": "Tempe, AZ 85281, USA"
+  },
+  {
+    "name": "Boise State University",
+    "website": "https://www.boisestate.edu/",
+    "asset": "boise-state-university.png",
+    "supplied": "https://www.boisestate.edu/",
+    "address": "1910 University Drive, Boise, ID 83725, USA"
+  },
+  {
+    "name": "California State Polytechnic University, Pomona",
+    "website": "https://www.cpp.edu/",
+    "asset": "california-state-polytechnic-university-pomona.png",
+    "supplied": "http://www.cpp.edu/",
+    "address": "3801 West Temple Ave, Pomona, CA 91768, USA"
+  },
+  {
+    "name": "Carnegie Mellon University",
+    "website": "https://www.cmu.edu/",
+    "asset": "carnegie-mellon-university.jpg",
+    "supplied": "https://www.cmu.edu/",
+    "address": "5000 Forbes Avenue, Pittsburgh, PA 15213, USA"
+  },
+  {
+    "name": "Chungnam National University",
+    "website": "https://plus.cnu.ac.kr/",
+    "asset": "chungnam-national-university.png",
+    "supplied": "https://plus.cnu.ac.kr/",
+    "address": "99 Daehak-ro, Yuseong-gu, Daejeon 34134, South Korea"
+  },
+  {
+    "name": "Clemson University",
+    "website": "https://www.clemson.edu/",
+    "asset": "clemson-university.png",
+    "supplied": "https://www.clemson.edu/",
+    "address": "1 Avenue of Champions, Clemson, SC 29634, USA"
+  },
+  {
+    "name": "Cleveland State University",
+    "website": "https://www.csuohio.edu/",
+    "asset": "cleveland-state-university.png",
+    "supplied": "https://www.csuohio.edu/",
+    "address": "2121 Euclid Avenue, Cleveland, OH 44115, USA"
+  },
+  {
+    "name": "Eindhoven University of Technology",
+    "website": "https://www.tue.nl/en/",
+    "asset": "eindhoven-university-of-technology.png",
+    "supplied": "https://www.tue.nl/en/",
+    "address": "Groene Loper 19, 5612 AP Eindhoven, Netherlands"
+  },
+  {
+    "name": "Gyeongsang National University",
+    "website": "https://www.gnu.ac.kr/",
+    "asset": "gyeongsang-national-university.jpg",
+    "supplied": "http://www.gnu.ac.kr/",
+    "address": "501 Jinju-daero, Jinju-si, Gyeongsangnam-do 52828, Republic of Korea"
+  },
+  {
+    "name": "Hanyang University",
+    "website": "https://www.hanyang.ac.kr/",
+    "asset": "hanyang-university.jpg",
+    "supplied": "https://www.hanyang.ac.kr/",
+    "address": "222 Wangsimni-ro, Seongdong-gu, Seoul 04763, South Korea"
+  },
+  {
+    "name": "Hanyang University ERICA Campus",
+    "website": "https://www.hanyang.ac.kr/",
+    "asset": "hanyang-university-erica-campus.png",
+    "supplied": "http://www.hanyang.ac.kr/",
+    "address": "55 Hanyangdaehak-ro, Sangnok-gu, Ansan-si, Gyeonggi-do 15588, South Korea"
+  },
+  {
+    "name": "Hochschule München University of Applied Sciences",
+    "website": "https://hm.edu/",
+    "asset": "hochschule-munchen-university-of-applied-sciences.png",
+    "supplied": "https://hm.edu/",
+    "address": "Lothstr. 34, 80335 Munich, Germany"
+  },
+  {
+    "name": "Indian Institute of Technology Hyderabad",
+    "website": "https://www.iith.ac.in/",
+    "asset": "indian-institute-of-technology-hyderabad.webp",
+    "supplied": "http://www.iith.ac.in/",
+    "address": "Kandi, Sangareddy, Telangana, India – 502285"
+  },
+  {
+    "name": "Indiana University Bloomington",
+    "website": "https://www.iu.edu/",
+    "asset": "indiana-university-bloomington.png",
+    "supplied": "https://www.iu.edu/",
+    "address": "700 N Woodlawn Ave, Bloomington, IN 47408-3901, USA"
+  },
+  {
+    "name": "Jeonbuk National University",
+    "website": "https://www.jbnu.ac.kr/",
+    "asset": "jeonbuk-national-university.png",
+    "supplied": "http://www.jbnu.ac.kr/",
+    "address": "567 Baekje-daero, Deokjin-gu, Jeonju-si, Jeonbuk-do 54896, Republic of Korea"
+  },
+  {
+    "name": "Johannes Kepler University Linz",
+    "website": "https://www.jku.at/",
+    "asset": "johannes-kepler-university-linz.jpg",
+    "supplied": "http://www.jku.at/",
+    "address": "Altenberger Street 69, 4040 Linz, Austria"
+  },
+  {
+    "name": "Johns Hopkins University",
+    "website": "https://www.jhu.edu/",
+    "asset": "johns-hopkins-university.png",
+    "supplied": "https://www.jhu.edu/",
+    "address": "3400 N. Charles Street, Baltimore, MD 21218, USA"
+  },
+  {
+    "name": "Keimyung University",
+    "website": "https://www.kmu.ac.kr/",
+    "asset": "keimyung-university.png",
+    "supplied": "https://www.kmu.ac.kr/",
+    "address": "1095 Dalgubeol-daero, Dalseo-gu, Daegu 42601, South Korea"
+  },
+  {
+    "name": "Khalifa University",
+    "website": "https://www.ku.ac.ae/",
+    "asset": "khalifa-university.png",
+    "supplied": "http://www.ku.ac.ae/",
+    "address": "P.O. Box 127788, Abu Dhabi, UAE"
+  },
+  {
+    "name": "King Fahd University of Petroleum and Minerals",
+    "website": "https://www.kfupm.edu.sa/",
+    "asset": "king-fahd-university-of-petroleum-and-minerals.jpg",
+    "supplied": "https://www.kfupm.edu.sa/",
+    "address": "King Fahd University of Petroleum & Minerals, Dhahran 31261, Saudi Arabia"
+  },
+  {
+    "name": "Korea Advanced Institute of Science and Technology",
+    "website": "https://www.kaist.ac.kr/",
+    "asset": "korea-advanced-institute-of-science-and-technology.png",
+    "supplied": "http://www.kaist.ac.kr/",
+    "address": "193 Munji-ro, Yuseong-gu, Daejeon 34051, Republic of Korea"
+  },
+  {
+    "name": "Lehigh University",
+    "website": "https://www.lehigh.edu/",
+    "asset": "lehigh-university.jpg",
+    "supplied": "https://www.lehigh.edu/",
+    "address": "113 Research Drive, Mountaintop Campus, Bethlehem, PA 18015, USA"
+  },
+  {
+    "name": "McMaster University",
+    "website": "https://www.mcmaster.ca/",
+    "asset": "mcmaster-university.jpg",
+    "supplied": "https://www.mcmaster.ca/",
+    "address": "1280 Main Street West, Hamilton, ON L8S 4L8, Canada"
+  },
+  {
+    "name": "Nanyang Technological University",
+    "website": "https://www.ntu.edu.sg/",
+    "asset": "nanyang-technological-university.jpg",
+    "supplied": "http://www.ntu.edu.sg/",
+    "address": "50 Nanyang Avenue, Singapore 639798"
+  },
+  {
+    "name": "New York University",
+    "website": "https://engineering.nyu.edu/",
+    "asset": "new-york-university.jpg",
+    "supplied": "https://engineering.nyu.edu/",
+    "address": "370 Jay Street, Floor 8, Room 820, Brooklyn, NY 11201, USA"
+  },
+  {
+    "name": "Oakland University",
+    "website": "https://www.oakland.edu/",
+    "asset": "oakland-university.jpg",
+    "supplied": "https://www.oakland.edu/",
+    "address": "115 Library Drive, Rochester, MI 48309, USA"
+  },
+  {
+    "name": "Old Dominion University",
+    "website": "https://www.odu.edu/",
+    "asset": "old-dominion-university.jpg",
+    "supplied": "https://www.odu.edu/",
+    "address": "5115 Hampton Blvd., Norfolk, VA 23529, USA"
+  },
+  {
+    "name": "Princeton University",
+    "website": "https://www.princeton.edu/",
+    "asset": "princeton-university.png",
+    "supplied": "https://www.princeton.edu/",
+    "address": "41 Olden Street, Princeton, NJ 08544, USA"
+  },
+  {
+    "name": "Queen's University",
+    "website": "https://www.queensu.ca/",
+    "asset": "queens-university.png",
+    "supplied": "https://www.queensu.ca/",
+    "address": "99 University Avenue, Kingston, ON K7L 3N6, Canada"
+  },
+  {
+    "name": "RMIT University",
+    "website": "https://www.rmit.edu.au/",
+    "asset": "rmit-university.png",
+    "supplied": "https://www.rmit.edu.au/",
+    "address": "330 Swanston Street, Melbourne, VIC 3000, Australia"
+  },
+  {
+    "name": "San Diego State University",
+    "website": "https://www.sdsu.edu/",
+    "asset": "san-diego-state-university.png",
+    "supplied": "https://www.sdsu.edu/",
+    "address": "5500 Campanile Drive, San Diego, CA 92182, USA"
+  },
+  {
+    "name": "Technical University of Munich",
+    "website": "https://www.tum.de/en/",
+    "asset": "technical-university-of-munich.jpg",
+    "supplied": "https://www.tum.de/en/",
+    "address": "Arcisstraße 21, 80333 Munich, Germany"
+  },
+  {
+    "name": "Technische Hochschule Ingolstadt",
+    "website": "https://www.thi.de/",
+    "asset": "technische-hochschule-ingolstadt.png",
+    "supplied": "http://www.thi.de/",
+    "address": "Esplanade 10, 85049 Ingolstadt, Germany"
+  },
+  {
+    "name": "Universidad de Alcalá",
+    "website": "https://www.uah.es/",
+    "asset": "universidad-de-alcala.jpg",
+    "supplied": "https://www.uah.es/",
+    "address": "Plaza de San Diego, s/n, 28801 Alcalá de Henares, Madrid, Spain"
+  },
+  {
+    "name": "University of California, Santa Barbara",
+    "website": "https://www.ucsb.edu/",
+    "asset": "university-of-california-santa-barbara.jpg",
+    "supplied": "https://www.ucsb.edu/",
+    "address": "Santa Barbara, CA 93106, USA"
+  },
+  {
+    "name": "University of Central Florida",
+    "website": "https://www.ucf.edu/",
+    "asset": "university-of-central-florida.png",
+    "supplied": "https://www.ucf.edu/",
+    "address": "4000 Central Florida Blvd., Orlando, FL 32816, USA"
+  },
+  {
+    "name": "University of Florida",
+    "website": "https://www.ufl.edu/",
+    "asset": "university-of-florida.png",
+    "supplied": "https://www.ufl.edu/",
+    "address": "Gainesville, FL 32611, USA"
+  },
+  {
+    "name": "University of Nevada, Las Vegas",
+    "website": "https://www.unlv.edu/",
+    "asset": "university-of-nevada-las-vegas.png",
+    "supplied": "https://www.unlv.edu/",
+    "address": "4505 S. Maryland Pkwy, Las Vegas, NV 89154, USA"
+  },
+  {
+    "name": "University of New Brunswick",
+    "website": "https://www.unb.ca/",
+    "asset": "university-of-new-brunswick.jpg",
+    "supplied": "https://www.unb.ca/",
+    "address": "3 Bailey Drive, Fredericton, NB E3B 5A3, Canada"
+  },
+  {
+    "name": "University of North Carolina at Charlotte",
+    "website": "https://www.charlotte.edu/",
+    "asset": "university-of-north-carolina-at-charlotte.png",
+    "supplied": "https://www.charlotte.edu/",
+    "address": "9201 University City Blvd, Charlotte, NC 28223, USA"
+  },
+  {
+    "name": "University of Oklahoma",
+    "website": "https://www.ou.edu/",
+    "asset": "university-of-oklahoma.png",
+    "supplied": "https://www.ou.edu/",
+    "address": "660 Parrington Oval, Norman, OK 73019, USA"
+  },
+  {
+    "name": "University of Pennsylvania",
+    "website": "https://www.upenn.edu/",
+    "asset": "university-of-pennsylvania.png",
+    "supplied": "https://www.upenn.edu/",
+    "address": "101 RCA/Moore Building, 200 South 33rd Street, Philadelphia, PA 19104, USA"
+  },
+  {
+    "name": "University of Texas Rio Grande Valley",
+    "website": "https://www.utrgv.edu/",
+    "asset": "university-of-texas-rio-grande-valley.png",
+    "supplied": "https://www.utrgv.edu/",
+    "address": "1201 West University Drive, Edinburg, TX 78539, USA"
+  },
+  {
+    "name": "University of Victoria",
+    "website": "https://www.uvic.ca/",
+    "asset": "university-of-victoria.png",
+    "supplied": "https://www.uvic.ca/",
+    "address": "3800 Finnerty Road, Victoria, BC V8P 5C2, Canada"
+  },
+  {
+    "name": "University of Waterloo",
+    "website": "https://uwaterloo.ca/",
+    "asset": "university-of-waterloo.png",
+    "supplied": "https://uwaterloo.ca/",
+    "address": "200 University Avenue West, Waterloo, ON N2L 3G5, Canada"
+  },
+  {
+    "name": "University of Windsor",
+    "website": "https://www.uwindsor.ca/",
+    "asset": "university-of-windsor.png",
+    "supplied": "https://www.uwindsor.ca/",
+    "address": "401 Sunset Avenue, Windsor, ON N9B 3P4, Canada"
+  },
+  {
+    "name": "Weber State University",
+    "website": "https://www.weber.edu/",
+    "asset": "weber-state-university.png",
+    "supplied": "https://www.weber.edu/",
+    "address": "3848 Harrison Blvd., Ogden, UT 84408, USA"
+  },
+  {
+    "name": "West Virginia University",
+    "website": "https://www.wvu.edu/",
+    "asset": "west-virginia-university.png",
+    "supplied": "https://www.wvu.edu/",
+    "address": "1306 Evansdale Drive, Morgantown, WV 26506-6106, USA"
+  }
+]
