@@ -1290,6 +1290,40 @@ describe("the PDU wiring guide is published and linked", () => {
 const CLIENTS = JSON.parse(fs.readFileSync(path.join(REPO, "tests/clients.fixture.json"), "utf8"));
 const ALL_NAV_PAGES = ALL_HTML;
 
+describe("commercial figures are written the same way everywhere", () => {
+  // contact.html carried one FAQ answer that wrote the Pro price as "US$6100"
+  // and the support tier as "Software Setup/Technical Support", against 11 and
+  // 58 correctly formatted occurrences elsewhere. The values never differed --
+  // only the formatting -- and the same sentence is mirrored into FAQ schema,
+  // so both copies must stay in step.
+  test("no US$ figure over a thousand drops its separator", () => {
+    for (const file of ALL_HTML) {
+      const offenders = [...read(file).matchAll(/US\$\d{4,}/g)].map((m) => m[0]);
+      assert.deepStrictEqual(offenders, [], `${file} writes ${offenders.join(", ")} without a separator`);
+    }
+  });
+
+  test("the support tier keeps its spaced slash", () => {
+    for (const file of ALL_HTML) {
+      assert.ok(
+        !read(file).includes("Software Setup/Technical Support"),
+        `${file} uses the unspaced Software Setup/Technical Support form`,
+      );
+    }
+  });
+
+  test("the corrected contact answer still reads the same in copy and in schema", () => {
+    const contact = read("contact.html");
+    const faq = [...nodes(jsonLd(contact))].find((n) => n["@type"] === "FAQPage");
+    const schemaText = faq.mainEntity.map((q) => q.acceptedAnswer.text).join(" ");
+    assert.match(schemaText, /US\$6,100 with Software Setup \/ Technical Support/);
+    assert.match(
+      visibleText(contact).replace(/\s+/g, " "),
+      /US\$6,100 with Software Setup \/ Technical Support/,
+    );
+  });
+});
+
 describe("the homepage parts grid names components the way the rest of the site does", () => {
   // The parts grid carried two stale spellings that contradicted the
   // specifications page and the store. Guard the canonical names so the copy
