@@ -1,23 +1,36 @@
 name: Deploy to Hostinger
 
-# MANUAL ONLY. There is no push trigger and there never should be one without
-# a deliberate decision — this workflow publishes to the live site.
+# Publishes the live site. Two ways in:
+#
+#   push to main       — automatic. Enabled 2026-09-02 on the owner's decision,
+#                        replacing the manual-only policy this file shipped with.
+#                        No typed confirmation; the gates below are the control.
+#   workflow_dispatch  — manual, kept for redeploys and recovery. Still requires
+#                        the operator to type DEPLOY.
 #
 # Safety rails, in order:
-#   1. workflow_dispatch only — no automatic trigger of any kind
-#   2. the operator must type DEPLOY into the confirmation input
-#   3. refuses to run from any ref other than the production branch
-#   4. re-runs the full CI gate (lint, audit, build, tests) before uploading
-#   5. re-runs Lighthouse desktop + mobile against the artifact being deployed
-#   6. GitHub Environment `production` gates on reviewer approval and holds
-#      the only copy of the Hostinger credentials
-#   7. concurrency group prevents two production deploys overlapping
-#   8. the artifact is inspected for forbidden files before a byte is sent
+#   1. refuses to run from any ref other than the production branch
+#   2. a manual run must type DEPLOY; an automatic run is authorised by the
+#      push to main itself
+#   3. re-runs the full CI gate (lint, audit, build, tests) before uploading
+#   4. re-runs Lighthouse desktop + mobile against the artifact being deployed
+#   5. the artifact is inspected for forbidden files, and its SHA256SUMS
+#      manifest is verified, before a byte is sent
+#   6. concurrency group prevents two production deploys overlapping, and does
+#      NOT cancel in flight, so a half-finished upload is never abandoned
+#   7. the deploy job is bound to the `production` GitHub Environment, which
+#      holds the only copy of the Hostinger credentials and restricts which
+#      branches may deploy
 #
 # Secrets are referenced ONLY inside the deploy job, which is bound to the
 # `production` environment. No pull-request workflow can reach them.
+#
+# Rollback: `git revert <sha> && git push` — the revert is itself a push to
+# main, so it redeploys the previous state through these same gates.
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       confirm:
@@ -50,10 +63,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Require the typed confirmation
-        if: inputs.confirm != 'DEPLOY'
+      # Only the manual route needs a typed confirmation. A push to main is
+      # already a deliberate act, and it has passed review before it landed.
+      - name: Require the typed confirmation on a manual run
+        if: github.event_name == 'workflow_dispatch' && inputs.confirm != 'DEPLOY'
         run: |
-          echo "::error title=Confirmation missing::Type DEPLOY in the confirmation input to run this workflow."
+          echo "::error title=Confirmation missing::Type DEPLOY in the confirmation input to run this workflow manually."
           exit 1
 
       - name: Require the production branch
@@ -72,7 +87,8 @@ jobs:
             echo "| Actor | ${{ github.actor }} |"
             echo "| Ref | ${{ github.ref_name }} |"
             echo "| Commit | ${{ github.sha }} |"
-            echo "| Reason | ${{ inputs.reason }} |"
+            echo "| Trigger | ${{ github.event_name }} |"
+            echo "| Reason | ${{ inputs.reason || 'automatic deployment of a push to main' }} |"
           } >> "$GITHUB_STEP_SUMMARY"
 
   build:
