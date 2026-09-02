@@ -71,12 +71,6 @@ function* nodes(value) {
   }
 }
 
-function offersIn(html) {
-  return jsonLd(html)
-    .flatMap((doc) => [...nodes(doc)])
-    .filter((n) => n["@type"] === "Offer");
-}
-
 /**
  * Every row of every .price-lines table on a page, split into its label and
  * its figure. Lets a test assert on the line item itself rather than on text
@@ -291,30 +285,6 @@ describe("confirmed international facts", () => {
       );
     });
   }
-
-  test("the USD Offer records that the service is excluded", () => {
-    for (const file of ["index.html", "autonomous-racing-robotics-kit.html"]) {
-      const usd = offersIn(read(file)).find((o) => o.priceCurrency === "USD");
-      assert.match(
-        usd.description ?? "",
-        /Software Setup \/ Technical Support is not included/i,
-        `the USD offer in ${file} does not exclude the service`,
-      );
-      assert.match(usd.description ?? "", /covers shipping only/i);
-    }
-  });
-
-  test("the INR Offers record the all-India shipping scope", () => {
-    for (const file of ["index.html", "autonomous-racing-robotics-kit.html"]) {
-      for (const o of offersIn(read(file)).filter((x) => x.priceCurrency === "INR")) {
-        assert.match(
-          o.description ?? "",
-          /any destination within India/i,
-          `offer ${o.price} in ${file} does not state the all-India shipping scope`,
-        );
-      }
-    }
-  });
 });
 
 describe("the three configurations are unambiguous", () => {
@@ -472,26 +442,6 @@ describe("the three configurations are unambiguous", () => {
           w,
           /Software Setup \/ Technical Support|Where that service is included|with Software Setup|\bSoftware setup\b/i,
           `${file} claims first-boot publishing without scoping it to the service:\n${w}`,
-        );
-      }
-    }
-  });
-
-  test("the service is only ever sold as a kit configuration, never on its own", () => {
-    // The Tech Support tier is now a published Offer (USD 6100), but it is a
-    // *kit* configuration. The bare service must never be an Offer by itself.
-    for (const file of ["index.html", "autonomous-racing-robotics-kit.html"]) {
-      const offers = offersIn(read(file));
-      assert.equal(offers.length, 4, `${file} should carry exactly four Offers`);
-      for (const o of offers) {
-        assert.ok(
-          !/^Software Setup/i.test(o.name ?? ""),
-          `${file} models the optional service as a standalone Offer: ${o.name}`,
-        );
-        assert.match(
-          o.name ?? "",
-          /RoboRacer Core Kit/i,
-          `${file} has an Offer that is not a Core Kit configuration: ${o.name}`,
         );
       }
     }
@@ -774,135 +724,17 @@ describe("structured data carries the current commerce facts", () => {
       }
     });
   }
-
+  // The informational pages deliberately carry no Product/Offer markup. The Core
+  // Kit cannot be bought here — India orders go by email, international orders go
+  // to orders.ambimat.com, which is the merchant surface and carries its own
+  // Product/Offer schema. Removed 2026-09-02; this test stops it coming back.
   for (const file of ["index.html", "autonomous-racing-robotics-kit.html"]) {
-    test(`${file} Product offers are exactly the four firm configurations`, () => {
-      const offers = offersIn(read(file));
-      const priced = offers.map((o) => `${o.priceCurrency} ${o.price}`).sort();
-      assert.deepEqual(
-        priced,
-        ["INR 580000", "INR 628000", "USD 5639", "USD 6100"],
-        `unexpected offers in ${file}`,
-      );
-    });
-
-    test(`${file} the USD 6100 offer is the Tech Support configuration`, () => {
-      const tech = offersIn(read(file)).filter((o) => o.priceCurrency === "USD" && o.price === "6100");
-      assert.equal(tech.length, 1, `${file} does not have exactly one USD 6100 offer`);
-      assert.match(
-        tech[0].name,
-        /Core Kit Pro/i,
-        `the USD 6100 offer in ${file} is not named as the Pro configuration:\n${tech[0].name}`,
-      );
-      assert.match(
-        tech[0].description,
-        /Software Setup \/ Technical Support/i,
-        `the USD 6100 offer in ${file} does not describe the service it includes`,
-      );
-      // It must not be presented as the plain/base international kit.
-      assert.ok(
-        !/^Complete RoboRacer Core Kit - international$/i.test(tech[0].name),
-        `the USD 6100 offer in ${file} is presented as the standard international kit`,
-      );
-    });
-
-    test(`${file} the USD 6100 offer did not replace the USD 5639 offer`, () => {
-      const usd = offersIn(read(file)).filter((o) => o.priceCurrency === "USD");
-      const prices = usd.map((o) => o.price).sort();
-      assert.deepEqual(prices, ["5639", "6100"], `${file} lost or duplicated a USD offer`);
-      const std = usd.find((o) => o.price === "5639");
-      assert.ok(std, `${file} no longer publishes the standard USD 5639 offer`);
-      assert.match(
-        std.description,
-        /not included in this price/i,
-        `the USD 5639 offer in ${file} no longer excludes the service`,
-      );
-    });
-
-    test(`${file} publishes no duplicate offers`, () => {
-      const keys = offersIn(read(file)).map((o) => `${o.priceCurrency} ${o.price} ${o.name}`);
-      assert.equal(new Set(keys).size, keys.length, `${file} has duplicate Offer nodes:\n${keys.join("\n")}`);
-    });
-
-    test(`${file} has exactly one Product node`, () => {
-      const products = jsonLd(read(file))
+    test(`${file} publishes no Product or Offer markup`, () => {
+      const found = jsonLd(read(file))
         .flatMap((doc) => [...nodes(doc)])
-        .filter((n) => n["@type"] === "Product");
-      assert.equal(products.length, 1, `${file} has ${products.length} Product nodes`);
-    });
-
-    test(`${file} offers declare tax as not included`, () => {
-      for (const o of offersIn(read(file))) {
-        assert.equal(
-          o.valueAddedTaxIncluded,
-          false,
-          `offer ${o.price} in ${file} implies tax-inclusive pricing`,
-        );
-      }
-    });
-
-    test(`${file} offers carry shipping as a separate rate, not in the price`, () => {
-      for (const o of offersIn(read(file))) {
-        const rate = o.shippingDetails?.shippingRate;
-        assert.ok(rate, `offer ${o.price} in ${file} has no shippingDetails`);
-        const expected = o.priceCurrency === "INR" ? "4500" : "500";
-        assert.equal(rate.value, expected, `offer ${o.price} in ${file} has the wrong shipping rate`);
-        assert.equal(rate.currency, o.priceCurrency);
-      }
-    });
-
-    test(`${file} does not advertise the indicative price as a firm Offer`, () => {
-      // approximately US$5,175 is a quotation-controlled estimate; publishing
-      // it as machine-readable commerce data would assert false precision.
-      const prices = offersIn(read(file)).map((o) => String(o.price));
-      assert.ok(!prices.includes("5175"), `${file} publishes the indicative price as an Offer`);
-    });
-
-    test(`${file} identifies Software Setup / Technical Support on the INR 628,000 offer`, () => {
-      const offer = offersIn(read(file)).find((o) => String(o.price) === "628000");
-      assert.ok(offer, "no INR 628,000 offer found");
-      assert.match(offer.name, /Software Setup \/ Technical Support/);
-    });
-
-    test(`${file} does not attach the service to the INR 580,000 offer`, () => {
-      const offer = offersIn(read(file)).find((o) => String(o.price) === "580000");
-      assert.ok(offer, "no INR 580,000 offer found");
-      assert.ok(
-        !/with Software Setup \/ Technical Support/i.test(offer.name),
-        "the INR 580,000 offer is named as including the service",
-      );
-      assert.match(
-        offer.description ?? "",
-        /not included/i,
-        "the INR 580,000 offer does not say the service is excluded",
-      );
-    });
-
-    test(`${file} INR offers describe the same physical kit`, () => {
-      const inr = offersIn(read(file)).filter((o) => o.priceCurrency === "INR");
-      assert.equal(inr.length, 2);
-      for (const o of inr) {
-        assert.match(
-          o.description ?? "",
-          /complete physical Core Kit/i,
-          `offer ${o.price} does not state it is the same complete physical kit`,
-        );
-      }
-    });
-
-    test(`${file} international offer does not absorb destination charges`, () => {
-      const usd = offersIn(read(file)).find((o) => o.priceCurrency === "USD");
-      assert.ok(usd, "no USD offer found");
-      const d = usd.description ?? "";
-      assert.match(d, /FOB/, "the USD offer does not state FOB terms");
-      assert.match(
-        d,
-        /covers shipping only; destination customs clearance, import duties, local taxes and related destination charges are the buyer's responsibility/i,
-        "the USD offer does not place destination charges with the buyer",
-      );
-      for (const re of [/duties included/i, /customs cleared/i, /duty[- ]paid/i, /DDP/]) {
-        assert.ok(!re.test(d), `the USD offer implies Ambimat covers destination charges: ${re}`);
-      }
+        .map((n) => n["@type"])
+        .filter((t) => t === "Product" || t === "Offer" || t === "AggregateOffer");
+      assert.deepEqual(found, [], `${file} reintroduced merchant markup: ${found.join(", ")}`);
     });
   }
 });
