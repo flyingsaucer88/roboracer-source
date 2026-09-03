@@ -114,8 +114,8 @@ function machineText(html) {
 
 describe("retired pricing never reappears", () => {
   for (const file of ALL_HTML) {
-    test(`${file} only uses US$6,100 for the Tech Support configuration`, () => {
-      // US$6,100 is the international kit *with* Software Setup / Technical
+    test(`${file} only uses US$6,250 for the Tech Support configuration`, () => {
+      // US$6,250 is the international kit *with* Software Setup / Technical
       // Support. It must never be presented as the standard kit price.
       const text = visibleText(read(file));
       for (const m of text.matchAll(/US\$6,?100/g)) {
@@ -123,7 +123,7 @@ describe("retired pricing never reappears", () => {
         assert.match(
           w,
           /Core Kit Pro|With Tech Support|Software Setup ?\/ ?Technical Support/i,
-          `${file} quotes US$6,100 without naming the Tech Support configuration:\n${w}`,
+          `${file} quotes US$6,250 without naming the Tech Support configuration:\n${w}`,
         );
       }
     });
@@ -180,12 +180,12 @@ describe("international terms are FOB and destination charges stay with the buye
       );
     });
 
-    test(`${file} excludes destination charges from the US$500 shipping rate`, () => {
+    test(`${file} excludes destination charges from the US$450 per-kit shipping rate`, () => {
       const text = visibleText(read(file));
       assert.match(
         text,
-        /US\$500 charge covers shipping only|US\$500, and that charge covers shipping only|US\$500 shipping charge does not include destination customs clearance/i,
-        `${file} does not scope the US$500 charge`,
+        /US\$450 per kit, and that charge covers shipping only|US\$450 charge covers shipping only/i,
+        `${file} does not scope the US$450 per-kit charge`,
       );
       assert.match(
         text,
@@ -226,10 +226,10 @@ describe("international terms are FOB and destination charges stay with the buye
 
 describe("confirmed international facts", () => {
   for (const file of PRICING_PAGES) {
-    test(`${file} states the service is not included in US$5,639`, () => {
+    test(`${file} states the service is not included in US$5,870`, () => {
       assert.match(
         visibleText(read(file)),
-        /not included in the US\$5,639 (international|kit) price|US\$5,639, which does not include\s+Software Setup \/ Technical Support/i,
+        /not included in the US\$5,870 (international|kit) price|US\$5,870, which does not include\s+Software Setup \/ Technical Support/i,
         `${file} does not say Software Setup / Technical Support is excluded from the USD price`,
       );
     });
@@ -261,11 +261,11 @@ describe("confirmed international facts", () => {
       }
     });
 
-    test(`${file} says the US$500 covers shipping only`, () => {
+    test(`${file} says the US$450 per-kit rate covers shipping only`, () => {
       assert.match(
         visibleText(read(file)),
-        /US\$500 (charge )?covers shipping only|covers shipping only/i,
-        `${file} does not state that US$500 is shipping only`,
+        /US\$450 per kit, and that charge covers shipping only|covers shipping only/i,
+        `${file} does not state that US$450 per kit is shipping only`,
       );
     });
 
@@ -305,13 +305,13 @@ describe("the three configurations are unambiguous", () => {
       );
     });
 
-    test(`${file} positions the US$5,639 row as customer-managed`, () => {
-      const line = priceLines(read(file)).find((l) => l.value.includes("US$5,639"));
-      assert.ok(line, `${file} has no US$5,639 row`);
+    test(`${file} positions the US$5,870 row as customer-managed`, () => {
+      const line = priceLines(read(file)).find((l) => l.value.includes("US$5,870"));
+      assert.ok(line, `${file} has no US$5,870 row`);
       assert.match(
         line.label,
         /customer-managed software setup and integration/i,
-        `the US$5,639 row in ${file} is not positioned as customer-managed:\n${line.label}`,
+        `the US$5,870 row in ${file} is not positioned as customer-managed:\n${line.label}`,
       );
     });
 
@@ -336,8 +336,8 @@ describe("the three configurations are unambiguous", () => {
       assert.ok(card, `${file} has no International price card`);
       for (const [what, re] of [
         [
-          "service excluded from US$5,639",
-          /Software Setup \/ Technical Support is not included in the US\$5,639 kit price/i,
+          "service excluded from US$5,870",
+          /Software Setup \/ Technical Support is not included in the US\$5,870 kit price/i,
         ],
         ["operating system not flashed", /without\s+the operating system flashed/i],
         [
@@ -347,7 +347,7 @@ describe("the three configurations are unambiguous", () => {
         ["60-day support not included", /60-day remote technical-support period is not included/i],
         [
           "Tech Support available as a priced configuration",
-          /RoboRacer Core Kit Pro[^.]{0,60}for US\$6,100/i,
+          /RoboRacer Core Kit Pro[^.]{0,60}for US\$6,250/i,
         ],
       ]) {
         assert.match(card.text, re, `the International card in ${file} does not state: ${what}`);
@@ -358,7 +358,7 @@ describe("the three configurations are unambiguous", () => {
       const card = priceCards(read(file)).find((c) => /International/i.test(c.heading));
       assert.match(
         card.text,
-        /Software Setup \/ Technical Support is not included in the US\$5,639 kit price\./,
+        /Software Setup \/ Technical Support is not included in the US\$5,870 kit price\./,
         `the International card in ${file} does not carry the corrected exclusion sentence`,
       );
     });
@@ -366,7 +366,7 @@ describe("the three configurations are unambiguous", () => {
     test(`${file} never asserts inclusion inside a customer-managed card`, () => {
       for (const card of priceCards(read(file))) {
         for (const re of [
-          /Software Setup \/ Technical Support is included in the US\$5,639/i,
+          /Software Setup \/ Technical Support is included in the US\$5,870/i,
           /the 60-day remote technical-support period is included/i,
           /the Jetson is supplied with the operating system flashed/i,
         ]) {
@@ -375,11 +375,11 @@ describe("the three configurations are unambiguous", () => {
       }
     });
 
-    test(`${file} never claims 580,000 or 5,639 include the setup activities`, () => {
+    test(`${file} never claims 580,000 or 5,870 include the setup activities`, () => {
       const text = visibleText(read(file));
       const forbidden = [
         /INR 580,000(?:(?!not|without|excluding)[^.]){0,140}\b(operating system (is )?flashed|ROS stack (is )?configured|drivers (are )?(pre-)?configured|60 days of remote)/i,
-        /US\$5,639(?:(?!not|without|excluding)[^.]){0,140}\b(operating system (is )?flashed|ROS stack (is )?configured|drivers (are )?(pre-)?configured|60 days of remote)/i,
+        /US\$5,870(?:(?!not|without|excluding)[^.]){0,140}\b(operating system (is )?flashed|ROS stack (is )?configured|drivers (are )?(pre-)?configured|60 days of remote)/i,
       ];
       for (const re of forbidden) {
         assert.ok(!re.test(text), `${file} attaches setup activities to a customer-managed price: ${re}`);
@@ -389,14 +389,14 @@ describe("the three configurations are unambiguous", () => {
     test(`${file} offers the service to international buyers at a published price`, () => {
       assert.match(
         visibleText(read(file)),
-        /RoboRacer Core Kit Pro[^.]{0,60}for US\$6,100/i,
+        /RoboRacer Core Kit Pro[^.]{0,60}for US\$6,250/i,
         `${file} does not offer international buyers the Tech Support configuration`,
       );
     });
 
     test(`${file} invents no price for the international service`, () => {
       // The sentence offering the service separately must carry no figure.
-      const APPROVED = new Set(["US$5,639", "US$464", "US$5,175", "US$500"]);
+      const APPROVED = new Set(["US$5,870", "US$464", "US$5,406", "US$450"]);
       const sentences = visibleText(read(file)).split(/(?<=\.)\s+/);
       for (const s of sentences.filter((x) => /separately for an additional fee/i.test(x))) {
         // Anchor on a digit so a trailing comma is not read as part of the figure.
@@ -415,7 +415,7 @@ describe("the three configurations are unambiguous", () => {
       for (const re of [
         /without Software Setup[^.]{0,80}(fewer|reduced|missing) (parts|components|hardware)/i,
         /INR 580,000[^.]{0,100}(without|no) (the )?(Traxxas )?chassis/i,
-        /US\$5,639[^.]{0,100}(without|no) (the )?(Traxxas )?chassis/i,
+        /US\$5,870[^.]{0,100}(without|no) (the )?(Traxxas )?chassis/i,
       ]) {
         assert.ok(!re.test(text), `${file} conflates the service distinction with the physical kit: ${re}`);
       }
@@ -588,12 +588,12 @@ describe("India pricing is stated with the service relationship intact", () => {
 
 describe("international pricing is stated with the discount qualified", () => {
   for (const file of PRICING_PAGES) {
-    test(`${file} quotes US$5,639 for the complete kit`, () => {
-      assert.match(visibleText(read(file)), /US\$5,639/);
+    test(`${file} quotes US$5,870 for the complete kit`, () => {
+      assert.match(visibleText(read(file)), /US\$5,870/);
     });
 
-    test(`${file} quotes the US$500 flat shipping`, () => {
-      assert.match(visibleText(read(file)), /US\$500/);
+    test(`${file} quotes the US$450 per-kit shipping`, () => {
+      assert.match(visibleText(read(file)), /US\$450 per kit/);
     });
 
     test(`${file} presents the US$464 discount as approximate`, () => {
@@ -604,14 +604,14 @@ describe("international pricing is stated with the discount qualified", () => {
       }
     });
 
-    test(`${file} presents US$5,175 as approximate and indicative`, () => {
+    test(`${file} presents US$5,406 as approximate and indicative`, () => {
       const text = visibleText(read(file));
-      for (const m of text.matchAll(/US\$5,175/g)) {
+      for (const m of text.matchAll(/US\$5,406/g)) {
         const w = text.slice(Math.max(0, m.index - 120), m.index + 200);
-        assert.match(w, /approximately/i, `US$5,175 appears unqualified in ${file}:\n${w}`);
+        assert.match(w, /approximately/i, `US$5,406 appears unqualified in ${file}:\n${w}`);
       }
-      // 5639 - 464 = 5175. Guard the arithmetic itself.
-      assert.equal(5639 - 464, 5175);
+      // 5870 - 464 = 5406. Guard the arithmetic itself.
+      assert.equal(5870 - 464, 5406);
     });
   }
 });
@@ -740,11 +740,104 @@ describe("structured data carries the current commerce facts", () => {
 });
 
 describe("pricing pages stay in agreement", () => {
-  const FIGURES = ["INR 580,000", "INR 628,000", "INR 4,500", "US$5,639", "US$464", "US$5,175", "US$500"];
+  const FIGURES = ["INR 580,000", "INR 628,000", "INR 4,500", "US$5,870", "US$464", "US$5,406", "US$450"];
   for (const figure of FIGURES) {
     test(`every pricing page shows ${figure}`, () => {
       for (const file of PRICING_PAGES) {
         assert.ok(visibleText(read(file)).includes(figure), `${file} is missing ${figure}`);
+      }
+    });
+  }
+});
+
+describe("international shipping is priced per kit, not per order", () => {
+  // Shipping was US$500 per ORDER, with a US$565 shortcut for a kit plus power
+  // boards and a "quoted rate" escape above one kit. The owner replaced all
+  // three with a single rule: US$450 per kit. These guards exist so the old
+  // per-order framing cannot creep back in through a copy edit.
+  const KIT_SHIPPING = 450;
+
+  test("the per-kit rate multiplies the way the policy says", () => {
+    assert.equal(KIT_SHIPPING * 1, 450);
+    assert.equal(KIT_SHIPPING * 2, 900);
+    // Power Board shipping is a separate, unchanged US$65 component.
+    assert.equal(KIT_SHIPPING + 65, 515);
+    assert.equal(KIT_SHIPPING * 2 + 65, 965);
+  });
+
+  for (const file of PRICING_PAGES) {
+    test(`${file} states the per-kit rule`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /US\$450 per kit/,
+        `${file} does not state the US$450 per-kit shipping rate`,
+      );
+    });
+
+    test(`${file} shows the two-kit total that follows from it`, () => {
+      assert.match(visibleText(read(file)), /US\$900/, `${file} does not show that two kits ship for US$900`);
+    });
+
+    test(`${file} keeps the US$65 Power Board rate separate`, () => {
+      const text = visibleText(read(file));
+      assert.match(text, /Power Board-only order ships for US\$65/i, `${file} lost the US$65 board rate`);
+      assert.match(text, /US\$515/, `${file} lost the kit-plus-board US$515 rate`);
+    });
+
+    test(`${file} carries no per-order or quoted-rate shipping language`, () => {
+      const text = visibleText(read(file));
+      for (const re of [
+        /US\$500/,
+        /US\$565/,
+        /Core Kit-only order/i,
+        /shipped on a quoted rate/i,
+        /more than one Core Kit are shipped/i,
+      ]) {
+        assert.ok(!re.test(text), `${file} still carries superseded shipping language: ${re}`);
+      }
+    });
+
+    test(`${file} does not fold shipping into the kit price`, () => {
+      assert.ok(
+        !/US\$(5,870|6,250)[^.]{0,80}(shipping included|including shipping|inclusive of shipping)/i.test(
+          visibleText(read(file)),
+        ),
+        `${file} implies shipping is included in the kit price`,
+      );
+    });
+  }
+});
+
+describe("kit orders are wire-transfer only, with no Ambimat surcharge", () => {
+  for (const file of PRICING_PAGES) {
+    test(`${file} names International Wire Transfer as the payment route`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /International Wire Transfer/,
+        `${file} does not state the wire-transfer payment policy`,
+      );
+    });
+
+    test(`${file} disclaims any Ambimat-side handling surcharge`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /Ambimat adds no P&H, payment-processing or wire-transfer handling charge/i,
+        `${file} does not disclaim the Ambimat P&H surcharge`,
+      );
+    });
+
+    test(`${file} places bank and intermediary charges on the buyer`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /(bank,\s*correspondent-bank or intermediary charges|bank or intermediary charges)[^.]{0,90}buyer's responsibility/i,
+        `${file} does not place bank charges with the buyer`,
+      );
+    });
+
+    test(`${file} does not offer a card or wallet gateway for kits`, () => {
+      const text = visibleText(read(file));
+      for (const re of [/pay by card/i, /credit card/i, /PayPal/i, /Stripe/i, /PayGlocal/i, /Juspay/i]) {
+        assert.ok(!re.test(text), `${file} offers a non-wire payment route: ${re}`);
       }
     });
   }
@@ -1123,7 +1216,7 @@ const CLIENTS = JSON.parse(fs.readFileSync(path.join(REPO, "tests/clients.fixtur
 const ALL_NAV_PAGES = ALL_HTML;
 
 describe("commercial figures are written the same way everywhere", () => {
-  // contact.html carried one FAQ answer that wrote the Pro price as "US$6100"
+  // contact.html carried one FAQ answer that wrote the Pro price as "US$6250"
   // and the support tier as "Software Setup/Technical Support", against 11 and
   // 58 correctly formatted occurrences elsewhere. The values never differed --
   // only the formatting -- and the same sentence is mirrored into FAQ schema,
@@ -1148,10 +1241,10 @@ describe("commercial figures are written the same way everywhere", () => {
     const contact = read("contact.html");
     const faq = [...nodes(jsonLd(contact))].find((n) => n["@type"] === "FAQPage");
     const schemaText = faq.mainEntity.map((q) => q.acceptedAnswer.text).join(" ");
-    assert.match(schemaText, /US\$6,100 with Software Setup \/ Technical Support/);
+    assert.match(schemaText, /US\$6,250 with Software Setup \/ Technical Support/);
     assert.match(
       visibleText(contact).replace(/\s+/g, " "),
-      /US\$6,100 with Software Setup \/ Technical Support/,
+      /US\$6,250 with Software Setup \/ Technical Support/,
     );
   });
 });
