@@ -1,0 +1,107 @@
+/**
+ * Ambimat Central Intake Platform — shared contact form styles.
+ *
+ * This file is IDENTICAL on every Ambimat site. It deliberately styles only
+ * `.intake-*` classes so it cannot collide with a site's existing form CSS,
+ * and it takes every colour and font from that site's own custom properties
+ * with a fallback — so it inherits each brand rather than imposing one.
+ *
+ * Maintenance: change it here, copy it out. Do not fork per-site.
+ */
+
+.intake-form {
+  --intake-accent: var(--brand-red, #E3222A);
+  --intake-ink: var(--ink, #23282a);
+  --intake-muted: var(--brand-grey, var(--muted, #6b7280));
+  --intake-line: var(--line, #d7dbdd);
+  --intake-label: var(--brand-dark, var(--ink, #23282a));
+  --intake-field-bg: var(--card-bg, #fff);
+  --intake-radius: var(--radius-btn, 6px);
+  --intake-font: var(--font-body, 'Source Sans 3', system-ui, -apple-system, sans-serif);
+  --intake-display: var(--font-display, 'Montserrat', system-ui, -apple-system, sans-serif);
+  --intake-error: #b3261e;
+  --intake-error-bg: #fdeceb;
+  --intake-error-line: #f3b8b4;
+  --intake-ok: #14532d;
+  --intake-ok-bg: #ecf7ee;
+  --intake-ok-line: #b7dfc0;
+  --intake-info-bg: #eef2f7;
+  --intake-info-line: #cbd5e1;
+  font-family: var(--intake-font);
+}
+
+/* Mobile-first: one column, so a phone never gets ~180px fields. The second
+   column only appears when there is genuinely room for it. */
+.intake-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 640px) { .intake-grid { grid-template-columns: 1fr 1fr; } }
+
+.intake-row { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.intake-row--full { grid-column: 1 / -1; }
+
+.intake-row label {
+  font-family: var(--intake-display);
+  font-size: 13px; font-weight: 600; letter-spacing: .3px;
+  color: var(--intake-label);
+}
+.intake-req { color: var(--intake-accent); }
+.intake-opt { color: var(--intake-muted); font-weight: 400; }
+
+.intake-row input,
+.intake-row select,
+.intake-row textarea {
+  font-family: var(--intake-font);
+  font-size: 15px;
+  color: var(--intake-ink);
+  background: var(--intake-field-bg);
+  border: 1px solid var(--intake-line);
+  border-radius: var(--intake-radius);
+  padding: 12px 14px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.intake-row textarea { min-height: 140px; resize: vertical; }
+
+.intake-row input:focus,
+.intake-row select:focus,
+.intake-row textarea:focus {
+  outline: none;
+  border-color: var(--intake-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--intake-accent) 18%, transparent);
+}
+/* Keyboard users must always get a ring, including where a design removes it. */
+.intake-row input:focus-visible,
+.intake-row select:focus-visible,
+.intake-row textarea:focus-visible,
+.intake-form button:focus-visible,
+.intake-status a:focus-visible {
+  outline: 2px solid var(--intake-accent);
+  outline-offset: 2px;
+}
+
+.intake-row input[aria-invalid="true"],
+.intake-row select[aria-invalid="true"],
+.intake-row textarea[aria-invalid="true"] { border-color: var(--intake-error); }
+
+.intake-hint { font-size: 12.5px; color: var(--intake-muted); line-height: 1.55; margin: 0; }
+.intake-err  { font-size: 13px; color: var(--intake-error); margin: 0; }
+
+/* Hidden from people and assistive tech; only bots fill it. */
+.intake-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.intake-status { font-size: 14.5px; line-height: 1.6; margin: 0; }
+.intake-status.is-visible { padding: 13px 15px; border-radius: var(--intake-radius); }
+.intake-status--info,
+.intake-status--busy    { background: var(--intake-info-bg);  border: 1px solid var(--intake-info-line);  color: var(--intake-ink); }
+.intake-status--error   { background: var(--intake-error-bg); border: 1px solid var(--intake-error-line); color: #8c1d18; }
+.intake-status--success { background: var(--intake-ok-bg);    border: 1px solid var(--intake-ok-line);    color: var(--intake-ok); }
+.intake-status a { color: inherit; text-decoration: underline; }
+
+.intake-form button[aria-disabled="true"] { opacity: .6; cursor: progress; }
+.intake-note { font-size: 12.5px; color: var(--intake-muted); line-height: 1.6; margin: 14px 0 0; }
+.intake-note a { color: var(--intake-accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .intake-row input, .intake-row select, .intake-row textarea { transition: none; }
+}
