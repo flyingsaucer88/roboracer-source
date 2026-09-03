@@ -791,10 +791,6 @@ ol {
   text-align: right;
 }
 /* Approximate figures are visually subordinate to firm ones. */
-.price-lines li.is-indicative .price-line-value {
-  color: var(--muted-strong);
-  font-weight: 600;
-}
 .price-card-note {
   margin-top: 18px;
   font-size: 13.5px;
