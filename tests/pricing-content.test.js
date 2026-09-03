@@ -180,12 +180,12 @@ describe("international terms are FOB and destination charges stay with the buye
       );
     });
 
-    test(`${file} excludes destination charges from the US$450 per-kit shipping rate`, () => {
+    test(`${file} excludes destination charges from the US$450 single-kit shipping rate`, () => {
       const text = visibleText(read(file));
       assert.match(
         text,
-        /US\$450 per kit, and that charge covers shipping only|US\$450 charge covers shipping only/i,
-        `${file} does not scope the US$450 per-kit charge`,
+        /US\$450 for a single RoboRacer Core Kit or Core Kit Pro, and that charge covers\s+shipping only/i,
+        `${file} does not scope the US$450 single-kit charge`,
       );
       assert.match(
         text,
@@ -261,11 +261,11 @@ describe("confirmed international facts", () => {
       }
     });
 
-    test(`${file} says the US$450 per-kit rate covers shipping only`, () => {
+    test(`${file} says the US$450 single-kit rate covers shipping only`, () => {
       assert.match(
         visibleText(read(file)),
-        /US\$450 per kit, and that charge covers shipping only|covers shipping only/i,
-        `${file} does not state that US$450 per kit is shipping only`,
+        /covers shipping only/i,
+        `${file} does not state that the US$450 single-kit rate is shipping only`,
       );
     });
 
@@ -592,8 +592,8 @@ describe("international pricing is stated with the discount qualified", () => {
       assert.match(visibleText(read(file)), /US\$5,870/);
     });
 
-    test(`${file} quotes the US$450 per-kit shipping`, () => {
-      assert.match(visibleText(read(file)), /US\$450 per kit/);
+    test(`${file} quotes US$450 shipping for a single kit`, () => {
+      assert.match(visibleText(read(file)), /US\$450 for a single (RoboRacer Core )?[Kk]it/);
     });
 
     test(`${file} presents the US$464 discount as approximate`, () => {
@@ -750,38 +750,63 @@ describe("pricing pages stay in agreement", () => {
   }
 });
 
-describe("international shipping is priced per kit, not per order", () => {
-  // Shipping was US$500 per ORDER, with a US$565 shortcut for a kit plus power
-  // boards and a "quoted rate" escape above one kit. The owner replaced all
-  // three with a single rule: US$450 per kit. These guards exist so the old
-  // per-order framing cannot creep back in through a copy edit.
-  const KIT_SHIPPING = 450;
+describe("international shipping is a single-kit rate, and quoted above one kit", () => {
+  // History: shipping was US$500 per ORDER; a later pass replaced it with
+  // "US$450 per kit", which multiplied — US$900 for two kits, US$515 for a kit
+  // plus boards, US$965 for two kits plus boards. The owner has since ruled
+  // that only the SINGLE-kit figure is fixed. Above one kit there is no
+  // formula at all: Ambimat sets the amount from the quantity requested and
+  // puts it in the quotation. These guards stop either superseded model — the
+  // per-order rate or the per-kit multiplier — creeping back through a copy edit.
+  const SINGLE_KIT_SHIPPING = 450;
 
-  test("the per-kit rate multiplies the way the policy says", () => {
-    assert.equal(KIT_SHIPPING * 1, 450);
-    assert.equal(KIT_SHIPPING * 2, 900);
-    // Power Board shipping is a separate, unchanged US$65 component.
-    assert.equal(KIT_SHIPPING + 65, 515);
-    assert.equal(KIT_SHIPPING * 2 + 65, 965);
+  test("only the one-kit figure is a published number", () => {
+    assert.equal(SINGLE_KIT_SHIPPING, 450);
   });
 
   for (const file of PRICING_PAGES) {
-    test(`${file} states the per-kit rule`, () => {
+    test(`${file} states the US$450 single-kit rate`, () => {
       assert.match(
         visibleText(read(file)),
-        /US\$450 per kit/,
-        `${file} does not state the US$450 per-kit shipping rate`,
+        /US\$450 for (a single|one) (RoboRacer Core Kit or Core Kit Pro|kit)/i,
+        `${file} does not state the US$450 single-kit shipping rate`,
       );
     });
 
-    test(`${file} shows the two-kit total that follows from it`, () => {
-      assert.match(visibleText(read(file)), /US\$900/, `${file} does not show that two kits ship for US$900`);
+    test(`${file} sends multi-kit shipping to the quotation`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /(more than one kit|multi-kit)[^.]{0,160}(quot|determined by the quantity)/i,
+        `${file} does not say multi-kit shipping is determined and quoted`,
+      );
     });
 
-    test(`${file} keeps the US$65 Power Board rate separate`, () => {
+    test(`${file} publishes no linear per-kit shipping formula`, () => {
       const text = visibleText(read(file));
-      assert.match(text, /Power Board-only order ships for US\$65/i, `${file} lost the US$65 board rate`);
-      assert.match(text, /US\$515/, `${file} lost the kit-plus-board US$515 rate`);
+      for (const re of [
+        /\$450 per kit/i,
+        /450\s*[*×x]\s*(\[qty\]|quantity|kit)/i,
+        /flat shipping per kit/i,
+      ]) {
+        assert.ok(!re.test(text), `${file} implies a per-kit shipping multiplier: ${re}`);
+      }
+    });
+
+    test(`${file} quotes no automatic multi-kit shipping total`, () => {
+      const text = visibleText(read(file));
+      // US$900 = 450x2, US$515 = 450+65, US$965 = 450x2+65. All three were
+      // computed from the retired multiplier and none may be shown again.
+      for (const re of [/US\$900/, /US\$515/, /US\$965/]) {
+        assert.ok(!re.test(text), `${file} shows a computed multi-kit shipping total: ${re}`);
+      }
+    });
+
+    test(`${file} keeps the US$65 Power Board rate separate and unchanged`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /Power Board-only order ships for US\$65/i,
+        `${file} lost the US$65 board rate`,
+      );
     });
 
     test(`${file} carries no per-order or quoted-rate shipping language`, () => {
@@ -808,14 +833,40 @@ describe("international shipping is priced per kit, not per order", () => {
   }
 });
 
-describe("kit orders are wire-transfer only, with no Ambimat surcharge", () => {
+describe("kits are quote-only, paid by wire against the quotation, with no Ambimat surcharge", () => {
   for (const file of PRICING_PAGES) {
-    test(`${file} names International Wire Transfer as the payment route`, () => {
+    test(`${file} says kit purchases are handled by quotation`, () => {
       assert.match(
         visibleText(read(file)),
-        /International Wire Transfer/,
-        `${file} does not state the wire-transfer payment policy`,
+        /Core Kit and Core Kit Pro purchases are handled by quotation/i,
+        `${file} does not state that kits are sold by quotation`,
       );
+    });
+
+    test(`${file} does not present an online checkout as the kit purchase route`, () => {
+      const text = visibleText(read(file));
+      for (const re of [
+        /Payment is by International Wire Transfer only/i,
+        /add to cart/i,
+        /Order the Core Kit/i,
+        /orders are placed on the Ambimat online store/i,
+      ]) {
+        assert.ok(!re.test(text), `${file} still implies an online checkout for kits: ${re}`);
+      }
+    });
+
+    test(`${file} puts the wire instructions in the quotation, not on the page`, () => {
+      assert.match(
+        visibleText(read(file)),
+        /International Wire Transfer instructions/i,
+        `${file} does not say wire instructions come with the quotation`,
+      );
+      // Bank credentials belong only in the private quotation, so nothing that
+      // reads as an account, IBAN, SWIFT/BIC or beneficiary may appear at all.
+      const html = read(file);
+      for (const re of [/IBAN/i, /\bBIC\b/, /\bSWIFT\b/i, /account number/i, /beneficiary/i, /sort code/i]) {
+        assert.ok(!re.test(html), `${file} publishes bank instructions: ${re}`);
+      }
     });
 
     test(`${file} disclaims any Ambimat-side handling surcharge`, () => {
@@ -946,7 +997,10 @@ const FOB_SENTENCE = "International quotations are supplied on";
 const SHIPPING_POLICY_HREF = 'href="https://orders.ambimat.com/shipping-policy/"';
 const INDIA_CTA_HREF =
   'href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=business.development@ambimat.com"';
-const INTL_CTA_HREF = 'href="https://orders.ambimat.com/"';
+// Kits became quote-only on 3 Sep 2026: the International CTA now opens the
+// enquiry form on this page rather than the store, because the store cannot
+// take a kit order any more.
+const INTL_CTA_HREF = 'href="#enquiry"';
 
 describe("contact pricing component keeps its restructured layout", () => {
   const html = read("contact.html");
@@ -982,10 +1036,14 @@ describe("contact pricing component keeps its restructured layout", () => {
     assert.ok(!cards.International.includes("Request an India quotation"));
   });
 
-  test("the International CTA keeps its store destination and sits in the International card", () => {
+  test("the International CTA asks for a quotation and sits in the International card", () => {
     assert.ok(cards.International.includes(INTL_CTA_HREF), "International CTA href changed or left the card");
-    assert.ok(cards.International.includes("International orders<"));
-    assert.ok(!cards.India.includes("International orders<"));
+    assert.ok(cards.International.includes("Request a quotation<"));
+    assert.ok(!cards.India.includes("Request a quotation<"));
+    assert.ok(
+      !/href="https:\/\/orders\.ambimat\.com\/"/.test(cards.International),
+      "the International CTA still sends kit buyers to the store checkout",
+    );
   });
 
   test("both CTAs use the same button treatment", () => {
@@ -1106,8 +1164,8 @@ describe("pricing CTAs size to their label", () => {
     }
     assert.ok(cards.India.includes("Request an India quotation"));
     assert.ok(cards.India.includes("mail.google.com/mail/?view=cm"));
-    assert.ok(cards.International.includes("International orders<"));
-    assert.ok(cards.International.includes('href="https://orders.ambimat.com/"'));
+    assert.ok(cards.International.includes("Request a quotation<"));
+    assert.ok(cards.International.includes('href="#enquiry"'));
     for (const c of ["India", "International"]) {
       const row = cards[c].match(/<div class="order-actions">[\s\S]*?<\/div>/);
       assert.ok(row, `${c} card lost its CTA row`);
@@ -1319,7 +1377,7 @@ describe("the Home hero CTA opens the Contact pricing section", () => {
 
   test("the CTA keeps its label and treatment, and the secondary CTA is untouched", () => {
     const hero = home.match(/<div class="hero-actions">([\s\S]*?)<\/div>/)[1];
-    assert.ok(hero.includes(">Order the Core Kit</a"), "the primary CTA label changed");
+    assert.ok(hero.includes(">Request a Core Kit quote</a"), "the primary CTA label changed");
     assert.ok(hero.includes("btn btn-primary"), "the primary CTA lost its treatment");
     assert.ok(
       hero.includes('href="/autonomous-racing-robotics-kit.html">What is in the kit</a>'),
@@ -1689,6 +1747,71 @@ describe("Our Clients is wired into the site", () => {
     assert.ok(
       sm.includes("https://roboracer.ambimat.com/our-clients.html"),
       "the sitemap is missing the page",
+    );
+  });
+});
+
+/* -------------------------------------------------------------------------
+   3-Sep-2026 correction: the Core Kit and Core Kit Pro are quote-only. No CTA
+   anywhere may promise an order, and every quote deep-link must land on an
+   enquiry-type option that actually exists — a ?purpose= value with no
+   matching <option> silently preselects nothing, which is invisible in
+   review and only shows up as a mis-routed enquiry weeks later.
+   ---------------------------------------------------------------------- */
+describe("kit CTAs ask for a quote and land somewhere real", () => {
+  const ALL = ALL_HTML;
+
+  test("no page offers to order, buy or cart a kit", () => {
+    for (const file of ALL) {
+      const text = visibleText(read(file));
+      for (const re of [
+        /Order the Core Kit/i,
+        /Buy the Core Kit/i,
+        /Add to cart/i,
+        /Order now/i,
+        /Purchase the Core Kit/i,
+      ]) {
+        assert.ok(!re.test(text), `${file} still carries an order-intent kit CTA: ${re}`);
+      }
+    }
+  });
+
+  test("no page links a kit CTA straight at a store product page", () => {
+    for (const file of ALL) {
+      const html = read(file);
+      for (const m of html.matchAll(/<a\b[^>]*class="[^"]*btn[^"]*"[^>]*href="([^"]+)"[^>]*>/g)) {
+        assert.ok(
+          !/orders\.ambimat\.com\/product\//.test(m[1]),
+          `${file} has a button pointing at a store kit listing: ${m[1]}`,
+        );
+      }
+    }
+  });
+
+  test("every ?purpose= deep link matches an enquiry-type option", () => {
+    const contact = read("contact.html");
+    const options = new Set([...contact.matchAll(/<option value="([^"]*)"/g)].map((m) => m[1]));
+    let seen = 0;
+    for (const file of ALL) {
+      for (const m of read(file).matchAll(/href="[^"]*[?&]purpose=([^"&#]+)/g)) {
+        seen += 1;
+        assert.ok(options.has(m[1]), `${file} deep-links purpose=${m[1]}, which contact.html does not offer`);
+      }
+    }
+    assert.ok(seen >= 2, `expected the Core and Pro quote deep links, found ${seen}`);
+  });
+
+  test("the enquiry form can carry the kit and the quantity", () => {
+    const contact = read("contact.html");
+    assert.match(contact, /<option value="quote-core-kit">/, "no Core Kit enquiry type");
+    assert.match(contact, /<option value="quote-core-kit-pro">/, "no Core Kit Pro enquiry type");
+    for (const name of ["name", "email", "company", "country", "message"]) {
+      assert.match(contact, new RegExp(`name="${name}"`), `the enquiry form lost its ${name} field`);
+    }
+    assert.match(
+      visibleText(contact),
+      /Quantity, destination country and intended use/i,
+      "the enquiry form stopped asking for quantity",
     );
   });
 });
