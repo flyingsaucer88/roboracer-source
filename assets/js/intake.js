@@ -63,8 +63,6 @@
   // under `extra` rather than dropped, so site-specific questions survive.
   var CANONICAL = ['name', 'email', 'phone', 'company', 'country', 'subject', 'message'];
 
-  var forms = d.querySelectorAll('form[data-intake-form]');
-  if (!forms.length) { return; }
 
   function setStatus(form, kind, msg, asHtml) {
     var el = form.querySelector('[data-form-status]');
@@ -258,7 +256,12 @@
     }
   }
 
-  Array.prototype.forEach.call(forms, function (form) {
+  function bind(form) {
+    // Idempotent: a React page may re-run init on every mount, and binding a
+    // second submit listener would send the inquiry twice.
+    if (form.getAttribute('data-intake-bound') === '1') { return; }
+    form.setAttribute('data-intake-bound', '1');
+
     // Stamp the timing field if the markup has one (bot-detection signal).
     var tsEl = form.querySelector('[name="ts"]');
     if (tsEl && !tsEl.value) { tsEl.value = String(Math.floor(Date.now() / 1000)); }
@@ -298,5 +301,16 @@
       setStatus(form, 'busy', 'Sending your inquiry…');
       send(form, payload, btn);
     });
-  });
+  }
+
+  function init() {
+    Array.prototype.forEach.call(d.querySelectorAll('form[data-intake-form]'), bind);
+  }
+
+  // Static pages: the form is in the HTML, so binding now is enough. Pages that
+  // render the form later (the React tools site) call window.AmbimatIntake.init()
+  // after mount; bind() is idempotent so calling it twice is safe.
+  w.AmbimatIntake = { init: init };
+  if (d.readyState === 'loading') { d.addEventListener('DOMContentLoaded', init); }
+  else { init(); }
 })(window, document);
