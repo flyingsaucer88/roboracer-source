@@ -55,6 +55,13 @@
     // existed. Flip to true only once the backend records
     // consent + timestamp + sourceSite + sourceForm + textVersion.
     consentCapture: false,
+    // Terms & Conditions acknowledgement. A SEPARATE flag from consentCapture:
+    // acknowledging Terms and opting into marketing are different purposes and
+    // must never ride on one switch. OFF until the backend can durably store
+    // the acceptance state, version and server-side timestamp.
+    termsCapture: false,
+    termsUrl: 'https://ambimat.com/terms-and-conditions/',
+    termsVersion: '1.0',
     sourceSite: 'roboracer.ambimat.com',
     mailto: 'business.development@ambimat.com',
     subjectPrefix: 'RoboRacer enquiry'
@@ -84,6 +91,55 @@
     { name: 'jobAlertsConsent',
       label: 'I would like to receive Ambimat job opening and career opportunity notifications by email.' }
   ];
+
+  // ── Terms & Conditions acknowledgement ───────────────────────────────────
+  // Owner-approved behaviour: the box is CHECKED BY DEFAULT, the visitor may
+  // uncheck it, and either state submits. Unchecking is a recorded answer, not
+  // a validation failure — it must never gate the inquiry.
+  //
+  // Three states must stay distinguishable downstream, which is why the payload
+  // omits `terms` entirely when the control was not shown:
+  //   accepted      -> terms.accepted === true
+  //   declined      -> terms.accepted === false   (they saw it and unticked it)
+  //   not captured  -> no `terms` key at all      (never presented)
+  // Writing false for "not presented" would be a lie about what the person did.
+  function injectTerms(form) {
+    if (!CFG.termsCapture) { return; }                 // no backend → no control
+    if (form.querySelector('[data-intake-terms]')) { return; }
+    var btn = form.querySelector('[type="submit"]');
+    if (!btn) { return; }
+    var host = btn.closest ? btn.closest('.intake-row') : null;
+    if (!host || !host.parentNode) { return; }
+
+    var wrap = d.createElement('div');
+    wrap.className = 'intake-row intake-row--full intake-terms';
+    wrap.setAttribute('data-intake-terms', CFG.termsVersion || '');
+    // `checked` is set as a property after insertion as well as in the markup,
+    // so the default survives browsers that re-parse the attribute.
+    wrap.innerHTML =
+      '<label class="intake-consent-item">' +
+        '<input type="checkbox" name="termsAccepted" value="yes" checked> ' +
+        '<span>I have read and accept the ' +
+          '<a href="' + (CFG.termsUrl || '#') + '" target="_blank" rel="noopener">Terms and Conditions</a>.' +
+        '</span>' +
+      '</label>' +
+      '<p class="intake-hint">You can submit this form either way &mdash; unticking this does not stop your message reaching us.</p>';
+    host.parentNode.insertBefore(wrap, host);
+    var cb = wrap.querySelector('[name="termsAccepted"]');
+    if (cb) { cb.checked = true; }
+  }
+
+  function termsPayload(form) {
+    if (!CFG.termsCapture) { return null; }             // not presented
+    var cb = form.querySelector('[name="termsAccepted"]');
+    if (!cb) { return null; }                           // not rendered
+    return {
+      accepted: !!cb.checked,
+      version: CFG.termsVersion || null,
+      url: CFG.termsUrl || null
+      // The server assigns termsRecordedAt and re-validates the version.
+    };
+  }
 
   function injectConsent(form) {
     if (!CFG.consentCapture) { return; }               // no backend → no controls
@@ -144,6 +200,7 @@
       // Consent is not an inquiry field: it is carried in its own object with
       // its own evidence, never folded into `extra`.
       if (el.name === 'productUpdatesConsent' || el.name === 'jobAlertsConsent') { return; }
+      if (el.name === 'termsAccepted') { return; }   // carried in payload.terms
       var v = (el.value || '').trim();
       if (CANONICAL.indexOf(el.name) !== -1) { payload[el.name] = v; }
       else if (v) { extra[el.name] = v; }
@@ -162,6 +219,11 @@
 
     var consent = consentPayload(form);
     if (consent) { payload.consent = consent; }
+
+    // Omitted entirely when the control was never shown, so the backend can
+    // record NOT_CAPTURED rather than a false "they declined".
+    var terms = termsPayload(form);
+    if (terms) { payload.terms = terms; }
     return payload;
   }
 
@@ -201,6 +263,10 @@
       lines.push('  Product updates: ' + (payload.consent.productUpdatesConsent ? 'yes' : 'no'));
       lines.push('  Job alerts: ' + (payload.consent.jobAlertsConsent ? 'yes' : 'no'));
       lines.push('  (consent text version ' + payload.consent.textVersion + ')');
+    }
+    if (payload.terms) {
+      lines.push('', 'Terms and Conditions (v' + payload.terms.version + '): '
+        + (payload.terms.accepted ? 'accepted' : 'not accepted'));
     }
     lines.push('', '— sent from ' + payload.sourceUrl);
 
@@ -336,6 +402,7 @@
 
     preselectSubject(form);
     injectConsent(form);
+    injectTerms(form);
 
     CANONICAL.forEach(function (f) {
       var el = form.querySelector('[name="' + f + '"]');
