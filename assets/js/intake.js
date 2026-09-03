@@ -48,6 +48,13 @@
     //   frame-src   https://www.google.com
     //   connect-src <the api origin>
     recaptchaSiteKey: '6LcKy6YtAAAAALdQdvCua2dS51PXJFvqrBeyaZiO',
+    // Marketing-consent capture. OFF until the Central Intake API can durably
+    // STORE the consent evidence. While false, the consent controls are never
+    // put in the DOM at all, so a visitor cannot tick a box whose answer we
+    // would then throw away — which would leave Ambimat believing a consent
+    // existed. Flip to true only once the backend records
+    // consent + timestamp + sourceSite + sourceForm + textVersion.
+    consentCapture: false,
     sourceSite: 'roboracer.ambimat.com',
     mailto: 'business.development@ambimat.com',
     subjectPrefix: 'RoboRacer enquiry'
@@ -63,6 +70,55 @@
   // under `extra` rather than dropped, so site-specific questions survive.
   var CANONICAL = ['name', 'email', 'phone', 'company', 'country', 'subject', 'message'];
 
+
+  // ── Marketing consent ────────────────────────────────────────────────────
+  // Two SEPARATE purposes. Product announcements and job alerts are different
+  // things to different people, so they are never merged into one
+  // "marketing" tick, never pre-checked, and never a condition of submitting.
+  // Bump CONSENT_TEXT_VERSION whenever a label below changes: the stored
+  // evidence records which wording a person actually agreed to.
+  var CONSENT_TEXT_VERSION = '2026-09-03.1';
+  var CONSENT_FIELDS = [
+    { name: 'productUpdatesConsent',
+      label: 'I would like to receive Ambimat product updates and new product launch announcements by email.' },
+    { name: 'jobAlertsConsent',
+      label: 'I would like to receive Ambimat job opening and career opportunity notifications by email.' }
+  ];
+
+  function injectConsent(form) {
+    if (!CFG.consentCapture) { return; }               // no backend → no controls
+    if (form.querySelector('[data-intake-consent]')) { return; }
+    var submitRow = form.querySelector('[type="submit"]');
+    if (!submitRow) { return; }
+    var host = submitRow.closest ? submitRow.closest('.intake-row') : null;
+    if (!host || !host.parentNode) { return; }
+
+    var wrap = d.createElement('div');
+    wrap.className = 'intake-row intake-row--full intake-consent';
+    wrap.setAttribute('data-intake-consent', CONSENT_TEXT_VERSION);
+    var html = '<p class="intake-consent-lead">Optional &mdash; you can submit this form without choosing either.</p>';
+    CONSENT_FIELDS.forEach(function (c) {
+      // No `checked`: consent is never pre-granted.
+      html += '<label class="intake-consent-item"><input type="checkbox" name="' + c.name +
+              '" value="yes"> <span>' + c.label + '</span></label>';
+    });
+    html += '<p class="intake-hint">See our <a href="' + (CFG.privacyUrl || '/privacy/') +
+            '">privacy notice</a>. You can withdraw either at any time.</p>';
+    wrap.innerHTML = html;
+    host.parentNode.insertBefore(wrap, host);
+  }
+
+  function consentPayload(form) {
+    if (!CFG.consentCapture) { return null; }
+    var out = { textVersion: CONSENT_TEXT_VERSION };
+    CONSENT_FIELDS.forEach(function (c) {
+      var el = form.querySelector('[name="' + c.name + '"]');
+      // The client only ever reports what was ticked. The server assigns the
+      // authoritative timestamp and validates the text version.
+      out[c.name] = !!(el && el.checked);
+    });
+    return out;
+  }
 
   function setStatus(form, kind, msg, asHtml) {
     var el = form.querySelector('[data-form-status]');
@@ -85,6 +141,9 @@
     Array.prototype.forEach.call(form.elements, function (el) {
       if (!el.name || el.disabled || el.type === 'submit') { return; }
       if (el.name === 'website' || el.name === 'ts') { return; }  // handled separately
+      // Consent is not an inquiry field: it is carried in its own object with
+      // its own evidence, never folded into `extra`.
+      if (el.name === 'productUpdatesConsent' || el.name === 'jobAlertsConsent') { return; }
       var v = (el.value || '').trim();
       if (CANONICAL.indexOf(el.name) !== -1) { payload[el.name] = v; }
       else if (v) { extra[el.name] = v; }
@@ -100,6 +159,9 @@
     payload.idempotencyKey = (w.crypto && w.crypto.randomUUID)
       ? w.crypto.randomUUID()
       : String(Date.now()) + '-' + Math.random().toString(36).slice(2, 10);
+
+    var consent = consentPayload(form);
+    if (consent) { payload.consent = consent; }
     return payload;
   }
 
@@ -133,6 +195,12 @@
       Object.keys(payload.extra).forEach(function (k) {
         lines.push(k.charAt(0).toUpperCase() + k.slice(1) + ': ' + payload.extra[k]);
       });
+    }
+    if (payload.consent) {
+      lines.push('', 'Email preferences requested:');
+      lines.push('  Product updates: ' + (payload.consent.productUpdatesConsent ? 'yes' : 'no'));
+      lines.push('  Job alerts: ' + (payload.consent.jobAlertsConsent ? 'yes' : 'no'));
+      lines.push('  (consent text version ' + payload.consent.textVersion + ')');
     }
     lines.push('', '— sent from ' + payload.sourceUrl);
 
@@ -267,6 +335,7 @@
     if (tsEl && !tsEl.value) { tsEl.value = String(Math.floor(Date.now() / 1000)); }
 
     preselectSubject(form);
+    injectConsent(form);
 
     CANONICAL.forEach(function (f) {
       var el = form.querySelector('[name="' + f + '"]');
