@@ -33,7 +33,14 @@
 /* Mobile-first: one column, so a phone never gets ~180px fields. The second
    column only appears when there is genuinely room for it. */
 .intake-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
-@media (min-width: 640px) { .intake-grid { grid-template-columns: 1fr 1fr; } }
+
+/* Deliberately (min-width:) and not the range notation (width >= 640px):
+   range syntax needs Safari 16.4+ (2023) and Chrome 104+, and a contact form
+   is the last thing on a site that should require a recent browser. */
+/* stylelint-disable-next-line media-feature-range-notation */
+@media (min-width: 640px) {
+  .intake-grid { grid-template-columns: 1fr 1fr; }
+}
 
 .intake-row { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .intake-row--full { grid-column: 1 / -1; }

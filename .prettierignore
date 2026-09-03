@@ -7,3 +7,11 @@ files/
 package-lock.json
 sitemap.xml
 SHA256SUMS
+
+# Estate-shared Central Intake assets. These files are byte-identical across
+# every Ambimat site (ambisecure, esim, v2x, ambipower, ambiautomation,
+# roboracer) so a fix lands in one place. Prettier here uses singleQuote:false,
+# which is this repo's house style, not the estate's — reformatting would fork
+# these copies from the others and silently break that guarantee.
+assets/css/intake.css
+assets/js/intake.js

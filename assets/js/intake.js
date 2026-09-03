@@ -193,7 +193,7 @@
     if (tsEl) { flat.ts = tsEl.value || String(Math.floor(Date.now() / 1000)); }
 
     if (CFG.encoding === 'form') {
-      return { body: new URLSearchParams(flat).toString(),
+      return { body: new w.URLSearchParams(flat).toString(),
                headers: { 'Content-Type': 'application/x-www-form-urlencoded',
                           'Accept': 'application/json', 'X-Requested-With': 'fetch' } };
     }
@@ -214,7 +214,7 @@
     token().then(function (t) {
       if (t) { payload.recaptchaToken = t; payload.recaptchaAction = ACTION; }
       var wire = encode(payload, form);
-      return fetch(ENDPOINT, { method: 'POST', body: wire.body, headers: wire.headers,
+      return w.fetch(ENDPOINT, { method: 'POST', body: wire.body, headers: wire.headers,
                                credentials: 'same-origin' });
     }).then(function (res) {
       return res.json().catch(function () { return { ok: false, error: 'server' }; });

@@ -557,76 +557,116 @@
               Tell us what you need and we will come back with a quotation or a technical answer.
             </p>
           </div>
-          <div style="max-width:760px;margin:0 auto;">
-            <form class="intake-form" data-intake-form="roboracer-contact" data-fallback-email="business.development@ambimat.com" novalidate>
-        <div class="intake-grid">
-          <div class="intake-row">
-            <label for="cf-name">Name <span class="intake-req" aria-hidden="true">*</span></label>
-            <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="120"
-                   required aria-required="true" aria-describedby="cf-name-err">
-            <p class="intake-err" id="cf-name-err" data-err-for="name" hidden>Please enter your name.</p>
-          </div>
-          <div class="intake-row">
-            <label for="cf-company">Company / organisation</label>
-            <input id="cf-company" name="company" type="text" autocomplete="organization" maxlength="160">
-          </div>
-          <div class="intake-row">
-            <label for="cf-email">Work email <span class="intake-req" aria-hidden="true">*</span></label>
-            <input id="cf-email" name="email" type="email" autocomplete="email" inputmode="email"
-                   maxlength="254" required aria-required="true" aria-describedby="cf-email-err">
-            <p class="intake-err" id="cf-email-err" data-err-for="email" hidden>Please enter a valid email address we can reply to.</p>
-          </div>
-          <div class="intake-row">
-            <label for="cf-phone">Phone <span class="intake-opt">(optional)</span></label>
-            <input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40">
-          </div>
-          <div class="intake-row">
-            <label for="cf-country">Country <span class="intake-opt">(optional)</span></label>
-            <input id="cf-country" name="country" type="text" autocomplete="country-name" maxlength="60">
-          </div>
-          <div class="intake-row">
-            <label for="cf-subject">Inquiry type</label>
-            <select id="cf-subject" name="subject">
-              <option value="">Select one</option>
-            <option value="order">Order a Core Kit</option>
-            <option value="quote">Request a quotation</option>
-            <option value="pricing">Pricing / bulk & education</option>
-            <option value="shipping">Shipping and delivery</option>
-            <option value="technical">Technical / bring-up question</option>
-            <option value="ros2">ROS 2 and software</option>
-            <option value="support">Support (60-day window)</option>
-            <option value="partnership">Partnership / reseller</option>
-            <option value="general">General</option>
-            </select>
-          </div>
-          <div class="intake-row intake-row--full">
-            <label for="cf-message">Message <span class="intake-req" aria-hidden="true">*</span></label>
-            <textarea id="cf-message" name="message" maxlength="8000" required aria-required="true"
-                      aria-describedby="cf-message-hint cf-message-err"></textarea>
-            <p class="intake-hint" id="cf-message-hint">Quantity, destination country and intended use (research, teaching, competition) help us quote accurately.</p>
-            <p class="intake-err" id="cf-message-err" data-err-for="message" hidden>Please add a few sentences about what you need.</p>
-          </div>
+          <div style="max-width: 760px; margin: 0 auto">
+            <form
+              class="intake-form"
+              data-intake-form="roboracer-contact"
+              data-fallback-email="business.development@ambimat.com"
+              novalidate
+            >
+              <div class="intake-grid">
+                <div class="intake-row">
+                  <label for="cf-name">Name <span class="intake-req" aria-hidden="true">*</span></label>
+                  <input
+                    id="cf-name"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    maxlength="120"
+                    required
+                    aria-required="true"
+                    aria-describedby="cf-name-err"
+                  />
+                  <p class="intake-err" id="cf-name-err" data-err-for="name" hidden>Please enter your name.</p>
+                </div>
+                <div class="intake-row">
+                  <label for="cf-company">Company / organisation</label>
+                  <input id="cf-company" name="company" type="text" autocomplete="organization" maxlength="160" />
+                </div>
+                <div class="intake-row">
+                  <label for="cf-email">Work email <span class="intake-req" aria-hidden="true">*</span></label>
+                  <input
+                    id="cf-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    inputmode="email"
+                    maxlength="254"
+                    required
+                    aria-required="true"
+                    aria-describedby="cf-email-err"
+                  />
+                  <p class="intake-err" id="cf-email-err" data-err-for="email" hidden>
+                    Please enter a valid email address we can reply to.
+                  </p>
+                </div>
+                <div class="intake-row">
+                  <label for="cf-phone">Phone <span class="intake-opt">(optional)</span></label>
+                  <input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" />
+                </div>
+                <div class="intake-row">
+                  <label for="cf-country">Country <span class="intake-opt">(optional)</span></label>
+                  <input id="cf-country" name="country" type="text" autocomplete="country-name" maxlength="60" />
+                </div>
+                <div class="intake-row">
+                  <label for="cf-subject">Inquiry type</label>
+                  <select id="cf-subject" name="subject">
+                    <option value="">Select one</option>
+                    <option value="order">Order a Core Kit</option>
+                    <option value="quote">Request a quotation</option>
+                    <option value="pricing">Pricing / bulk &amp; education</option>
+                    <option value="shipping">Shipping and delivery</option>
+                    <option value="technical">Technical / bring-up question</option>
+                    <option value="ros2">ROS 2 and software</option>
+                    <option value="support">Support (60-day window)</option>
+                    <option value="partnership">Partnership / reseller</option>
+                    <option value="general">General</option>
+                  </select>
+                </div>
+                <div class="intake-row intake-row--full">
+                  <label for="cf-message">Message <span class="intake-req" aria-hidden="true">*</span></label>
+                  <textarea
+                    id="cf-message"
+                    name="message"
+                    maxlength="8000"
+                    required
+                    aria-required="true"
+                    aria-describedby="cf-message-hint cf-message-err"
+                  ></textarea>
+                  <p class="intake-hint" id="cf-message-hint">
+                    Quantity, destination country and intended use (research, teaching, competition) help us quote
+                    accurately.
+                  </p>
+                  <p class="intake-err" id="cf-message-err" data-err-for="message" hidden>
+                    Please add a few sentences about what you need.
+                  </p>
+                </div>
 
-          <!-- Anti-spam honeypot. Hidden from people and assistive tech; bots fill it. -->
-          <div class="intake-hp" aria-hidden="true">
-            <label for="cf-website">Leave this field empty</label>
-            <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off">
-          </div>
-          <input type="hidden" name="ts" value="">
+                <!-- Anti-spam honeypot. Hidden from people and assistive tech; bots fill it. -->
+                <div class="intake-hp" aria-hidden="true">
+                  <label for="cf-website">Leave this field empty</label>
+                  <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+                </div>
+                <input type="hidden" name="ts" value="" />
 
-          <div class="intake-row intake-row--full">
-            <button type="submit" class="btn btn-primary">Send inquiry</button>
-          </div>
-          <div class="intake-row intake-row--full">
-            <p class="intake-status" data-form-status role="status" aria-live="polite"></p>
-          </div>
-        </div>
-        <p class="intake-note"><strong>How this works:</strong> online enquiry submission is being upgraded. For now this form opens the message in your own email app so you can review and send it to <a href="mailto:business.development@ambimat.com">business.development@ambimat.com</a> &mdash; nothing is submitted to us until you send that email. Support questions during the 60-day window reach us fastest at <a href="mailto:support@ambimat.com">support@ambimat.com</a>.</p>
-      </form>
+                <div class="intake-row intake-row--full">
+                  <button type="submit" class="btn btn-primary">Send inquiry</button>
+                </div>
+                <div class="intake-row intake-row--full">
+                  <p class="intake-status" data-form-status role="status" aria-live="polite"></p>
+                </div>
+              </div>
+              <p class="intake-note">
+                <strong>How this works:</strong> online enquiry submission is being upgraded. For now this form opens
+                the message in your own email app so you can review and send it to
+                <a href="mailto:business.development@ambimat.com">business.development@ambimat.com</a> &mdash; nothing
+                is submitted to us until you send that email. Support questions during the 60-day window reach us
+                fastest at <a href="mailto:support@ambimat.com">support@ambimat.com</a>.
+              </p>
+            </form>
           </div>
         </div>
       </section>
-
 
       <!-- FAQ -->
       <section class="section" id="faq" aria-labelledby="faq-title">
