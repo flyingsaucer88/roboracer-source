@@ -60,7 +60,12 @@
     // must never ride on one switch. OFF until the backend can durably store
     // the acceptance state, version and server-side timestamp.
     termsCapture: false,
-    termsUrl: 'https://ambimat.com/terms-and-conditions/',
+    // VERIFIED 2026-09-03: this URL returns 200 and is the existing canonical
+    // Ambimat Terms page (h1 "Terms & Conditions", last updated 2024-03-27);
+    // /terms/ already 301s to it. The often-assumed /terms-and-conditions/ is
+    // a 404 on ambimat.com — do not "correct" this to that slug without first
+    // creating it, or the control would link visitors to a missing page.
+    termsUrl: 'https://ambimat.com/terms-conditions/',
     termsVersion: '1.0',
     sourceSite: 'roboracer.ambimat.com',
     mailto: 'business.development@ambimat.com',
