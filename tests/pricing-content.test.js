@@ -1492,10 +1492,12 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
 
   test("the fixture carries every published client, with no duplicates", () => {
     // The spreadsheet supplied 48 rows; Hanyang University ERICA Campus was
-    // withdrawn on the owner's instruction, so 47 are published. The fixture
-    // tracks what the site shows, and every assertion below runs on all of them.
-    assert.strictEqual(CLIENTS.length, 47);
-    assert.strictEqual(new Set(CLIENTS.map((c) => c.name)).size, 47);
+    // withdrawn on the owner's instruction, leaving 47. BITS Pilani, Hyderabad
+    // Campus and Indian Institute of Technology Bombay were supplied separately
+    // by the owner on 2026-09-03, so 49 are published. The fixture tracks what
+    // the site shows, and every assertion below runs on all of them.
+    assert.strictEqual(CLIENTS.length, 49);
+    assert.strictEqual(new Set(CLIENTS.map((c) => c.name)).size, 49);
   });
 
   test("the page exists with the exact heading", () => {
@@ -1512,8 +1514,8 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
       visibleText(m[1]).trim(),
     );
     const expected = CLIENTS.map((c) => c.name);
-    assert.strictEqual(shown.length, 47, `expected 47 cards, found ${shown.length}`);
-    assert.strictEqual(new Set(shown).size, 47, "the page repeats a client");
+    assert.strictEqual(shown.length, 49, `expected 49 cards, found ${shown.length}`);
+    assert.strictEqual(new Set(shown).size, 49, "the page repeats a client");
     assert.deepStrictEqual(
       expected.filter((n) => !shown.includes(n)),
       [],
@@ -1522,7 +1524,7 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
     assert.deepStrictEqual(
       shown.filter((n) => !expected.includes(n)),
       [],
-      "clients on the page that are not in the spreadsheet",
+      "clients on the page that are not in the fixture",
     );
     assert.deepStrictEqual(shown, expected, "the page no longer follows spreadsheet row order");
   });
@@ -1578,18 +1580,18 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
   });
 
   test("every website link comes from the spreadsheet and opens safely", () => {
+    // Prettier breaks an <a> onto one attribute per line once the tag grows long
+    // enough, so match the whole opening tag and inspect its attributes rather
+    // than assuming they share a line.
+    const anchors = [...page.matchAll(/<a\b[^>]*class="client-link"[^>]*>/g)].map((m) => m[0]);
     for (const c of CLIENTS) {
-      const a = page.match(
-        new RegExp(
-          `<a class="client-link" href="${c.website.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"[^>]*>`,
-        ),
-      );
+      const a = anchors.find((t) => t.includes('href="' + c.website + '"'));
       assert.ok(a, `no link for ${c.name} at ${c.website}`);
-      assert.match(a[0], /target="_blank"/, `${c.name} link does not open in a new tab`);
-      assert.match(a[0], /rel="noopener noreferrer"/, `${c.name} link is missing rel protection`);
+      assert.match(a, /target="_blank"/, `${c.name} link does not open in a new tab`);
+      assert.match(a, /rel="noopener noreferrer"/, `${c.name} link is missing rel protection`);
     }
-    const hrefs = [...page.matchAll(/<a class="client-link" href="([^"]+)"/g)].map((m) => m[1]);
-    assert.strictEqual(hrefs.length, 47);
+    const hrefs = anchors.map((t) => t.match(/href="([^"]+)"/)[1]);
+    assert.strictEqual(hrefs.length, 49);
     assert.ok(!hrefs.some((h) => h.startsWith("http://")), "an insecure client link survived");
   });
 
@@ -1613,7 +1615,7 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
     // all -- their rendered width is the same in every column count.
     const MAX_5COL = 194.8;
     const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
-    assert.strictEqual(imgs.length, 47);
+    assert.strictEqual(imgs.length, 49);
     let withWideBranch = 0;
     for (const i of imgs) {
       const sizes = i[0].match(/sizes="([^"]*)"/)[1].replace(/\s+/g, " ");
@@ -1658,7 +1660,7 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
 
   test("logos declare intrinsic dimensions and lazy-load below the fold", () => {
     const imgs = [...page.matchAll(/<img[\s\S]*?\/>/g)].filter((m) => m[0].includes("/assets/img/clients/"));
-    assert.strictEqual(imgs.length, 47);
+    assert.strictEqual(imgs.length, 49);
     for (const i of imgs) {
       assert.match(i[0], /width="\d+"/, "a client logo has no intrinsic width");
       assert.match(i[0], /height="\d+"/, "a client logo has no intrinsic height");
@@ -1666,7 +1668,7 @@ describe("the Our Clients page matches the supplied spreadsheet", () => {
     }
     assert.strictEqual(
       imgs.filter((i) => i[0].includes('loading="lazy"')).length,
-      41,
+      43,
       "the lazy/eager split for the logo grid changed",
     );
   });

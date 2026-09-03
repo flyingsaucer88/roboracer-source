@@ -7,6 +7,13 @@
     "address": "Tempe, AZ 85281, USA"
   },
   {
+    "name": "BITS Pilani, Hyderabad Campus",
+    "website": "https://www.bits-pilani.ac.in/hyderabad/",
+    "asset": "bits-pilani-hyderabad-campus.webp",
+    "supplied": "https://www.bits-pilani.ac.in/hyderabad/",
+    "address": "Jawahar Nagar, Kapra Mandal, Medchal District, Hyderabad, Telangana 500078, India"
+  },
+  {
     "name": "Boise State University",
     "website": "https://www.boisestate.edu/",
     "asset": "boise-state-university.png",
@@ -75,6 +82,13 @@
     "asset": "hochschule-munchen-university-of-applied-sciences.png",
     "supplied": "https://hm.edu/",
     "address": "Lothstr. 34, 80335 Munich, Germany"
+  },
+  {
+    "name": "Indian Institute of Technology Bombay",
+    "website": "https://www.iitb.ac.in/",
+    "asset": "indian-institute-of-technology-bombay.webp",
+    "supplied": "https://www.iitb.ac.in/",
+    "address": "Powai, Mumbai, Maharashtra 400076, India"
   },
   {
     "name": "Indian Institute of Technology Hyderabad",
