@@ -1009,8 +1009,12 @@ function calloutMarkup(html) {
 const SUPPORT_SENTENCE = "This covers loading of the operating system for the";
 const FOB_SENTENCE = "International quotations are supplied on";
 const SHIPPING_POLICY_HREF = 'href="https://orders.ambimat.com/shipping-policy/"';
-const INDIA_CTA_HREF =
-  'href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=business.development@ambimat.com"';
+// Owner ruling, 2026-09-04: Core Kit and Core Kit Pro quotations go to
+// roboracer@ambimat.com for India as well as international. One desk, so both
+// cards resolve to the same address and the constants are deliberately equal —
+// the cards still differ, because INR and USD pricing is a real distinction,
+// but the quotation route no longer does.
+const INDIA_CTA_HREF = 'href="mailto:roboracer@ambimat.com"';
 // Kits became quote-only on 3 Sep 2026, and on the same day the quotation route
 // moved off the on-page enquiry form to a manual email. The International CTA
 // now opens a mail client addressed to roboracer@ambimat.com — not the store,
@@ -1052,9 +1056,27 @@ describe("contact pricing component keeps its restructured layout", () => {
     assert.ok(!cards.International.includes("Request an India quotation"));
   });
 
+  test("both regions route a kit quotation to the one desk", () => {
+    // The guarantee is "one desk", so it is asserted positively on BOTH cards.
+    // Checking only that India no longer carries the old address would pass if
+    // the India CTA vanished entirely, which is the failure that matters most.
+    for (const [region, card] of Object.entries(cards)) {
+      assert.ok(
+        card.includes('href="mailto:roboracer@ambimat.com"'),
+        `the ${region} card no longer routes a kit quotation to roboracer@ambimat.com`,
+      );
+      assert.ok(
+        !card.includes("business.development@ambimat.com"),
+        `the ${region} card still routes a kit quotation to the retired second desk`,
+      );
+    }
+  });
+
   test("the International CTA emails for a quotation and sits in the International card", () => {
     assert.ok(cards.International.includes(INTL_CTA_HREF), "International CTA href changed or left the card");
     assert.ok(cards.International.includes("Email roboracer@ambimat.com<"));
+    // The two cards share a destination but not a label, so the International
+    // wording must not leak into the India card and blur which price applies.
     assert.ok(!cards.India.includes("Email roboracer@ambimat.com<"));
     assert.ok(
       !/href="https:\/\/orders\.ambimat\.com\/"/.test(cards.International),
@@ -1183,7 +1205,7 @@ describe("pricing CTAs size to their label", () => {
       cards[visibleText(h ? h[1] : "")] = m[1];
     }
     assert.ok(cards.India.includes("Request an India quotation"));
-    assert.ok(cards.India.includes("mail.google.com/mail/?view=cm"));
+    assert.ok(cards.India.includes('href="mailto:roboracer@ambimat.com"'));
     assert.ok(cards.International.includes("Email roboracer@ambimat.com<"));
     assert.ok(cards.International.includes('href="mailto:roboracer@ambimat.com"'));
     for (const c of ["India", "International"]) {
@@ -1392,7 +1414,7 @@ describe("the Home hero CTA opens the Contact pricing section", () => {
   test("the India quotation action still exists on Contact, one step further on", () => {
     const card = contact.match(/<article class="price-card">\s*<h3>India<\/h3>([\s\S]*?)<\/article>/)[1];
     const href = card.match(/<div class="order-actions">[\s\S]*?href="([^"]+)"/)[1];
-    assert.match(href, /mail\.google\.com/, "the India quotation action changed");
+    assert.strictEqual(href, "mailto:roboracer@ambimat.com", "the India quotation action changed");
   });
 
   test("the CTA keeps its label and treatment, and the secondary CTA is untouched", () => {
@@ -1417,9 +1439,17 @@ describe("the pricing-card CTAs are centred in their cards", () => {
     assert.ok(!/^\.btn \{[^}]*margin(-inline)?:\s*auto/m.test(css), "a global .btn centring rule appeared");
   });
   test("the CTA destinations are unchanged", () => {
+    // Both assertions read the CARD, not the page. The International one used to
+    // check the page merely contained href="https://orders.ambimat.com/" — which
+    // it does, once, in unrelated FAQ prose — so it had been passing by accident
+    // since the International CTA stopped pointing at the store on 2026-09-03.
     const c = read("contact.html");
-    assert.ok(c.includes("mail.google.com/mail/?view=cm"), "the India CTA destination changed");
-    assert.ok(c.includes('href="https://orders.ambimat.com/"'), "the International CTA destination changed");
+    const card = (region) =>
+      c.match(new RegExp(`<article class="price-card">\\s*<h3>${region}</h3>([\\s\\S]*?)</article>`))[1];
+    for (const region of ["India", "International"]) {
+      const href = card(region).match(/<div class="order-actions">[\s\S]*?href="([^"]+)"/)[1];
+      assert.strictEqual(href, "mailto:roboracer@ambimat.com", `the ${region} CTA destination changed`);
+    }
   });
 });
 
