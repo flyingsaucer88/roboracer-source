@@ -1,7 +1,14 @@
 # CI and quality gates
 
-Two workflows. `ci.yml` validates; `deploy-hostinger.yml` publishes and is manual only.
-Neither grants more than `contents: read` at the workflow level.
+Two workflows. `ci.yml` validates; `deploy-hostinger.yml` publishes **automatically on push to
+`main`** — enabled 2026-09-02, replacing the manual-only policy — and also accepts a manual
+`workflow_dispatch` for redeploys and recovery. Neither grants more than `contents: read` at the
+workflow level.
+
+> This line said "manual only" until 2026-09-04. It was read, believed, and used to justify a
+> hand-deploy that bypassed the pipeline and its gates. Read
+> `.github/workflows/deploy-hostinger.yml`'s own `on:` block — a claim about a file is only evidence
+> if it lives in that file.
 
 ---
 
@@ -84,6 +91,34 @@ rebuilding, so the bytes scored are the bytes tested. Reports upload as
 `lighthouse-desktop` / `lighthouse-mobile` (14-day retention) on success and failure.
 
 ---
+
+---
+
+## 1a. Changing a published price
+
+Every commercial figure on `contact.html` exists **twice**: in the visible copy, and again inside the
+page's single `<script type="application/ld+json">` block (`BreadcrumbList` + `ContactPage` +
+`FAQPage`). The JSON-LD half is invisible to any check — or any person — reasoning about the page as
+a user sees it, and it is the surface Google trusts most. Change one half and the other serves a
+stale price against a page that looks entirely correct.
+
+Measured on the deployed page, 2026-09-04:
+
+| Figure                        | In JSON-LD | In visible copy | Total to change |
+| ----------------------------- | ---------- | --------------- | --------------- |
+| `5,870` — Core Kit, USD       | 3          | 6               | 9               |
+| `580,000` — Core Kit, INR     | 2          | 4               | 6               |
+| `6,250` — Core Kit Pro, USD   | 4          | 7               | 11              |
+| `628,000` — Core Kit Pro, INR | 3          | 4               | 7               |
+| `roboracer@ambimat.com`       | 2          | 8               | 10              |
+
+So repricing the **Core Kit** is 15 occurrences and the **Core Kit Pro** is 18, across two
+representations — and a repricing is exactly the task someone does by searching for the old figure in
+the rendered page, which finds two thirds of them.
+
+`tests/pricing-content.test.js` asserts the visible copy **and** the JSON-LD for these figures, so a
+half-done repricing fails the gate rather than shipping. Run `npm test` before assuming a search-and-
+replace was complete, and do not hand-deploy past it.
 
 ## 2. Lighthouse CI
 
