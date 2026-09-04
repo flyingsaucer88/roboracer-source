@@ -1903,4 +1903,24 @@ describe("kit CTAs ask for a quote and land somewhere real", () => {
       assert.ok(schema.purposeAliases[alias], `the ${alias} enquiry route was removed`);
     }
   });
+
+  test("the published enquiry checklist still tells a visitor what to include", () => {
+    // The structural assertions above guard the FIELDS. This guards the COPY,
+    // which is a separate promise and the one a visitor actually reads: the
+    // "What to include in an enquiry" list is where the site states, in its own
+    // words, what a quotation needs. roboracer-inquiry-v1 was derived from this
+    // list (runbook v1.5 §29.4.1), so if the prose quietly disappeared the
+    // schema would still be green while the page stopped explaining itself.
+    const text = visibleText(read("contact.html"));
+    for (const [re, what] of [
+      [/What to include in an enquiry/i, "the checklist heading"],
+      [/Quantity/, "quantity"],
+      [/Delivery country and city/i, "delivery country and city"],
+      [/Institution or individual/i, "institution vs individual"],
+      [/procurement process needs/i, "the procurement-documents question"],
+      [/target date/i, "the target date"],
+    ]) {
+      assert.match(text, re, `contact.html no longer asks for ${what}`);
+    }
+  });
 });
