@@ -4,7 +4,13 @@ name: CI
 #
 # This workflow NEVER deploys and NEVER reads a deployment secret, so it is
 # safe to run against pull requests from forks. Deployment lives in
-# deploy-hostinger.yml, which is workflow_dispatch-only.
+# deploy-hostinger.yml, which since 2026-09-02 runs AUTOMATICALLY on push to
+# main (workflow_dispatch is retained for redeploys and recovery).
+#
+# This comment previously said "workflow_dispatch-only" and was left stale by
+# that change. It was read, believed, and used to justify a hand-deploy that
+# bypassed the pipeline. A claim about another file is not evidence about it —
+# read deploy-hostinger.yml's own `on:` block.
 
 on:
   pull_request:
