@@ -126,6 +126,12 @@
   font-family: var(--intake-font); font-size: 14px; font-weight: 400;
   line-height: 1.55; color: var(--intake-ink); letter-spacing: 0;
   cursor: pointer;
+  /* The whole row is the label, so the whole row is the tap target. Without
+     this it is 20px tall — under the 24px WCAG 2.5.8 minimum — which mattered
+     little while these rules only styled the consent controls (never rendered,
+     consentCapture is off) but matters now: the multi-select detail fields the
+     schema renders use the same markup and visitors do see them. */
+  min-height: 24px; padding: 2px 0; align-items: center;
 }
 .intake-consent-item input[type="checkbox"] {
   width: 16px; height: 16px; margin: 3px 0 0; flex: none;

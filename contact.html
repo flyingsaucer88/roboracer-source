@@ -46,7 +46,7 @@
     <link rel="preload" href="/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/assets/css/fonts.css?v=2" />
     <link rel="stylesheet" href="/assets/css/main.css?v=5" />
-    <link rel="stylesheet" href="/assets/css/intake.css?v=1" />
+    <link rel="stylesheet" href="/assets/css/intake.css?v=20260904" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon-192.png" />
@@ -220,8 +220,8 @@
             <h2 class="section-title" id="order-title">Request a quotation</h2>
             <hr class="section-line" />
             <p class="section-desc">
-              RoboRacer Core Kit and Core Kit Pro purchases are completed against an Ambimat quotation. Choose the route
-              that matches your location.
+              RoboRacer Core Kit and Core Kit Pro purchases are completed against an Ambimat quotation, never through an
+              online checkout. Email the desk that matches your location and Ambimat will prepare it.
             </p>
           </div>
           <div class="order-actions">
@@ -618,15 +618,25 @@
                   <input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" />
                 </div>
                 <div class="intake-row">
-                  <label for="cf-country">Country <span class="intake-opt">(optional)</span></label>
-                  <input id="cf-country" name="country" type="text" autocomplete="country-name" maxlength="60" />
+                  <label for="cf-country">Country <span class="intake-req" aria-hidden="true">*</span></label>
+                  <input
+                    id="cf-country"
+                    name="country"
+                    type="text"
+                    autocomplete="country-name"
+                    maxlength="60"
+                    required
+                    aria-required="true"
+                    aria-describedby="cf-country-err"
+                  />
+                  <p class="intake-err" id="cf-country-err" data-err-for="country" hidden>
+                    Please tell us the delivery country — export and India quotations differ.
+                  </p>
                 </div>
                 <div class="intake-row">
                   <label for="cf-subject">Inquiry type</label>
                   <select id="cf-subject" name="subject">
                     <option value="">Select one</option>
-                    <option value="quote-core-kit">RoboRacer Core Kit — request a quote</option>
-                    <option value="quote-core-kit-pro">RoboRacer Core Kit Pro — request a quote</option>
                     <option value="quote">Request a quotation</option>
                     <option value="pricing">Pricing / bulk &amp; education</option>
                     <option value="shipping">Shipping and delivery</option>
@@ -648,8 +658,7 @@
                     aria-describedby="cf-message-hint cf-message-err"
                   ></textarea>
                   <p class="intake-hint" id="cf-message-hint">
-                    Quantity, destination country and intended use (research, teaching, competition) help us quote
-                    accurately. Shipping is charged separately from the kit price and is set in the quotation.
+                    Shipping is charged separately from the kit price and is set in the quotation.
                   </p>
                   <p class="intake-err" id="cf-message-err" data-err-for="message" hidden>
                     Please add a few sentences about what you need.
@@ -674,8 +683,11 @@
                 <strong>How this works:</strong> online enquiry submission is being upgraded. For now this form opens
                 the message in your own email app so you can review and send it to
                 <a href="mailto:business.development@ambimat.com">business.development@ambimat.com</a> &mdash; nothing
-                is submitted to us until you send that email. Support questions during the 60-day window reach us
-                fastest at <a href="mailto:support@ambimat.com">support@ambimat.com</a>.
+                is submitted to us until you send that email. Core Kit and Core Kit Pro quotations are handled by the
+                desks above — <a href="mailto:business.development@ambimat.com">business.development@ambimat.com</a> in
+                India, <a href="mailto:roboracer@ambimat.com">roboracer@ambimat.com</a> for export — and support
+                questions during the 60-day window reach us fastest at
+                <a href="mailto:support@ambimat.com">support@ambimat.com</a>.
               </p>
             </form>
           </div>
@@ -907,6 +919,6 @@
       gtag("config", "G-KCRP2C9ZCL");
     </script>
     <script src="/assets/js/nav.js" defer></script>
-    <script src="/assets/js/intake.js" defer></script>
+    <script src="/assets/js/intake.js?v=20260904" defer></script>
   </body>
 </html>
