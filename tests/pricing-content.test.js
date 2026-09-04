@@ -1852,15 +1852,55 @@ describe("kit CTAs ask for a quote and land somewhere real", () => {
 
   test("the enquiry form can carry the kit and the quantity", () => {
     const contact = read("contact.html");
-    assert.match(contact, /<option value="quote-core-kit">/, "no Core Kit enquiry type");
-    assert.match(contact, /<option value="quote-core-kit-pro">/, "no Core Kit Pro enquiry type");
     for (const name of ["name", "email", "company", "country", "message"]) {
       assert.match(contact, new RegExp(`name="${name}"`), `the enquiry form lost its ${name} field`);
     }
-    assert.match(
-      visibleText(contact),
-      /Quantity, destination country and intended use/i,
+
+    // The guarantee is unchanged and the mechanism is not. Until 2026-09-04 the
+    // kit was encoded in the enquiry-type select as `quote-core-kit` /
+    // `quote-core-kit-pro`, so a visitor arriving at the form directly could say
+    // which kit they wanted. Central Intake Phase 0E replaced that with the
+    // approved roboracer-inquiry-v1 schema (runbook v1.5 §29.4.1), where those
+    // two options collapse into QUOTATION plus a typed `product` field — the
+    // distinction is preserved and the form gained a real `quantity` field,
+    // which the select never had.
+    //
+    // Those fields are rendered by assets/js/intake.js from the schema, so they
+    // are not in the HTML and no static assertion can see them. Asserting the
+    // schema instead is what keeps this test honest: it is the same registry the
+    // client renders from and the Lambda validators are generated from.
+    assert.match(contact, /<option value="quote">/, "the enquiry form lost its quotation option");
+
+    const schema = JSON.parse(
+      fs
+        .readFileSync(path.join(REPO, "assets/js/intake.js"), "utf8")
+        .match(
+          /BEGIN GENERATED SCHEMA REGISTRY \*\/\s*var SCHEMAS = (\{[\s\S]*?\});\s*\/\* END GENERATED/,
+        )[1],
+    )["roboracer-inquiry-v1"];
+
+    const product = schema.fields.find((f) => f.key === "product");
+    assert.ok(product, "the enquiry form can no longer record which kit");
+    for (const kit of ["CORE_KIT", "CORE_KIT_PRO"]) {
+      assert.ok(
+        product.options.some((o) => o.value === kit),
+        `the enquiry form can no longer record ${kit}`,
+      );
+    }
+    assert.ok(
+      product.showWhen.inquiryType.includes("QUOTATION"),
+      "the kit is not offered on a quotation enquiry",
+    );
+    assert.ok(
+      schema.fields.some((f) => f.key === "quantity" && f.required),
       "the enquiry form stopped asking for quantity",
     );
+
+    // The per-kit aliases stay resolvable for anyone who reaches the form
+    // directly, and for go-live. Nothing customer-facing links to them — that is
+    // asserted separately, and stays asserted.
+    for (const alias of ["quote-core-kit", "quote-core-kit-pro"]) {
+      assert.ok(schema.purposeAliases[alias], `the ${alias} enquiry route was removed`);
+    }
   });
 });

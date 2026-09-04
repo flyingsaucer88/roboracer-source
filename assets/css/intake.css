@@ -130,8 +130,12 @@
      this it is 20px tall — under the 24px WCAG 2.5.8 minimum — which mattered
      little while these rules only styled the consent controls (never rendered,
      consentCapture is off) but matters now: the multi-select detail fields the
-     schema renders use the same markup and visitors do see them. */
-  min-height: 24px; padding: 2px 0; align-items: center;
+     schema renders use the same markup and visitors do see them.
+     Height and padding do that work on their own. `align-items` stays
+     flex-start above: these labels wrap, and centring would drag the checkbox
+     to the middle of a two-line block instead of beside its first line, which
+     is also what the 3px top margin on the box below is there to fine-tune. */
+  min-height: 24px; padding: 2px 0;
 }
 .intake-consent-item input[type="checkbox"] {
   width: 16px; height: 16px; margin: 3px 0 0; flex: none;
