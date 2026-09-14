@@ -9,7 +9,7 @@
     <title>Autonomous Racing Robotics Kit — RoboRacer Core Kit</title>
     <meta
       name="description"
-      content="A complete guide to the RoboRacer Core Kit: the 1:10-scale autonomous racing robotics kit with NVIDIA Jetson Orin Nano, Hokuyo LiDAR, VESC 6 MkIV and ROS 2, assembled and tested."
+      content="A complete guide to the RoboRacer Core Kit: the 1:10-scale autonomous racing robotics kit with NVIDIA Jetson Orin Nano, Hokuyo LiDAR, TRAMPA VESC 6 MkVI and ROS 2, assembled and tested."
     />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://roboracer.ambimat.com/autonomous-racing-robotics-kit.html" />
@@ -34,7 +34,7 @@
     <meta name="twitter:title" content="Autonomous Racing Robotics Kit — RoboRacer Core Kit" />
     <meta
       name="twitter:description"
-      content="The 1:10-scale autonomous racing robotics kit: NVIDIA Jetson Orin Nano, Hokuyo LiDAR, VESC 6 MkIV and ROS 2, assembled and validated."
+      content="The 1:10-scale autonomous racing robotics kit: NVIDIA Jetson Orin Nano, Hokuyo LiDAR, TRAMPA VESC 6 MkVI and ROS 2, assembled and validated."
     />
     <meta name="twitter:image" content="https://roboracer.ambimat.com/assets/img/roboracer-og.png" />
     <meta
@@ -83,7 +83,7 @@
                 "name": "What is an autonomous racing robotics kit?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "An autonomous racing robotics kit is a small-scale vehicle that carries everything needed to drive itself: a sensor for perception, an onboard computer for planning and control, a motor controller for actuation, regulated power for all three, and a software stack that ties them together. The RoboRacer Core Kit is a 1:10-scale example built to the RoboRacer / F1TENTH specification, using a Hokuyo 2D LiDAR, an NVIDIA Jetson Orin Nano, a VESC 6 MkIV motor controller and ROS 2 on a Traxxas Slash 4x4 chassis."
+                  "text": "An autonomous racing robotics kit is a small-scale vehicle that carries everything needed to drive itself: a sensor for perception, an onboard computer for planning and control, a motor controller for actuation, regulated power for all three, and a software stack that ties them together. The RoboRacer Core Kit is a 1:10-scale example built to the RoboRacer / F1TENTH specification, using a Hokuyo 2D LiDAR, an NVIDIA Jetson Orin Nano, a TRAMPA VESC 6 MkVI motor controller and ROS 2 on a Traxxas Slash 4X4 Brushless (P/N 68454-4) chassis."
                 }
               },
               {
@@ -91,7 +91,7 @@
                 "name": "Is the RoboRacer Core Kit compatible with F1TENTH?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes. The kit is built to the 1:10-scale RoboRacer / F1TENTH vehicle specification and uses the component classes that community's open-source stack expects — a Traxxas Slash 4x4 chassis, a VESC motor controller, a 2D scanning LiDAR and an NVIDIA Jetson compute module. Code published under the f1tenth GitHub organisation, including the f1tenth_gym simulator, runs against it without a hardware redesign."
+                  "text": "Yes. The kit is built to the 1:10-scale RoboRacer / F1TENTH vehicle specification and uses the component classes that community's open-source stack expects — a Traxxas Slash 4X4 Brushless (P/N 68454-4) chassis, a VESC motor controller, a 2D scanning LiDAR and an NVIDIA Jetson compute module. Code published under the f1tenth GitHub organisation, including the f1tenth_gym simulator, runs against it without a hardware redesign."
                 }
               },
               {
@@ -99,7 +99,7 @@
                 "name": "Which compute module and sensors does the kit use?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "The standard build pairs an NVIDIA Jetson Orin Nano Super — a 1024-core Ampere GPU with 32 tensor cores, a 6-core Arm Cortex-A78AE CPU and 8 GB of LPDDR5 — with a Hokuyo 2D laser scanner giving a 270-degree field of view at 40 Hz, and the inertial measurement unit integrated into the VESC 6 MkIV motor controller. Exact sensor and compute variants are confirmed on your quotation."
+                  "text": "The standard build pairs an NVIDIA Jetson Orin Nano Super — a 1024-core Ampere GPU with 32 tensor cores, a 6-core Arm Cortex-A78AE CPU and 8 GB of LPDDR5 — with a Hokuyo 2D laser scanner giving a 270-degree field of view at 40 Hz, and the inertial measurement unit integrated into the VESC 6 MkVI motor controller. Exact sensor and compute variants are confirmed on your quotation."
                 }
               },
               {
@@ -258,9 +258,9 @@
               </dd>
               <dt>Actuation</dt>
               <dd>
-                A <strong>VESC 6 MkIV</strong> from Trampa Boards drives the Traxxas Velineon brushless motor under
-                field-oriented control, closes the servo loop for steering, reports wheel odometry back to ROS 2 and
-                carries the inertial measurement unit used for state estimation.
+                A <strong>TRAMPA VESC 6 MkVI</strong> from Trampa Boards drives the Traxxas Velineon V3200 brushless
+                motor under field-oriented control, closes the servo loop for steering, reports wheel odometry back to
+                ROS 2 and carries the inertial measurement unit used for state estimation.
               </dd>
               <dt>Power</dt>
               <dd>
@@ -379,7 +379,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row">VESC 6 MkIV</th>
+                  <th scope="row">TRAMPA VESC 6 MkVI</th>
                   <td>
                     Motor controller. Field-oriented drive of the brushless motor, steering servo control, wheel
                     odometry and the onboard IMU.
@@ -393,10 +393,13 @@
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row">Traxxas Slash VXL 4x4 chassis</th>
+                  <th scope="row">Traxxas Slash 4X4 Brushless chassis (P/N 68454-4)</th>
                   <td>
-                    The 1:10-scale rolling platform — four-wheel drive, oil-filled shocks and the Velineon brushless
-                    power system.
+                    The 1:10-scale rolling platform — shaft-driven four-wheel drive and the Velineon V3200 brushless
+                    power system (3200 Kv).
+                    <a href="https://traxxas.com/slash-4x4-brushless-68454-4" target="_blank" rel="noopener noreferrer"
+                      >Manufacturer specifications</a
+                    >.
                   </td>
                 </tr>
                 <tr>
@@ -463,7 +466,8 @@
                 <tr>
                   <th scope="row">Actuation</th>
                   <td>
-                    VESC 6 MkIV field-oriented motor controller with integrated IMU; Traxxas Velineon brushless drive
+                    VESC 6 MkVI field-oriented motor controller with integrated IMU; Traxxas Velineon V3200 brushless
+                    drive (3200 Kv)
                   </td>
                 </tr>
                 <tr>
@@ -676,8 +680,8 @@
                 itself: a sensor for perception, an onboard computer for planning and control, a motor controller for
                 actuation, regulated power for all three, and a software stack that ties them together. The RoboRacer
                 Core Kit is a 1:10-scale example built to the RoboRacer / F1TENTH specification, using a Hokuyo 2D
-                LiDAR, an NVIDIA Jetson Orin Nano, a VESC 6 MkIV motor controller and ROS 2 on a Traxxas Slash 4x4
-                chassis.
+                LiDAR, an NVIDIA Jetson Orin Nano, a TRAMPA VESC 6 MkVI motor controller and ROS 2 on a Traxxas Slash
+                4X4 Brushless (P/N 68454-4) chassis.
               </p>
             </div>
 
@@ -685,8 +689,9 @@
               <h3>Is the RoboRacer Core Kit compatible with F1TENTH?</h3>
               <p>
                 Yes. The kit is built to the 1:10-scale RoboRacer / F1TENTH vehicle specification and uses the component
-                classes that community's open-source stack expects — a Traxxas Slash 4x4 chassis, a VESC motor
-                controller, a 2D scanning LiDAR and an NVIDIA Jetson compute module. Code published under the
+                classes that community's open-source stack expects — a Traxxas Slash 4X4 Brushless (P/N 68454-4)
+                chassis, a VESC motor controller, a 2D scanning LiDAR and an NVIDIA Jetson compute module. Code
+                published under the
                 <code>f1tenth</code> GitHub organisation, including the <code>f1tenth_gym</code> simulator, runs against
                 it without a hardware redesign.
               </p>
@@ -697,7 +702,7 @@
               <p>
                 The standard build pairs an NVIDIA Jetson Orin Nano Super — a 1024-core Ampere GPU with 32 tensor cores,
                 a 6-core Arm Cortex-A78AE CPU and 8 GB of LPDDR5 — with a Hokuyo 2D laser scanner giving a 270° field of
-                view at 40 Hz, and the inertial measurement unit integrated into the VESC 6 MkIV motor controller. Exact
+                view at 40 Hz, and the inertial measurement unit integrated into the VESC 6 MkVI motor controller. Exact
                 sensor and compute variants are confirmed on your quotation.
               </p>
             </div>

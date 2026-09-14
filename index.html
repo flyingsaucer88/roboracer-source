@@ -9,7 +9,7 @@
     <title>RoboRacer Core Kit — Autonomous Racing Robotics Platform</title>
     <meta
       name="description"
-      content="The RoboRacer Core Kit is a fully assembled 1:10-scale autonomous racing platform — NVIDIA Jetson Orin Nano, Hokuyo LiDAR, VESC 6 MkIV and ROS 2, integrated and validated by Ambimat Electronics."
+      content="The RoboRacer Core Kit is a fully assembled 1:10-scale autonomous racing platform — NVIDIA Jetson Orin Nano, Hokuyo LiDAR, TRAMPA VESC 6 MkVI and ROS 2, integrated and validated by Ambimat Electronics."
     />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://roboracer.ambimat.com/" />
@@ -129,7 +129,7 @@
                 "name": "What is included in the RoboRacer Core Kit?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "An NVIDIA Jetson Orin Nano Super compute module, a VESC 6 MkIV motor controller, a Hokuyo 2D LiDAR, the Ambimat AE170 power distribution unit, a Traxxas Slash VXL 4x4 chassis, an MDF base plate, a 3S lithium-polymer battery and a charger — all assembled, wired and tested together. Loading of the Jetson operating system, complete ROS stack configuration and 60 days of remote technical support make up Software Setup / Technical Support, which is included in the INR 628,000 + GST option."
+                  "text": "An NVIDIA Jetson Orin Nano Super compute module, a TRAMPA VESC 6 MkVI motor controller, a Hokuyo 2D LiDAR, the Ambimat AE170 power distribution unit, a Traxxas Slash 4X4 Brushless (P/N 68454-4) chassis, an MDF base plate, a 3S lithium-polymer battery and a charger — all assembled, wired and tested together. Loading of the Jetson operating system, complete ROS stack configuration and 60 days of remote technical support make up Software Setup / Technical Support, which is included in the INR 628,000 + GST option."
                 }
               },
               {
@@ -230,10 +230,10 @@
               hardware.
             </p>
             <p class="hero-desc">
-              An NVIDIA Jetson Orin Nano Super, a Hokuyo 2D LiDAR, a VESC 6 MkIV motor controller and the Ambimat AE170
-              power distribution board, wired onto a Traxxas Slash 4x4 chassis and built to the RoboRacer / F1TENTH
-              specification. Software Setup / Technical Support — operating-system loading and ROS stack configuration —
-              is a <a href="#pricing">priced option</a>.
+              An NVIDIA Jetson Orin Nano Super, a Hokuyo 2D LiDAR, a TRAMPA VESC 6 MkVI motor controller and the Ambimat
+              AE170 power distribution board, wired onto a Traxxas Slash 4X4 Brushless (P/N 68454-4) chassis and built
+              to the RoboRacer / F1TENTH specification. Software Setup / Technical Support — operating-system loading
+              and ROS stack configuration — is a <a href="#pricing">priced option</a>.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="/contact.html#pricing">Request a Core Kit quote</a>
@@ -242,26 +242,32 @@
           </div>
 
           <div class="hero-right">
-            <picture>
-              <source
-                type="image/webp"
-                srcset="
-                  /assets/img/roboracer-core-kit-cutout-400.webp 400w,
-                  /assets/img/roboracer-core-kit-cutout-460.webp 460w,
-                  /assets/img/roboracer-core-kit-cutout-600.webp 600w
-                "
-                sizes="(max-width: 1080px) min(420px, 90vw), 460px"
-              />
-              <img
-                class="hero-visual"
-                src="/assets/img/roboracer-core-kit-cutout.png"
-                width="600"
-                height="800"
-                fetchpriority="high"
-                decoding="async"
-                alt="Assembled RoboRacer Core Kit: a 1:10-scale racing chassis carrying a LiDAR unit, Jetson compute module, VESC motor controller and power distribution board."
-              />
-            </picture>
+            <figure class="hero-figure">
+              <picture>
+                <source
+                  type="image/webp"
+                  srcset="
+                    /assets/img/roboracer-core-kit-cutout-400.webp 400w,
+                    /assets/img/roboracer-core-kit-cutout-460.webp 460w,
+                    /assets/img/roboracer-core-kit-cutout-600.webp 600w
+                  "
+                  sizes="(max-width: 1080px) min(420px, 90vw), 460px"
+                />
+                <img
+                  class="hero-visual"
+                  src="/assets/img/roboracer-core-kit-cutout.png"
+                  width="600"
+                  height="800"
+                  fetchpriority="high"
+                  decoding="async"
+                  alt="RoboRacer autonomous racing platform, reference image from an earlier chassis configuration: a 1:10-scale racing chassis carrying a LiDAR unit, Jetson compute module, VESC motor controller and power distribution board."
+                />
+              </picture>
+              <figcaption class="reference-image-note">
+                <strong>Reference image — earlier RoboRacer chassis shown.</strong> Current Core Kit and Core Kit Pro
+                builds use the Traxxas Slash 4X4 Brushless (P/N 68454-4).
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
@@ -361,7 +367,7 @@
             </li>
             <li class="part-card">
               <span class="part-body">
-                <span class="part-name">VESC 6 MkIV</span>
+                <span class="part-name">TRAMPA VESC 6 MkVI</span>
                 <span class="part-role">Field-oriented motor control, steering, wheel odometry and onboard IMU</span>
               </span>
             </li>
@@ -393,8 +399,14 @@
             </li>
             <li class="part-card">
               <span class="part-body">
-                <span class="part-name">Traxxas Slash VXL 4x4 Chassis</span>
-                <span class="part-role">1:10-scale four-wheel-drive platform with Velineon brushless drive</span>
+                <span class="part-name">Traxxas Slash 4X4 Brushless Chassis (P/N 68454-4)</span>
+                <span class="part-role"
+                  >1:10-scale shaft-driven four-wheel-drive platform with the Traxxas Velineon V3200 brushless motor
+                  (3200 Kv) —
+                  <a href="https://traxxas.com/slash-4x4-brushless-68454-4" target="_blank" rel="noopener noreferrer"
+                    >manufacturer specifications</a
+                  ></span
+                >
               </span>
             </li>
             <li class="part-card">
@@ -404,6 +416,14 @@
               </span>
             </li>
           </ul>
+
+          <div class="callout platform-update">
+            <p>
+              <strong>Platform update:</strong> New RoboRacer Core Kit and Core Kit Pro systems are built exclusively on
+              the Traxxas Slash 4X4 Brushless (P/N 68454-4). Earlier configurations based on Slash VXL / Slash Ultimate
+              platforms are obsolete and are no longer supplied for new orders.
+            </p>
+          </div>
 
           <div class="order-actions section-cta">
             <a class="btn btn-outline" href="/specifications.html">Full technical specifications</a>
@@ -687,11 +707,12 @@
             <div class="faq-item">
               <h3>What is included in the RoboRacer Core Kit?</h3>
               <p>
-                An NVIDIA Jetson Orin Nano Super compute module, a VESC 6 MkIV motor controller, a Hokuyo 2D LiDAR, the
-                Ambimat AE170 power distribution unit, a Traxxas Slash VXL 4x4 chassis, an MDF base plate, a 3S
-                lithium-polymer battery and a charger — all assembled, wired and tested together. Loading of the Jetson
-                operating system, complete ROS stack configuration and 60 days of remote technical support make up
-                Software Setup / Technical Support, which is included in the INR 628,000 + GST option.
+                An NVIDIA Jetson Orin Nano Super compute module, a TRAMPA VESC 6 MkVI motor controller, a Hokuyo 2D
+                LiDAR, the Ambimat AE170 power distribution unit, a Traxxas Slash 4X4 Brushless (P/N 68454-4) chassis,
+                an MDF base plate, a 3S lithium-polymer battery and a charger — all assembled, wired and tested
+                together. Loading of the Jetson operating system, complete ROS stack configuration and 60 days of remote
+                technical support make up Software Setup / Technical Support, which is included in the INR 628,000 + GST
+                option.
               </p>
             </div>
 

@@ -938,10 +938,18 @@ describe("required page metadata survives content edits", () => {
 });
 
 describe("inferred component variants keep their caveat", () => {
-  // These model names were inferred from the platform standard, not supplied by
-  // the build team, and the business has decided not to commit to them publicly.
-  // The caveat is what keeps them honest, so it is asserted against the sentence
-  // that actually carries it — not merely somewhere on the page.
+  // Sensor and compute variants (Hokuyo model, Jetson SKU) are still inferred
+  // from the platform standard rather than supplied by the build team, so the
+  // caveat still applies to them and is asserted against the sentence that
+  // actually carries it — not merely somewhere on the page.
+  //
+  // The VESC is NO LONGER one of them. This comment previously said the VESC
+  // model was inferred and that the business had decided not to commit to it
+  // publicly. Trampa Boards invoice 28267 (order 55723, 11-Sep-2026) records
+  // the purchase of VESC 6 MkVI units, so the model is now evidenced, is
+  // published, and is guarded positively below in "current hardware
+  // definition". A caveat that outlives its uncertainty is just a false
+  // statement with a hedge in front of it.
   test("the specifications page defers the exact build to the quotation", () => {
     assert.match(
       visibleText(read("specifications.html")),
@@ -1367,7 +1375,7 @@ describe("the homepage parts grid names components the way the rest of the site 
   test("the Home parts grid uses the canonical names", () => {
     const home = read("index.html");
     assert.match(home, /<span class="part-name">Jetson Orin Nano Super<\/span>/);
-    assert.match(home, /<span class="part-name">VESC 6 MkIV<\/span>/);
+    assert.match(home, /<span class="part-name">TRAMPA VESC 6 MkVI<\/span>/);
   });
 
   test("the part descriptions beside them were not touched", () => {
@@ -1951,6 +1959,309 @@ describe("kit CTAs ask for a quote and land somewhere real", () => {
       [/target date/i, "the target date"],
     ]) {
       assert.match(text, re, `contact.html no longer asks for ${what}`);
+    }
+  });
+});
+
+/* -------------------------------------------------------------------------
+   Current hardware definition — Traxxas 68454-4 / Velineon V3200 / VESC 6 MkVI.
+
+   Three facts changed together on 14-Sep-2026 and must never drift apart:
+
+     chassis     Traxxas Slash 4X4 Brushless (P/N 68454-4)
+     drive motor Traxxas Velineon V3200 brushless, 3200 Kv
+     controller  TRAMPA VESC 6 MkVI   (Trampa invoice 28267, order 55723)
+
+   Two things are deliberately NOT failures here, and both are easy to "fix"
+   into a regression:
+
+   1. The word VXL still appears once, inside the .platform-update callout.
+      That note exists so an existing customer can tell that their older
+      Slash VXL / Slash Ultimate machine is a previous generation. A blanket
+      `VXL === 0` assertion would delete it, so the guards below strip that
+      one scoped block and then require zero VXL/Ultimate everywhere else.
+
+   2. The hero photograph still shows the earlier chassis. It is retained on
+      the owner's decision as a labelled reference image, so its presence is
+      the expected state — what must never happen is that photograph being
+      shown without the visible qualification, or captioned/alt-texted as if
+      the pictured vehicle itself were the 68454-4.
+   ---------------------------------------------------------------------- */
+
+/** Pages that state the current hardware definition to a customer. */
+const HARDWARE_PAGES = [
+  "index.html",
+  "specifications.html",
+  "autonomous-racing-robotics-kit.html",
+  "contact.html",
+];
+
+/** The one scoped block where obsolete platform names are allowed. */
+const PLATFORM_UPDATE_BLOCK = /<div class="callout platform-update">[\s\S]*?<\/div>/g;
+
+/** Page markup with the controlled legacy note removed. */
+const withoutLegacyNote = (html) => html.replace(PLATFORM_UPDATE_BLOCK, " ");
+
+/** Built artifact pages, so a broken build cannot ship what source forbids. */
+const DIST_DIR = path.join(REPO, "dist", "roboracer-site");
+const distPages = () =>
+  fs.existsSync(DIST_DIR) ? fs.readdirSync(DIST_DIR).filter((f) => f.endsWith(".html")) : [];
+
+describe("current hardware definition", () => {
+  for (const file of HARDWARE_PAGES) {
+    test(`${file} names the current Traxxas platform`, () => {
+      const text = visibleText(read(file));
+      assert.match(text, /Traxxas Slash 4X4 Brushless/, `${file} lost the current chassis name`);
+      assert.match(text, /68454-4/, `${file} lost the current chassis part number`);
+    });
+
+    test(`${file} names the current motor controller`, () => {
+      const text = visibleText(read(file));
+      assert.match(text, /VESC 6 MkVI/, `${file} lost the current VESC model`);
+      assert.match(text, /TRAMPA VESC 6 MkVI/, `${file} lost the manufacturer-qualified VESC name`);
+    });
+  }
+
+  // The motor is only named where a model number helps a buyer; where it is
+  // named it must be the current one, with its Kv.
+  for (const file of ["index.html", "specifications.html", "autonomous-racing-robotics-kit.html"]) {
+    test(`${file} names the current drive motor and its Kv`, () => {
+      const text = visibleText(read(file));
+      assert.match(text, /Velineon V3200/, `${file} lost the current motor model`);
+      assert.match(text, /3200 Kv/, `${file} lost the motor Kv`);
+    });
+  }
+
+  test("visible copy and JSON-LD agree on the chassis and the VESC", () => {
+    for (const file of HARDWARE_PAGES) {
+      const html = read(file);
+      const machine = machineText(html);
+      if (!machine) continue;
+      if (/Traxxas Slash/.test(machine)) {
+        assert.match(
+          machine,
+          /Traxxas Slash 4X4 Brushless \(P\/N 68454-4\)/,
+          `${file} JSON-LD has a stale chassis`,
+        );
+      }
+      if (/VESC 6/.test(machine)) {
+        assert.match(machine, /VESC 6 MkVI/, `${file} JSON-LD has a stale VESC`);
+      }
+      assert.ok(!/MkIV/.test(machine), `${file} JSON-LD still carries MkIV`);
+      assert.ok(
+        !/Slash VXL|Slash Ultimate/.test(machine),
+        `${file} JSON-LD still carries an obsolete platform`,
+      );
+    }
+  });
+
+  test("the manufacturer's own product page is linked for verification", () => {
+    const specs = read("specifications.html");
+    assert.match(
+      specs,
+      /href="https:\/\/traxxas\.com\/slash-4x4-brushless-68454-4"/,
+      "specifications.html lost the Traxxas 68454-4 link",
+    );
+    for (const file of ALL_HTML) {
+      const html = read(file);
+      assert.ok(
+        !/traxxas\.com\/[^"]*(vxl|ultimate)/i.test(html),
+        `${file} links to an obsolete Traxxas product page`,
+      );
+    }
+  });
+});
+
+describe("obsolete hardware never returns as a current claim", () => {
+  // Raw source AND built output: source can be correct while a stale artifact
+  // is what actually reaches the web root.
+  const FORBIDDEN = [
+    [/VESC 6 MkIV/i, "VESC 6 MkIV"],
+    [/MkIV VESC/i, "MkIV VESC"],
+    [/Velineon 3500/i, "Velineon 3500"],
+    [/oil-filled shocks/i, "oil-filled shocks"],
+  ];
+
+  const targets = () => [
+    ...ALL_HTML.map((f) => [f, read(f)]),
+    ...distPages().map((f) => [`dist/${f}`, fs.readFileSync(path.join(DIST_DIR, f), "utf8")]),
+  ];
+
+  test("no page carries a superseded component spelling", () => {
+    for (const [label, html] of targets()) {
+      for (const [re, name] of FORBIDDEN) {
+        assert.ok(!re.test(html), `${label} still claims ${name}`);
+      }
+    }
+  });
+
+  test("obsolete platforms appear only inside the controlled legacy note", () => {
+    for (const [label, html] of targets()) {
+      const rest = withoutLegacyNote(html);
+      for (const re of [/Slash VXL/i, /Slash Ultimate/i, /VXL 4[xX×]4/i, /Ultimate 4[xX×]4/i]) {
+        assert.ok(!re.test(rest), `${label} claims an obsolete platform outside the legacy note: ${re}`);
+      }
+    }
+  });
+
+  test("exactly one controlled legacy note exists, on the principal surface", () => {
+    const owners = ALL_HTML.filter((f) => PLATFORM_UPDATE_BLOCK.test(read(f)));
+    PLATFORM_UPDATE_BLOCK.lastIndex = 0;
+    assert.deepEqual(owners, ["index.html"], "the platform-update note moved, vanished or was duplicated");
+
+    const note = read("index.html").match(PLATFORM_UPDATE_BLOCK);
+    PLATFORM_UPDATE_BLOCK.lastIndex = 0;
+    assert.equal(note.length, 1, "there must be exactly one platform-update note");
+    const text = visibleText(note[0]);
+    assert.match(text, /Platform update:/, "the legacy note lost its label");
+    assert.match(
+      text,
+      /Traxxas Slash 4X4 Brushless \(P\/N 68454-4\)/,
+      "the legacy note lost the current platform",
+    );
+    assert.match(text, /Slash VXL \/ Slash Ultimate/, "the legacy note lost the platforms it deprecates");
+    assert.match(text, /no longer supplied for new orders/, "the legacy note lost its procurement statement");
+    // A procurement statement, not a support-withdrawal notice.
+    for (const re of [/unsupported/i, /stop working/i, /drop-in/i, /no longer supported/i]) {
+      assert.ok(!re.test(text), `the legacy note implies more than obsolescence: ${re}`);
+    }
+  });
+
+  test("the stock Traxxas ESC is never presented as RoboRacer's controller", () => {
+    for (const [label, html] of targets()) {
+      const text = visibleText(html);
+      assert.ok(
+        !/VX3[^.]{0,60}(motor controller|speed control)[^.]{0,40}RoboRacer/i.test(text) &&
+          !/RoboRacer[^.]{0,60}VX3[^.]{0,40}(motor controller|speed control)/i.test(text),
+        `${label} presents the stock VX3 as RoboRacer's motor controller`,
+      );
+    }
+  });
+});
+
+describe("the retained earlier-chassis photograph stays qualified", () => {
+  const CUTOUT = "roboracer-core-kit-cutout";
+
+  /** Pages that actually show the earlier-chassis photograph. */
+  const pagesWithPhoto = () => ALL_HTML.filter((f) => read(f).includes(CUTOUT));
+
+  test("the photograph is still published — its removal is not the fix", () => {
+    assert.deepEqual(pagesWithPhoto(), ["index.html"], "the reference photograph moved or was removed");
+    for (const f of ["roboracer-core-kit-cutout.png", "roboracer-core-kit-cutout-460.webp"]) {
+      assert.ok(
+        fs.existsSync(path.join(REPO, "assets/img", f)),
+        `${f} was deleted; it is retained by decision`,
+      );
+    }
+  });
+
+  test("every page showing it carries a visible qualification", () => {
+    for (const file of pagesWithPhoto()) {
+      const html = read(file);
+      const figure = html.match(/<figure class="hero-figure">[\s\S]*?<\/figure>/);
+      assert.ok(figure, `${file} shows the photograph without a <figure> to caption it`);
+
+      const caption = visibleText(figure[0]);
+      // Both concepts must survive together: what the picture is, and what
+      // the customer actually receives.
+      assert.match(caption, /reference image|earlier chassis/i, `${file} lost the reference-image concept`);
+      assert.match(caption, /68454-4/, `${file} caption does not name the current platform`);
+
+      // The qualification must be readable, not hidden behind a hover or a
+      // screen-reader-only class.
+      assert.ok(!/visually-hidden|sr-only|aria-hidden/.test(figure[0]), `${file} hid the qualification`);
+      assert.ok(!/<figcaption[^>]*hidden/.test(figure[0]), `${file} hid the caption element`);
+
+      // And the page must separately state the current chassis, so the fact
+      // does not depend on the caption alone.
+      assert.match(
+        visibleText(html),
+        /Traxxas Slash 4X4 Brushless/,
+        `${file} does not state the current chassis`,
+      );
+    }
+  });
+
+  test("the photograph is never labelled as the current 68454-4 build", () => {
+    for (const file of pagesWithPhoto()) {
+      const html = read(file);
+      const img =
+        html.match(new RegExp(`<img[^>]*${CUTOUT}[^>]*>`, "s")) || html.match(/<img[^>]*hero-visual[^>]*>/s);
+      assert.ok(img, `${file} hero <img> not found`);
+      const tag = img[0];
+      const alt = (tag.match(/alt="([^"]*)"/) || [])[1] || "";
+      assert.ok(alt.length > 30, `${file} hero alt text is missing or too thin`);
+      // Truthful: it may describe a RoboRacer, but not claim to be the 68454-4.
+      for (const re of [/68454/, /Slash 4X4 Brushless/i]) {
+        assert.ok(!re.test(alt), `${file} alt text claims the pictured chassis is the current model`);
+      }
+      assert.ok(
+        !/title="[^"]*68454/.test(tag),
+        `${file} title attribute claims the pictured chassis is current`,
+      );
+      assert.match(
+        alt,
+        /reference image|earlier chassis/i,
+        `${file} alt text does not flag the earlier configuration`,
+      );
+    }
+  });
+});
+
+describe("legacy assembly material is labelled, not passed off as current", () => {
+  test("the F1TENTH assembly video carries a legacy label", () => {
+    const html = read("resource.html");
+    assert.ok(html.includes("f1tenth-assembling"), "the assembly video was removed rather than labelled");
+    const text = visibleText(html);
+    assert.match(text, /Legacy assembly reference:/, "resource.html lost its legacy-assembly label");
+    assert.match(
+      text,
+      /does not represent the current Traxxas Slash 4X4 Brushless \(P\/N 68454-4\) build/,
+      "the legacy label no longer names the current build",
+    );
+  });
+});
+
+describe("the hardware update did not reopen commercial rules", () => {
+  // The 14-Sep hardware pass touched chassis, motor and controller only. These
+  // pin the commercial invariants it must not have disturbed.
+  test("kit prices are unchanged", () => {
+    for (const file of PRICING_PAGES) {
+      const text = visibleText(read(file));
+      assert.match(text, /US\$5,870/, `${file} lost the Core Kit price`);
+      assert.match(text, /US\$6,250/, `${file} lost the Core Kit Pro price`);
+    }
+  });
+
+  test("the kit is still quote-only, with no Offer schema and no checkout", () => {
+    for (const file of HARDWARE_PAGES) {
+      const html = read(file);
+      for (const node of nodes(jsonLd(html))) {
+        assert.notEqual(node["@type"], "Product", `${file} added Product schema to a quote-only kit`);
+        assert.notEqual(node["@type"], "Offer", `${file} added Offer schema to a quote-only kit`);
+      }
+      assert.ok(!/add-to-cart/i.test(html), `${file} exposes an add-to-cart route for the kit`);
+    }
+    assert.match(
+      visibleText(read("contact.html")),
+      /roboracer@ambimat\.com/,
+      "the quotation route was removed",
+    );
+  });
+
+  test("forbidden public commercial detail did not slip in", () => {
+    for (const [label, html] of ALL_HTML.map((f) => [f, visibleText(read(f))])) {
+      for (const re of [
+        /US\$450/,
+        /\bIBAN\b/,
+        /\bSWIFT\b/,
+        /wire transfer/i,
+        /Trampa[^.]{0,40}invoice/i,
+        /\b28267\b/,
+        /\b55723\b/,
+      ]) {
+        assert.ok(!re.test(html), `${label} publishes detail that must stay internal: ${re}`);
+      }
     }
   });
 });

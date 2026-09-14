@@ -370,6 +370,26 @@ ol {
   max-width: 460px;
 }
 
+/* The hero photograph shows an earlier chassis generation, so it ships with a
+   visible qualification rather than a silent swap. The caption is part of the
+   product claim, not decoration -- it must stay readable, so it is not hidden
+   at any breakpoint. */
+.hero-figure {
+  margin: 0;
+  max-width: 460px;
+  text-align: center;
+}
+.reference-image-note {
+  margin-top: 14px;
+  font-size: var(--fs-small);
+  color: var(--muted);
+  text-align: left;
+}
+.legacy-reference-note {
+  font-size: var(--fs-small);
+  color: var(--muted);
+}
+
 .eyebrow,
 .hero-tag {
   display: inline-block;

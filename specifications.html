@@ -9,7 +9,7 @@
     <title>RoboRacer Core Kit Specifications — Hardware and Software</title>
     <meta
       name="description"
-      content="Full technical specifications for the RoboRacer Core Kit: NVIDIA Jetson Orin Nano compute, Hokuyo 2D LiDAR, VESC 6 MkIV, the AE170 power board rails and connectors, and the ROS 2 software stack."
+      content="Full technical specifications for the RoboRacer Core Kit: NVIDIA Jetson Orin Nano compute, Hokuyo 2D LiDAR, TRAMPA VESC 6 MkVI, the AE170 power board rails and connectors, and the ROS 2 software stack."
     />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://roboracer.ambimat.com/specifications.html" />
@@ -84,7 +84,7 @@
             "about": { "@id": "https://roboracer.ambimat.com/#core-kit" },
             "publisher": { "@id": "https://roboracer.ambimat.com/#org" },
             "inLanguage": "en",
-            "keywords": "RoboRacer, F1TENTH, ROS 2, NVIDIA Jetson Orin Nano, Hokuyo LiDAR, VESC 6 MkIV, Traxxas Slash 4x4, SLAM, power distribution unit, autonomous racing"
+            "keywords": "RoboRacer, F1TENTH, ROS 2, NVIDIA Jetson Orin Nano, Hokuyo LiDAR, VESC 6 MkVI, Traxxas Slash 4X4 Brushless (P/N 68454-4), SLAM, power distribution unit, autonomous racing"
           }
         ]
       }
@@ -168,11 +168,20 @@
                 </tr>
                 <tr>
                   <th scope="row">Chassis</th>
-                  <td>Traxxas Slash VXL 4x4 — four-wheel drive, independent suspension, oil-filled shocks</td>
+                  <td>
+                    Traxxas Slash 4X4 Brushless (P/N 68454-4) — 1:10-scale shaft-driven four-wheel drive, 324 mm
+                    wheelbase —
+                    <a href="https://traxxas.com/slash-4x4-brushless-68454-4" target="_blank" rel="noopener noreferrer"
+                      >manufacturer specifications</a
+                    >
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">Drive system</th>
-                  <td>Traxxas Velineon brushless motor, driven under field-oriented control by the VESC</td>
+                  <td>
+                    Traxxas Velineon V3200 sensorless brushless motor, 3200 Kv, driven under field-oriented control by
+                    the VESC
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">Steering</th>
@@ -301,7 +310,7 @@
                 <tr>
                   <th scope="row">Additional sensing</th>
                   <td>
-                    Inertial measurement unit integrated into the VESC 6 MkIV; spare 12 V and 5 V rails are available
+                    Inertial measurement unit integrated into the VESC 6 MkVI; spare 12 V and 5 V rails are available
                     for a depth camera such as an Intel RealSense, or a separate IMU
                   </td>
                 </tr>
@@ -316,7 +325,7 @@
         <div class="section-narrow">
           <div class="section-head">
             <p class="eyebrow">Motion</p>
-            <h2 class="section-title" id="actuation-title">Actuation — VESC 6 MkIV</h2>
+            <h2 class="section-title" id="actuation-title">Actuation — TRAMPA VESC 6 MkVI</h2>
             <hr class="section-line" />
           </div>
 
@@ -328,7 +337,7 @@
               <tbody>
                 <tr>
                   <th scope="row">Controller</th>
-                  <td>VESC 6 MkIV (Trampa Boards), open-source BLDC controller</td>
+                  <td>VESC 6 MkVI (Trampa Boards), open-source BLDC controller</td>
                 </tr>
                 <tr>
                   <th scope="row">Control mode</th>
