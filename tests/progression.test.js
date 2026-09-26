@@ -1,18 +1,19 @@
 /**
  * Commercial-progression event contract tests.
  *
- * progression.js decides, from an href alone, which of the estate's three
- * existing events a click is — and the whole point of the file is that the
- * RoboRacer funnel finally becomes measurable, so a silent misclassification
- * would be worse than no instrumentation at all. These tests pin the decisions
- * that matter commercially:
+ * progression.js decides, from an href alone, what commercial CTA a click is and
+ * emits ONE reusable event, `cta_click`, with stable machine-readable parameters.
+ * A silent misclassification would be worse than no instrumentation, so these
+ * tests pin the decisions that matter commercially:
  *
- *   - the mailto: click is the terminal enquiry and must always be counted,
- *     footer included, because purchases are completed against a quotation
- *   - the quote CTA must be counted only in-content, never from the footer
+ *   - the quote mailto is commercial INTENT and must always be counted, footer
+ *     included, because purchases are completed against a quotation — but it is
+ *     never a lead, and `generate_lead` must never be emitted from here
+ *   - the in-content quote CTA is counted only in-content, never from the footer
  *     band that repeats on all eight pages
- *   - the orders.ambimat.com listings cross a GA4 property boundary, so they
- *     must be sent from here or they are invisible
+ *   - the PCB category is a real commercial route and must be counted
+ *   - product identifiers are the Central Intake enums, so an analytics row and
+ *     an inquiry row name the same thing
  *   - no address, query string or link text is ever sent
  *
  * The DOM is stubbed by hand rather than with jsdom: the script touches five
@@ -97,102 +98,174 @@ describe("progression.js — event classification", () => {
     assert.equal(events.filter((e) => e.bound).length, 1, "listener bound more than once");
   });
 
-  test("the quote mailto is the terminal enquiry, and carries the kit", () => {
-    const d = load("/use-cases.html");
-    const e = d.click(
-      "mailto:roboracer@ambimat.com?subject=RoboRacer%20Core%20Kit%20Pro%20quotation%20request",
+  /* The single most important assertion in this file. Opening a mail client is not
+     evidence that anything was sent, received or read. If this ever starts emitting
+     generate_lead, reported lead volume becomes fiction. */
+  test("a mailto is commercial intent and is NEVER a lead", () => {
+    const rr = load();
+    const ev = rr.click("mailto:roboracer@ambimat.com?subject=RoboRacer%20Core%20Kit%20quotation");
+    assert.equal(ev.name, "cta_click");
+    assert.equal(ev.params.intent, "quote");
+    assert.equal(ev.params.destination_type, "mailto");
+    assert.equal(ev.params.cta_id, "quote_email");
+    assert.ok(
+      !rr.events.some((e) => e.name === "generate_lead"),
+      "generate_lead must never be emitted from a CTA click",
     );
-    assert.equal(e.name, "contact_method_click");
-    assert.equal(e.params.contact_method, "email");
-    assert.equal(e.params.quote_subject, "core_kit_pro");
-    assert.equal(e.params.source_page, "/use-cases");
   });
 
-  test("Core Kit and bare addresses are distinguished from Core Kit Pro", () => {
-    const d = load();
+  test("the quote mailto carries the Central Intake product enum", () => {
+    const rr = load();
     assert.equal(
-      d.click("mailto:roboracer@ambimat.com?subject=RoboRacer%20Core%20Kit%20quotation%20request").params
-        .quote_subject,
-      "core_kit",
+      rr.click("mailto:roboracer@ambimat.com?subject=RoboRacer%20Core%20Kit%20Pro%20quotation").params
+        .product,
+      "CORE_KIT_PRO",
     );
-    assert.equal(d.click("mailto:roboracer@ambimat.com").params.quote_subject, "general");
+    assert.equal(
+      rr.click("mailto:roboracer@ambimat.com?subject=RoboRacer%20Core%20Kit%20quotation").params.product,
+      "CORE_KIT",
+    );
+    // A bare address names no kit, and must not guess one.
+    assert.equal(rr.click("mailto:roboracer@ambimat.com").params.product, "UNDECIDED");
+  });
+
+  test("each desk maps to its own intent", () => {
+    const rr = load();
+    assert.equal(rr.click("mailto:support@ambimat.com").params.intent, "support");
+    assert.equal(rr.click("mailto:support@ambimat.com").params.cta_id, "support_email");
+    assert.equal(rr.click("mailto:business.development@ambimat.com").params.intent, "partnership");
+    // An unknown address is still counted, but never mislabelled as a quote.
+    const other = rr.click("mailto:someone@example.com");
+    assert.equal(other.params.cta_id, "other_email");
+    assert.equal(other.params.intent, "contact");
+    assert.equal(other.params.product, undefined);
   });
 
   test("mailto and tel count from the footer too", () => {
-    const d = load();
-    assert.equal(d.click("mailto:support@ambimat.com", { inMain: false }).name, "contact_method_click");
-    assert.equal(d.click("tel:+917925501989", { inMain: false }).params.contact_method, "phone");
+    const rr = load();
+    assert.equal(rr.click("mailto:roboracer@ambimat.com", { inMain: false }).name, "cta_click");
+    const tel = rr.click("tel:+912240161000", { inMain: false });
+    assert.equal(tel.params.destination_type, "tel");
+    assert.equal(tel.params.cta_id, "phone");
   });
 
   test("no address, query string or subject text is ever sent", () => {
-    const d = load();
-    const e = d.click("mailto:roboracer@ambimat.com?subject=RoboRacer%20Core%20Kit%20quotation%20request");
-    const serialised = JSON.stringify(e.params);
+    const rr = load();
+    rr.click("mailto:roboracer@ambimat.com?subject=RoboRacer%20Core%20Kit%20quotation");
+    rr.click("mailto:support@ambimat.com");
+    rr.click("tel:+912240161000");
+    const serialised = JSON.stringify(rr.events);
     assert.ok(!/@|ambimat\.com|subject=|quotation/i.test(serialised), `leaked PII/raw href: ${serialised}`);
   });
 
-  test("the in-content quote CTA is product_contact_click, tagged by section", () => {
-    const d = load("/use-cases.html");
-    const e = d.click("/contact.html#order");
-    assert.equal(e.name, "product_contact_click");
-    assert.equal(e.params.contact_section, "order");
-    assert.equal(e.params.source_page, "/use-cases");
-    assert.equal(d.click("/contact.html#pricing").params.contact_section, "pricing");
-    assert.equal(d.click("/contact.html").params.contact_section, "top");
+  test("every event carries the source site and page", () => {
+    const rr = load("/specifications.html");
+    const ev = rr.click("mailto:roboracer@ambimat.com");
+    assert.equal(ev.params.source_site, "roboracer");
+    assert.equal(ev.params.source_page, "/specifications");
+  });
+
+  test("the in-content quote CTA is tagged by section", () => {
+    const rr = load("/index.html");
+    const ev = rr.click("/contact.html#order");
+    assert.equal(ev.name, "cta_click");
+    assert.equal(ev.params.intent, "quote");
+    assert.equal(ev.params.cta_id, "contact_page_order");
+    assert.equal(ev.params.destination_type, "internal");
   });
 
   test("the same CTA in the footer band is NOT counted", () => {
-    const d = load("/use-cases.html");
-    d.click("/contact.html#order", { inMain: false });
-    assert.equal(d.events.length, 0, "footer CTA was counted as intent");
+    const rr = load("/index.html");
+    const before = rr.events.length;
+    rr.click("/contact.html#order", { inMain: false });
+    assert.equal(rr.events.length, before, "footer CTA was counted");
   });
 
   test("contact links on /contact itself are not counted", () => {
-    const d = load("/contact.html");
-    d.click("/contact.html#order");
-    assert.equal(d.events.length, 0);
+    const rr = load("/contact.html");
+    const before = rr.events.length;
+    rr.click("/contact.html#order");
+    assert.equal(rr.events.length, before);
   });
 
-  test("store listings cross a GA4 property boundary and are sent from here", () => {
-    const d = load("/contact.html");
-    const e = d.click("https://orders.ambimat.com/product/roboracer-core-kit/");
-    assert.equal(e.name, "product_interest");
-    assert.equal(e.params.product, "core_kit");
-    assert.equal(e.params.source_page, "/contact");
-    assert.deepEqual(Object.keys(e.params).sort(), ["product", "source_page"]);
+  test("store product listings are counted with the right product", () => {
+    const rr = load("/contact.html");
+    const kit = rr.click("https://orders.ambimat.com/product/roboracer-core-kit/");
+    assert.equal(kit.name, "cta_click");
+    assert.equal(kit.params.product, "CORE_KIT");
+    assert.equal(kit.params.cta_id, "store_core_kit");
+    assert.equal(kit.params.intent, "purchase_intent");
+    assert.equal(kit.params.destination_type, "store");
     assert.equal(
-      d.click("https://orders.ambimat.com/product/roboracer-core-kit-pro/").params.product,
-      "core_kit_pro",
+      rr.click("https://orders.ambimat.com/product/roboracer-core-kit-pro/").params.product,
+      "CORE_KIT_PRO",
     );
   });
 
-  test("store policy pages are not product interest", () => {
-    const d = load("/contact.html");
-    d.click("https://orders.ambimat.com/shipping-policy/");
-    d.click("https://orders.ambimat.com/refund-and-cancellation-policy/");
-    assert.equal(d.events.length, 0);
+  /* The gap this pass closed: the PCB category is a genuine commercial route and
+     used to emit nothing, so a visitor going to the power-board catalogue looked
+     identical to one who bounced. */
+  test("the PCB category is a counted commercial route", () => {
+    const rr = load("/resource.html");
+    const ev = rr.click("https://orders.ambimat.com/product-category/pcb-board/");
+    assert.equal(ev.name, "cta_click");
+    assert.equal(ev.params.cta_id, "store_pcb_category");
+    assert.equal(ev.params.product, "POWER_BOARD");
+    assert.equal(ev.params.intent, "purchase_intent");
+  });
+
+  test("store policy pages are not commercial intent", () => {
+    const rr = load("/index.html");
+    const before = rr.events.length;
+    rr.click("https://orders.ambimat.com/shipping-policy/");
+    rr.click("https://orders.ambimat.com/refund-and-cancellation-policy/");
+    rr.click("https://orders.ambimat.com/");
+    assert.equal(rr.events.length, before, "a policy or store-root link was counted");
   });
 
   test("the platform guide and specification are product surfaces; a use case is not", () => {
-    const d = load("/index.html");
-    assert.equal(d.click("/autonomous-racing-robotics-kit.html").params.product, "core_kit_platform");
-    assert.equal(d.click("/specifications.html").params.product, "core_kit_specifications");
-    const before = d.events.length;
-    d.click("/use-cases.html");
-    d.click("/our-clients.html");
-    assert.equal(d.events.length, before, "browsing was counted as product interest");
+    const rr = load("/index.html");
+    const guide = rr.click("/autonomous-racing-robotics-kit.html");
+    assert.equal(guide.params.cta_id, "product_detail");
+    assert.equal(guide.params.product, "CORE_KIT");
+    assert.equal(guide.params.intent, "research");
+    const before = rr.events.length;
+    rr.click("/use-cases.html");
+    assert.equal(rr.events.length, before, "a use case was counted as a product surface");
   });
 
-  test("a self-link is not product interest", () => {
-    const d = load("/specifications.html");
-    d.click("/specifications.html");
-    assert.equal(d.events.length, 0);
+  test("a self-link is not counted", () => {
+    const rr = load("/specifications.html");
+    const before = rr.events.length;
+    rr.click("/specifications.html");
+    assert.equal(rr.events.length, before);
   });
 
   test("third-party links are ignored", () => {
-    const d = load();
-    d.click("https://github.com/f1tenth");
-    assert.equal(d.events.length, 0);
+    const rr = load("/index.html");
+    const before = rr.events.length;
+    rr.click("https://github.com/ambimat");
+    rr.click("https://traxxas.com/");
+    assert.equal(rr.events.length, before);
+  });
+
+  test("campaign attribution is attached when the shared module is present", () => {
+    const events = [];
+    const sandbox = {
+      window: {
+        location: { pathname: "/index.html", hostname: HOST },
+        gtag: (kind, name, params) => events.push({ kind, name, params }),
+        ambimatAttribution: {
+          eventParams: () => ({ attr_campaign: "roboracer_x_2026_10", attr_source: "benchmarkemail" }),
+        },
+      },
+      document: { addEventListener: (t, fn) => (sandbox.__h = fn) },
+    };
+    vm.createContext(sandbox);
+    vm.runInContext(SOURCE, sandbox);
+    sandbox.__h({ target: anchor("mailto:roboracer@ambimat.com") });
+    assert.equal(events[0].params.attr_campaign, "roboracer_x_2026_10");
+    assert.equal(events[0].params.attr_source, "benchmarkemail");
   });
 
   test("inert when gtag never loaded", () => {
