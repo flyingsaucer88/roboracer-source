@@ -92,6 +92,41 @@ for css in "${OUT}"/assets/css/*.css; do
     printf "  %-14s %6s B -> %6s B\n" "$(basename "${css}")" "${before}" "${after}"
 done
 
+# ---------------------------------------------------------------------
+# Minify JS into the artifact. Same contract as the CSS above: the source
+# stays readable and commented, only the shipped bytes are compressed.
+#
+# Added 2026-09-26. Before this, JS was copied verbatim, `unminified-javascript`
+# had always scored 0.5, and the error-level `resource-summary:script:size`
+# budget had almost no headroom left - gtag.js alone is most of it. Adding the
+# estate attribution module pushed it over, and trimming comments was not
+# enough because the budget measures transferred bytes, not source prose.
+#
+# es2019 is the floor the hand-written sources already assume: they use
+# optional catch binding, which is ES2019. Nothing here downlevels further,
+# because nothing in these files needs it.
+#
+# Hard requirement, not best-effort, for the same reason as the CSS: a
+# silently unminified bundle fails a Lighthouse gate and wastes a CI run.
+# ---------------------------------------------------------------------
+if [[ ! -x "${REPO}/node_modules/.bin/esbuild" ]]; then
+    echo "ERROR: node_modules/.bin/esbuild not found - run 'npm ci' first." >&2
+    exit 1
+fi
+
+echo
+echo "Minifying JS:"
+for js in "${OUT}"/assets/js/*.js; do
+    before=$(wc -c < "${js}" | tr -d ' ')
+    "${REPO}/node_modules/.bin/esbuild" \
+        --minify \
+        --target=es2019 \
+        "${js}" --outfile="${js}.min"
+    mv "${js}.min" "${js}"
+    after=$(wc -c < "${js}" | tr -d ' ')
+    printf "  %-24s %6s B -> %6s B\n" "$(basename "${js}")" "${before}" "${after}"
+done
+
 echo
 echo "Package contents:"
 printf "  HTML pages:   %s\n" "$(find "${OUT}" -name '*.html' | wc -l | tr -d ' ')"
