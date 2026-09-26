@@ -216,23 +216,38 @@ describe("progression.js — wiring", () => {
     }
   });
 
-  /* This guard used to assert `ids.size <= 1`. It was protecting against tag sprawl -
-     a stray container picked up from a snippet - and that risk is real and unchanged.
-     What changed on 2026-09-26 is that a SECOND id is now deliberate: the unified
-     commercial property that orders.ambimat.com and ambimat.com already report to, added
-     so the roboracer -> orders -> ambimat journey is one session in one property. So the
-     guard is not removed, it is tightened: the approved pair, exactly, and nothing else.
-     That catches a third id creeping in AND the unified id being dropped by accident,
-     which the old form would have silently allowed. */
-  const APPROVED_IDS = ["G-03T01GG8K1", "G-KCRP2C9ZCL"];
+  /* This guard used to assert `ids.size <= 1`, protecting against tag sprawl - a stray
+     container picked up from a snippet. That risk is real and unchanged, so the guard
+     stays; it is just pinned to the one id that is correct.
 
-  test("instrumented pages declare exactly the approved measurement ids", () => {
+     On 2026-09-26 this host moved OFF its own property (546867357, G-KCRP2C9ZCL) and onto
+     the unified commercial property that orders.ambimat.com and ambimat.com already use,
+     so the roboracer -> orders -> ambimat journey is one session in one property. The old
+     property is retained and still queryable; it just stops collecting.
+
+     Dual-tagging was tried first and rejected on measurement, not taste: a second
+     configured destination made gtag.js pull an extra container and took script weight to
+     364,888 B against the 200,000 B error-level budget in .lighthouserc.json. So the
+     legacy id must NOT come back, and that is asserted explicitly rather than left to the
+     generic count - a silent re-add would break a performance gate, not just a convention. */
+  const UNIFIED_ID = "G-03T01GG8K1";
+  const RETIRED_ID = "G-KCRP2C9ZCL";
+
+  test("instrumented pages declare only the unified measurement id", () => {
     const pages = fs.readdirSync(REPO).filter((f) => f.endsWith(".html"));
     for (const page of pages) {
       const html = fs.readFileSync(path.join(REPO, page), "utf8");
-      const ids = [...new Set(html.match(/G-[A-Z0-9]{8,12}/g) || [])].sort();
+      const ids = [...new Set(html.match(/G-[A-Z0-9]{8,12}/g) || [])];
       if (ids.length === 0) continue; // 404.html carries no analytics, by design
-      assert.deepStrictEqual(ids, APPROVED_IDS, `${page} declares ${ids.join(", ")}`);
+      assert.deepStrictEqual(ids, [UNIFIED_ID], `${page} declares ${ids.join(", ")}`);
+    }
+  });
+
+  test("the retired property id is not reintroduced anywhere", () => {
+    const pages = fs.readdirSync(REPO).filter((f) => f.endsWith(".html"));
+    for (const page of pages) {
+      const html = fs.readFileSync(path.join(REPO, page), "utf8");
+      assert.ok(!html.includes(RETIRED_ID), `${page} reintroduces the retired property id`);
     }
   });
 
@@ -240,19 +255,19 @@ describe("progression.js — wiring", () => {
     const pages = fs.readdirSync(REPO).filter((f) => f.endsWith(".html"));
     for (const page of pages) {
       const html = fs.readFileSync(path.join(REPO, page), "utf8");
-      if (!html.includes("G-03T01GG8K1")) continue;
+      if (!html.includes(UNIFIED_ID)) continue;
       const hits = (html.match(/\/assets\/js\/ambi-attribution\.js/g) || []).length;
       assert.equal(hits, 1, `${page} loads the attribution module ${hits} times`);
     }
   });
 
   /* Two gtag.js <script> tags would mean two containers fetched and, depending on load
-     order, a duplicated page_view inside a property. One loader, two config calls. */
+     order, a duplicated page_view inside the property. Exactly one loader, one config. */
   test("each page fetches the gtag loader exactly once", () => {
     const pages = fs.readdirSync(REPO).filter((f) => f.endsWith(".html"));
     for (const page of pages) {
       const html = fs.readFileSync(path.join(REPO, page), "utf8");
-      if (!html.includes("G-03T01GG8K1")) continue;
+      if (!html.includes(UNIFIED_ID)) continue;
       const loaders = (html.match(/googletagmanager\.com\/gtag\/js/g) || []).length;
       assert.equal(loaders, 1, `${page} fetches the gtag loader ${loaders} times`);
     }

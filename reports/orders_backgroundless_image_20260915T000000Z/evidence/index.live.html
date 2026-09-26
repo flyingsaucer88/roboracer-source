@@ -84,7 +84,7 @@
             ],
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "1005 & 1006, 10th Floor, Shivalik Shilp II, Keshavbaug Party Plot, Nr. Chandresh Baug, Vastrapur",
+              "streetAddress": "1005 & 1006, 10th Floor, Shivalik Shilp II",
               "addressLocality": "Ahmedabad",
               "addressRegion": "Gujarat",
               "postalCode": "380015",
@@ -93,7 +93,7 @@
             "contactPoint": [
               {
                 "@type": "ContactPoint",
-                "telephone": "+91 79 2550 1989",
+                "telephone": "+91-79255-01989",
                 "contactType": "customer support",
                 "email": "support@ambimat.com"
               },
@@ -805,8 +805,8 @@
           <div>
             <h2>Contact</h2>
             <address>
-              1005 &amp; 1006, 10th Floor, Shivalik Shilp II,<br />
-              Keshavbaug Party Plot, Nr. Chandresh Baug, Vastrapur,<br />
+              1005 &amp; 1006, 10th Floor,<br />
+              Shivalik Shilp II,<br />
               Ahmedabad, Gujarat 380015, India<br /><br />
               India: <a href="tel:+917925501989">+91&nbsp;79255&nbsp;01989</a><br />
               Global: <a href="tel:+12153973819">+1&nbsp;215&nbsp;397&nbsp;3819</a><br />
@@ -823,60 +823,15 @@
     </footer>
 
     <!-- Google tag (gtag.js) — GA4 -->
-    <!-- Ambimat estate analytics — unified commercial property 250947051 (G-03T01GG8K1),
-         shared with orders.ambimat.com and ambimat.com.
-    
-         CUTOVER 2026-09-26. This host previously reported to its own property, 546867357.
-         That property is RETAINED and every historical report remains queryable there; it
-         simply stops receiving new hits from this date. Reports spanning the boundary must
-         say which side of it they are on.
-    
-         WHY MOVED AND NOT DUAL-TAGGED. Dual-tagging was built and measured first. A second
-         configured destination makes gtag.js fetch an extra destination container, which took
-         script weight from ~200 KB to 364,888 B and broke the error-level
-         resource-summary:script:size budget in .lighthouserc.json. Paying 165 KB on every page
-         of a marketing site to run two properties in parallel is a bad trade against the LCP
-         and TBT budgets sitting beside it, so the tag was moved rather than duplicated. One
-         destination also means there is no way to double-count inside a property.
-    
-         WHY THIS MAKES THE JOURNEY MEASURABLE. All three hosts are subdomains of ambimat.com
-         and `_ga` is written to `.ambimat.com`, so client and session id already survive the
-         hop — proven in a three-hop test on 2026-08-17. The only thing missing was a shared
-         destination. No cross-domain linker: that would be change-for-nothing. hostName is the
-         site discriminator inside the property.
-    
-         Consent semantics match the orders.ambimat.com mu-plugin exactly: an explicit
-         estate-wide refusal blocks gtag.js entirely, and dataLayer/gtag stay defined so queued
-         events are simply never transmitted. -->
-    <script src="/assets/js/ambi-attribution.js?v=20260926" defer></script>
-    <script id="ambi-estate-analytics">
-      (function () {
-        var ID = "G-03T01GG8K1";
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        window.gtag = gtag;
-        var m = document.cookie.match(/(?:^|;\s*)ambimat_consent=([^;]*)/);
-        if (m && decodeURIComponent(m[1]) === "denied") {
-          window["ga-disable-" + ID] = true;
-          return;
-        }
-        var s = document.createElement("script");
-        s.async = true;
-        s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(ID);
-        document.head.appendChild(s);
-        gtag("consent", "default", {
-          ad_storage: "denied",
-          ad_user_data: "denied",
-          ad_personalization: "denied",
-          analytics_storage: "granted",
-        });
-        gtag("js", new Date());
-        gtag("config", ID);
-      })();
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KCRP2C9ZCL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-KCRP2C9ZCL");
     </script>
-    <script src="/assets/js/nav.js?v=20260922" defer></script>
-    <script src="/assets/js/progression.js?v=20260926" defer></script>
+    <script src="/assets/js/nav.js" defer></script>
   </body>
 </html>
