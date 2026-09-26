@@ -216,11 +216,45 @@ describe("progression.js — wiring", () => {
     }
   });
 
-  test("no page declares a second measurement id", () => {
+  /* This guard used to assert `ids.size <= 1`. It was protecting against tag sprawl -
+     a stray container picked up from a snippet - and that risk is real and unchanged.
+     What changed on 2026-09-26 is that a SECOND id is now deliberate: the unified
+     commercial property that orders.ambimat.com and ambimat.com already report to, added
+     so the roboracer -> orders -> ambimat journey is one session in one property. So the
+     guard is not removed, it is tightened: the approved pair, exactly, and nothing else.
+     That catches a third id creeping in AND the unified id being dropped by accident,
+     which the old form would have silently allowed. */
+  const APPROVED_IDS = ["G-03T01GG8K1", "G-KCRP2C9ZCL"];
+
+  test("instrumented pages declare exactly the approved measurement ids", () => {
     const pages = fs.readdirSync(REPO).filter((f) => f.endsWith(".html"));
     for (const page of pages) {
-      const ids = new Set(fs.readFileSync(path.join(REPO, page), "utf8").match(/G-[A-Z0-9]{8,12}/g) || []);
-      assert.ok(ids.size <= 1, `${page} declares ${[...ids].join(", ")}`);
+      const html = fs.readFileSync(path.join(REPO, page), "utf8");
+      const ids = [...new Set(html.match(/G-[A-Z0-9]{8,12}/g) || [])].sort();
+      if (ids.length === 0) continue; // 404.html carries no analytics, by design
+      assert.deepStrictEqual(ids, APPROVED_IDS, `${page} declares ${ids.join(", ")}`);
+    }
+  });
+
+  test("every instrumented page loads the shared attribution module exactly once", () => {
+    const pages = fs.readdirSync(REPO).filter((f) => f.endsWith(".html"));
+    for (const page of pages) {
+      const html = fs.readFileSync(path.join(REPO, page), "utf8");
+      if (!html.includes("G-03T01GG8K1")) continue;
+      const hits = (html.match(/\/assets\/js\/ambi-attribution\.js/g) || []).length;
+      assert.equal(hits, 1, `${page} loads the attribution module ${hits} times`);
+    }
+  });
+
+  /* Two gtag.js <script> tags would mean two containers fetched and, depending on load
+     order, a duplicated page_view inside a property. One loader, two config calls. */
+  test("each page fetches the gtag loader exactly once", () => {
+    const pages = fs.readdirSync(REPO).filter((f) => f.endsWith(".html"));
+    for (const page of pages) {
+      const html = fs.readFileSync(path.join(REPO, page), "utf8");
+      if (!html.includes("G-03T01GG8K1")) continue;
+      const loaders = (html.match(/googletagmanager\.com\/gtag\/js/g) || []).length;
+      assert.equal(loaders, 1, `${page} fetches the gtag loader ${loaders} times`);
     }
   });
 });

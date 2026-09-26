@@ -15,3 +15,9 @@ SHA256SUMS
 # these copies from the others and silently break that guarantee.
 assets/css/intake.css
 assets/js/intake.js
+
+# Estate-shared campaign attribution. Canonical source lives in
+# ambimat-site/estate/analytics/ambi-attribution.js and is deployed byte-identical to
+# ambimat.com, orders.ambimat.com and this host. Same reasoning as intake.js above:
+# reformatting here would fork this copy from the others.
+assets/js/ambi-attribution.js

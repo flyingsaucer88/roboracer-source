@@ -51,10 +51,24 @@
 
   var STORE_HOST = "orders.ambimat.com";
 
+  /* Every event carries the campaign that brought the visitor in, read from the shared
+     first-party record on `.ambimat.com` (ambi-attribution.js). GA4's own session-scoped
+     campaign decays to (direct) once the session rolls over, and this journey routinely
+     spans days — the quote arrives long after the click. These attr_* parameters are what
+     let a product_interest or a contact_method_click still name the email that caused it.
+     Absent module, or a visitor who refused analytics, simply yields no attr_* keys. */
   function send(name, params) {
     try {
       if (typeof window.gtag !== "function") return;
-      window.gtag("event", name, params || {});
+      var out = params || {};
+      var attr = window.ambimatAttribution;
+      if (attr && typeof attr.eventParams === "function") {
+        var extra = attr.eventParams();
+        for (var k in extra) {
+          if (Object.prototype.hasOwnProperty.call(extra, k) && extra[k]) out[k] = extra[k];
+        }
+      }
+      window.gtag("event", name, out);
     } catch {
       /* analytics must never break the page */
     }

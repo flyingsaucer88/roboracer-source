@@ -877,17 +877,52 @@
     </footer>
 
     <!-- Google tag (gtag.js) — GA4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KCRP2C9ZCL"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-KCRP2C9ZCL");
+    <!-- Ambimat estate analytics. Two destinations, one page_view each.
+         G-KCRP2C9ZCL  RoboRacer property 546867357 - the historical record, unbroken.
+         G-03T01GG8K1  unified commercial property 250947051, shared with
+                       orders.ambimat.com and ambimat.com.
+         Both hosts write `_ga` to `.ambimat.com`, so configuring the unified id here puts
+         roboracer -> orders -> ambimat into ONE session in 250947051 with no cross-domain
+         linker. A linker would be change-for-nothing: client and session id already survive
+         the subdomain hop natively. hostName is the site discriminator inside the property.
+         Each property receives exactly one page_view per pageview, so this is dual-tagging,
+         not duplicate measurement.
+         Consent semantics are copied from the orders.ambimat.com mu-plugin so the estate
+         behaves identically: an explicit estate-wide refusal blocks gtag.js entirely, and
+         dataLayer/gtag stay defined so queued events are simply never transmitted. -->
+    <script src="/assets/js/ambi-attribution.js?v=20260926" defer></script>
+    <script id="ambi-estate-analytics">
+      (function () {
+        var LEGACY = "G-KCRP2C9ZCL";
+        var UNIFIED = "G-03T01GG8K1";
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+        var m = document.cookie.match(/(?:^|;\s*)ambimat_consent=([^;]*)/);
+        if (m && decodeURIComponent(m[1]) === "denied") {
+          window["ga-disable-" + LEGACY] = true;
+          window["ga-disable-" + UNIFIED] = true;
+          return;
+        }
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(UNIFIED);
+        document.head.appendChild(s);
+        gtag("consent", "default", {
+          ad_storage: "denied",
+          ad_user_data: "denied",
+          ad_personalization: "denied",
+          analytics_storage: "granted",
+        });
+        gtag("js", new Date());
+        gtag("config", LEGACY);
+        gtag("config", UNIFIED);
+      })();
     </script>
     <script src="/assets/js/nav.js?v=20260922" defer></script>
-    <script src="/assets/js/progression.js?v=20260922" defer></script>
+    <script src="/assets/js/progression.js?v=20260926" defer></script>
     <script src="/assets/js/intake.js?v=20260904" defer></script>
   </body>
 </html>
