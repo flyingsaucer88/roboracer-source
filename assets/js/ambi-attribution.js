@@ -125,6 +125,19 @@
 
   var record = capture();
 
+  /* Clear the moment consent is withdrawn, not on the next navigation.
+     capture() runs at load, so a refusal made *after* load left the stored record on disk
+     until the visitor happened to move page — get() already returned null, and the PHP side
+     already refused to read it, but leaving the row there is not what "respect the choice"
+     should look like. CookieYes dispatches this event on ambimat.com; the other two hosts
+     never fire it and simply keep the load-time behaviour. */
+  d.addEventListener("cookieyes_consent_update", function () {
+    if (refused()) {
+      clearCookie(COOKIE);
+      record = null;
+    }
+  });
+
   /* Exposed for the funnel events and for QA. */
   w.ambimatAttribution = {
     get: function () {
