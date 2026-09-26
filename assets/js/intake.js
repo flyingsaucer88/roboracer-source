@@ -803,6 +803,18 @@
       } else {
         delete flat.details;
       }
+      // EVERY other nested object, not just `details`. This used to special-case
+      // `details` alone, which was correct while it was the only nested field —
+      // and silently wrong the moment a second one appeared. `attribution` is
+      // that second one; `consent` and `terms` are two more that would have hit
+      // it as soon as their capture flags were turned on. URLSearchParams
+      // stringifies an object as the literal "[object Object]", so a field-by-
+      // field allowlist here is a bug waiting for the next field.
+      for (k in flat) {
+        if (k !== 'details' && flat[k] !== null && typeof flat[k] === 'object') {
+          flat[k] = JSON.stringify(flat[k]);
+        }
+      }
       return { body: new w.URLSearchParams(flat).toString(),
                headers: { 'Content-Type': 'application/x-www-form-urlencoded',
                           'Accept': 'application/json', 'X-Requested-With': 'fetch' } };
