@@ -878,30 +878,13 @@
 
     <!-- Google tag (gtag.js) — GA4 -->
     <!-- Ambimat estate analytics — unified commercial property 250947051 (G-03T01GG8K1),
-         shared with orders.ambimat.com and ambimat.com.
-    
-         CUTOVER 2026-09-26. This host previously reported to its own property, 546867357.
-         That property is RETAINED and every historical report remains queryable there; it
-         simply stops receiving new hits from this date. Reports spanning the boundary must
-         say which side of it they are on.
-    
-         WHY MOVED AND NOT DUAL-TAGGED. Dual-tagging was built and measured first. A second
-         configured destination makes gtag.js fetch an extra destination container, which took
-         script weight from ~200 KB to 364,888 B and broke the error-level
-         resource-summary:script:size budget in .lighthouserc.json. Paying 165 KB on every page
-         of a marketing site to run two properties in parallel is a bad trade against the LCP
-         and TBT budgets sitting beside it, so the tag was moved rather than duplicated. One
-         destination also means there is no way to double-count inside a property.
-    
-         WHY THIS MAKES THE JOURNEY MEASURABLE. All three hosts are subdomains of ambimat.com
-         and `_ga` is written to `.ambimat.com`, so client and session id already survive the
-         hop — proven in a three-hop test on 2026-08-17. The only thing missing was a shared
-         destination. No cross-domain linker: that would be change-for-nothing. hostName is the
-         site discriminator inside the property.
-    
-         Consent semantics match the orders.ambimat.com mu-plugin exactly: an explicit
-         estate-wide refusal blocks gtag.js entirely, and dataLayer/gtag stay defined so queued
-         events are simply never transmitted. -->
+         shared with orders.ambimat.com and ambimat.com, which is what makes
+         roboracer -> orders -> ambimat one session. CUTOVER 2026-09-26 off this host's own
+         property 546867357, which is retained and still queryable but no longer collecting.
+         Dual-tagging was measured and rejected: a second destination cost 165 KB and broke the
+         script-weight budget. Rationale: ../ambimat-site/estate/analytics/ATTRIBUTION_DESIGN.md
+         Consent matches the orders mu-plugin: an estate-wide refusal blocks gtag.js, and
+         dataLayer/gtag stay defined so queued events are simply never transmitted. -->
     <script src="/assets/js/ambi-attribution.js?v=20260926" defer></script>
     <script id="ambi-estate-analytics">
       (function () {

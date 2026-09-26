@@ -1,49 +1,15 @@
 /* Ambimat estate — first-party campaign attribution.
- * Canonical source: ambimat-site/estate/analytics/ambi-attribution.js
- * Deployed byte-identical to ambimat.com, orders.ambimat.com and roboracer.ambimat.com.
  *
- * WHAT THIS SOLVES
+ * CANONICAL: ambimat-site/estate/analytics/ambi-attribution.js — deployed byte-identical to
+ * ambimat.com, orders.ambimat.com and roboracer.ambimat.com. Edit here, redeploy all three.
+ * Design, consent policy and privacy: estate/analytics/ATTRIBUTION_DESIGN.md
  *
- * GA4 session attribution is not durable enough for this estate's buying journey.
- * The RoboRacer path is landing -> kit page -> orders.ambimat.com product -> back to
- * ambimat.com -> contact form, and it routinely spans more than one GA4 session: the
- * quote arrives days later, and GA4's session-scoped `campaign` has already decayed to
- * (direct) by then. The September 2026 blast proved the cost of that - the Orders links
- * carried no UTMs at all, so ~300 sessions of genuine product interest were recorded as
- * (direct)/(none) and could never be tied back to the email.
+ * Kept deliberately terse: roboracer ships JS unminified under an error-level Lighthouse
+ * script-weight gate, so a comment byte here is a byte on every page of that site.
  *
- * So the campaign is written once, first-touch, to a first-party cookie on the shared
- * parent domain `.ambimat.com`. Every Ambimat subdomain can read it, and the contact form
- * on ambimat.com can attach it to the server-side lead record - which is the only place a
- * lead is authoritative. GA4 remains behavioural measurement; this is the attribution.
- *
- * WHY A COOKIE AND NOT localStorage
- *
- * localStorage is per-origin. roboracer.ambimat.com and ambimat.com cannot read each
- * other's. A cookie scoped to `.ambimat.com` is the only shared first-party channel
- * across these hosts, and it is the same mechanism `_ga` itself already uses here - see
- * the estate consent broadcast, which publishes `ambimat_consent` the same way.
- *
- * FIRST-TOUCH, NOT LAST-TOUCH
- *
- * The question the owner asks is "which email produced this inquiry", so the first
- * campaign that brought the visitor in wins and is never overwritten by a later visit.
- * A later campaign only writes if the stored record has expired.
- *
- * CONSENT
- *
- * This is analytics storage and is gated exactly like analytics on the host it runs on:
- * an explicit estate-wide refusal (`ambimat_consent=denied`, published by CookieYes on
- * ambimat.com and scoped to `.ambimat.com`) blocks the write and clears anything already
- * stored. A visitor who refuses is deliberately unattributed, and the hidden lead fields
- * are then empty. That is the correct outcome, not a defect.
- *
- * PRIVACY
- *
- * Campaign metadata only: source, medium, campaign, content, the landing host and path,
- * and a timestamp. No identifiers are generated, nothing is derived from the device, and
- * no value is ever read from a form field. This is not a fingerprint - it stores only
- * what the visitor's own inbound link already declared.
+ * GA4's campaign is session-scoped and this buying journey spans days, so the first-touch
+ * campaign is stored on a `.ambimat.com` cookie and attached to the lead server-side.
+ * Gated on estate consent; cleared on an explicit refusal.
  */
 (function (w, d) {
   "use strict";
@@ -54,8 +20,7 @@
   var TTL_DAYS = 90;
   var VERSION = 1;
 
-  /* utm_term is deliberately absent: it is a paid-search field, this estate's campaigns
-     are email, and every field stored here has to earn its place in a lead record. */
+  /* utm_term is deliberately absent: paid-search field, these campaigns are email. */
   var FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
 
   function readCookie(name) {
@@ -88,22 +53,16 @@
       d.cookie =
         name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + DOMAIN;
     } catch {
-      /* a blocked cookie jar is not an error worth surfacing */
+      /* blocked cookie jar */
     }
   }
 
-  /* Only an explicit refusal blocks storage. An absent decision is not a refusal: the
-     subdomains carry no banner, so treating "no decision" as denial there would make it
-     impossible for a campaign visitor ever to be attributed while never actually having
-     been asked. ambimat.com, which does carry the banner, is denied-by-default in its own
-     Consent Mode configuration, and publishes an explicit decision here either way. */
+  /* Only an explicit refusal blocks storage. See ATTRIBUTION_DESIGN.md#consent. */
   function refused() {
     return readCookie(CONSENT_COOKIE) === "denied";
   }
 
-  /* Parsed by hand rather than with URLSearchParams: it keeps the module free of any
-     global beyond window/document, which is what lets the identical bytes run on a static
-     page, inside WordPress and inside WooCommerce without a build step. */
+  /* Hand-parsed so the module needs no global beyond window/document. */
   function params() {
     var out = {};
     var qs = String(w.location.search || "").replace(/^\?/, "");
@@ -146,8 +105,7 @@
     var existing = stored();
     var p = params();
 
-    /* First touch wins. A campaign already on file is never overwritten, so the inquiry
-       is credited to the email that actually brought the visitor into the estate. */
+    /* First touch wins: the inquiry is credited to the email that brought them in. */
     if (existing) return existing;
     if (!p.utm_campaign && !p.utm_source) return null;
 
@@ -167,13 +125,12 @@
 
   var record = capture();
 
-  /* Expose for the funnel events and for QA. Read-only by convention. */
+  /* Exposed for the funnel events and for QA. */
   w.ambimatAttribution = {
     get: function () {
       return refused() ? null : stored();
     },
-    /* GA4 event parameters. Named to match the estate's existing vocabulary and kept
-       short because GA4 caps parameter names at 40 chars and values at 100. */
+    /* GA4 event parameters. Short names: GA4 caps names at 40 chars, values at 100. */
     eventParams: function () {
       var r = this.get();
       if (!r) return {};
@@ -190,10 +147,8 @@
     },
   };
 
-  /* One event on the arrival that actually carried the campaign, so the unified property
-     records the entry point even if the visitor bounces before any other interaction.
-     Fires only on the hit that created the record - never on subsequent pages, which is
-     what keeps it from becoming a second page_view. */
+  /* Fires once, only on the hit that created the record, so it can never become a second
+     page_view. Inert if gtag never loaded. */
   if (record && record.ts && Object.keys(params()).length) {
     var fire = function () {
       try {
@@ -207,7 +162,7 @@
           attr_landing_path: record.path,
         });
       } catch {
-      /* a blocked cookie jar is not an error worth surfacing */
+      /* blocked cookie jar */
     }
     };
     if (d.readyState === "loading") {
