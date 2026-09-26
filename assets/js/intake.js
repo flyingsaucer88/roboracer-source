@@ -197,6 +197,115 @@
     wrap.innerHTML = html;
     host.parentNode.insertBefore(wrap, host);
   }
+  /* ── Campaign attribution ────────────────────────────────────────────────
+   *
+   * Reads the estate's EXISTING first-touch record, `ambimat_attr` on
+   * .ambimat.com, written by ambi-attribution.js. No second cookie: a second
+   * store would be a second truth, and the two would agree only for as long as
+   * someone kept checking.
+   *
+   * NOTHING HERE MAY BLOCK A SUBMISSION. An organic visitor, a direct visitor,
+   * a visitor who refused analytics and a visitor with cookies blocked all have
+   * no record, and all must be able to inquire. Every failure path returns null,
+   * which omits the object entirely — absence means NOT CAPTURED, and an empty
+   * string is not the same thing once it is in a database.
+   *
+   * IT ALSO SANITISES, and that is not redundant with the server. The server
+   * REJECTS malformed attribution, which is right: a hostile direct POST should
+   * not get to write whatever it likes beside a real inquiry. But a real visitor
+   * whose cookie got truncated by some other tool must not have their inquiry
+   * refused over metadata they never typed. So the client drops any field that
+   * would not validate and sends what is left, and sends nothing if nothing is
+   * left. The two behaviours are complementary, not contradictory.
+   *
+   * The patterns below are the same ones in
+   * central-intake/contracts/schemas/common/attribution.schema.json. They are
+   * repeated rather than fetched because this file must work with no network.
+   */
+  var ATTR_TOKEN_RE = /^[A-Za-z0-9][A-Za-z0-9._\-+ ]{0,99}$/;
+  var ATTR_HOST_RE = /^[a-z0-9]([a-z0-9.-]{0,98}[a-z0-9])?$/;
+  var ATTR_PATH_RE = /^\/[A-Za-z0-9._~\-/]{0,199}$/;
+  var ATTR_PRODUCT_RE = /^[A-Z][A-Z0-9_]{1,39}$/;
+  var ATTR_SITE_RE = /^[a-z][a-z0-9.-]{0,99}$/;
+  var ATTR_CTA_RE = /^[a-z][a-z0-9_]{1,59}$/;
+  var ATTR_TIME_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+  var ATTR_INTENTS = ['quote', 'support', 'partnership', 'purchase_intent', 'research', 'contact'];
+
+  function attrCookie(name) {
+    try {
+      var m2 = d.cookie.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
+      return m2 ? decodeURIComponent(m2[1]) : '';
+    } catch {
+      return '';
+    }
+  }
+
+  /** Keep the value only if it matches; otherwise drop the field silently. */
+  function attrKeep(target, key, value, re) {
+    if (typeof value === 'string' && value && re.test(value)) { target[key] = value; }
+  }
+
+  function attributionPayload(form) {
+    try {
+      // An explicit estate-wide refusal is binding here too. Attribution is
+      // analytics storage; if it was refused, there is nothing to send and the
+      // cookie should not exist anyway.
+      if (attrCookie('ambimat_consent') === 'denied') { return null; }
+
+      var out = {};
+
+      var raw = attrCookie('ambimat_attr');
+      if (raw && raw.length <= 2048) {
+        var rec = null;
+        try {
+          rec = JSON.parse(raw);
+        } catch {
+          rec = null;
+        }
+        if (rec && rec.v === 1) {
+          attrKeep(out, 'source', rec.src, ATTR_TOKEN_RE);
+          attrKeep(out, 'medium', rec.med, ATTR_TOKEN_RE);
+          attrKeep(out, 'campaign', rec.cmp, ATTR_TOKEN_RE);
+          attrKeep(out, 'content', rec.cnt, ATTR_TOKEN_RE);
+          attrKeep(out, 'landingHost', rec.host, ATTR_HOST_RE);
+          attrKeep(out, 'landingPath', rec.path, ATTR_PATH_RE);
+          attrKeep(out, 'firstSeen', rec.ts, ATTR_TIME_RE);
+        }
+      }
+
+      // Host only. A full referrer URL can carry another site's query data, and
+      // this object is not the place for it.
+      try {
+        if (d.referrer) {
+          var rh = d.referrer.split('/')[2];
+          if (rh) { attrKeep(out, 'referrerHost', rh.split(':')[0].toLowerCase(), ATTR_HOST_RE); }
+        }
+      } catch {
+        /* a malformed referrer is not worth failing over */
+      }
+
+      /* CTA context: what they were looking at when they asked. Declared on the
+         form by the page, because only the page knows which CTA opened it.
+         Stable machine ids — a display label is never an identifier. */
+      var ctx = {};
+      if (form && form.getAttribute) {
+        attrKeep(ctx, 'product', form.getAttribute('data-intake-product'), ATTR_PRODUCT_RE);
+        attrKeep(ctx, 'sourceSite', form.getAttribute('data-intake-source-site'), ATTR_SITE_RE);
+        attrKeep(ctx, 'sourcePage', form.getAttribute('data-intake-source-page'), ATTR_PATH_RE);
+        attrKeep(ctx, 'sourceCta', form.getAttribute('data-intake-cta'), ATTR_CTA_RE);
+        var intent = form.getAttribute('data-intake-intent');
+        if (intent && ATTR_INTENTS.indexOf(intent) !== -1) { ctx.intent = intent; }
+      }
+      if (Object.keys(ctx).length) { out.context = ctx; }
+
+      return Object.keys(out).length ? out : null;
+    } catch {
+      // Attribution is never worth failing an inquiry over.
+      return null;
+    }
+  }
+
+
 
   function consentPayload(form) {
     if (!CFG.consentCapture) { return null; }
@@ -524,9 +633,24 @@
     payload.sourceUrl = w.location.href.split('#')[0];
 
     // Lets the API reject a double submission without creating two inquiries.
-    payload.idempotencyKey = (w.crypto && w.crypto.randomUUID)
-      ? w.crypto.randomUUID()
-      : String(Date.now()) + '-' + Math.random().toString(36).slice(2, 10);
+    //
+    // MINTED ONCE PER FILLED FORM, NOT PER ATTEMPT. contracts/dynamodb.md §5
+    // records IDEMPOTENCY#<sha256(idempotencyKey)> as existing for "website
+    // submit retry" — and a fresh UUID on every attempt defeats precisely that.
+    // The dangerous case is not the double click, which the disabled button
+    // already stops: it is the request that SUCCEEDED server-side and whose
+    // response was lost, where the visitor presses the button again. With a key
+    // per attempt that writes a second inquiry; with a key per filled form the
+    // server collapses it onto the first.
+    //
+    // Cleared on success (see send()), so the next genuinely new inquiry from
+    // the same page gets a new key.
+    if (!form.__intakeIdem) {
+      form.__intakeIdem = (w.crypto && w.crypto.randomUUID)
+        ? w.crypto.randomUUID()
+        : String(Date.now()) + '-' + Math.random().toString(36).slice(2, 10);
+    }
+    payload.idempotencyKey = form.__intakeIdem;
 
     // The typed layer. `schemaId` is a claim the server re-derives from
     // (sourceSite, sourceForm) and rejects if it disagrees (§29.3), so nothing
@@ -541,6 +665,11 @@
 
     var consent = consentPayload(form);
     if (consent) { payload.consent = consent; }
+
+    // Campaign attribution. Read at SUBMIT, never at page load: the visitor may
+    // have arrived on Monday, browsed Orders, and be submitting on Thursday.
+    var attribution = attributionPayload(form);
+    if (attribution) { payload.attribution = attribution; }
 
     // Omitted entirely when the control was never shown, so the backend can
     // record NOT_CAPTURED rather than a false "they declined".
@@ -691,6 +820,60 @@
     server:     'We could not record your inquiry just now. Please try again, or email us directly.'
   };
 
+  /* ── generate_lead ───────────────────────────────────────────────────────
+   *
+   * THE ONLY PLACE THIS MAY FIRE is the branch above: a parsed response whose
+   * `ok` is true, i.e. Central Intake has accepted and durably stored the
+   * inquiry. Not on form open, not on first interaction, not on submit click,
+   * not when the request goes out, and never optimistically on a network error.
+   * The estate has been here before — a generate_lead derived from /contact page
+   * views was deleted on 2026-08-20 because it counted bounces and refreshes.
+   *
+   * EXACTLY ONCE. Three independent guards, because a lead count that
+   * double-counts is worse than one that is missing:
+   *   1. the submit button is disabled for the whole in-flight request;
+   *   2. this runs only in the ok branch, which a retry after failure cannot
+   *      have reached;
+   *   3. the accepted idempotencyKey is recorded and refused a second time, so
+   *      even a server that answered ok twice for one key yields one event.
+   *
+   * NO PII. Site, form, and the campaign context already validated for the
+   * envelope. Never the contact block, never the message, never the address.
+   *
+   * Sites with a successRedirect are skipped: their thank-you page fires its own
+   * conversion, and firing here as well would count that lead twice.
+   */
+  var leadsSent = {};
+
+  function emitLead(form, payload) {
+    try {
+      if (CFG.successRedirect) { return; }
+      var key = payload && payload.idempotencyKey;
+      if (key) {
+        if (leadsSent[key]) { return; }
+        leadsSent[key] = 1;
+      }
+      if (typeof w.gtag !== 'function') { return; }
+      var params = {
+        source_site: payload.sourceSite,
+        source_form: payload.sourceForm
+      };
+      if (payload.inquiryType) { params.intake_type = payload.inquiryType; }
+      var a = payload.attribution;
+      if (a) {
+        if (a.campaign) { params.attr_campaign = a.campaign; }
+        if (a.source) { params.attr_source = a.source; }
+        if (a.medium) { params.attr_medium = a.medium; }
+        if (a.content) { params.attr_content = a.content; }
+        if (a.context && a.context.product) { params.product = a.context.product; }
+        if (a.context && a.context.sourceCta) { params.cta_id = a.context.sourceCta; }
+      }
+      w.gtag('event', 'generate_lead', params);
+    } catch {
+      /* measurement must never break a confirmed submission */
+    }
+  }
+
   function send(form, payload, btn) {
     token().then(function (t) {
       if (t) { payload.recaptchaToken = t; payload.recaptchaAction = ACTION; }
@@ -702,6 +885,9 @@
     }).then(function (data) {
       if (data && data.ok) {
         // Only the server can confirm an inquiry was stored, so only now.
+        emitLead(form, payload);
+        // A new inquiry from this page must not reuse the accepted key.
+        form.__intakeIdem = null;
         if (CFG.successRedirect) {
           w.location.assign(CFG.successRedirect
             + '?ref=' + encodeURIComponent(data.ref || '')
