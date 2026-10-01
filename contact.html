@@ -901,6 +901,10 @@
           window["ga-disable-" + ID] = true;
           return;
         }
+        // Off-production renders (Lighthouse CI, local serve) still load gtag.js so the
+        // script-weight budget stays honest, but transmit nothing: 697 localhost sessions
+        // reached the property 2026-09-26 -> 10-01 before this guard.
+        if (location.hostname !== "roboracer.ambimat.com") window["ga-disable-" + ID] = true;
         var s = document.createElement("script");
         s.async = true;
         s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(ID);
