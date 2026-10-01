@@ -3,9 +3,9 @@
 ## What happened
 
 The identity correction shipped as `e2d8172`
-(*fix(identity): restore the approved US number and retire the old address*,
+(_fix(identity): restore the approved US number and retire the old address_,
 2026-09-28 16:44:49 +0530) was applied with a repo-wide text substitution.
-The substitution was scoped to file *type*, not to file *role*, so it also
+The substitution was scoped to file _type_, not to file _role_, so it also
 rewrote ten **historical evidence captures** under
 `reports/orders_backgroundless_image_20260915T000000Z/evidence/`.
 
@@ -27,15 +27,15 @@ recovery path.** Only the original bytes were authoritative.
 
 ## Timeline
 
-| Time (IST) | Event |
-|---|---|
-| 2026-09-15 | Evidence captures taken (the record being protected) |
-| 2026-09-28 16:33:15 | APFS local Time Machine snapshot `com.apple.TimeMachine.2026-09-28-163315.local` |
-| 2026-09-28 16:36:39 | Site source `*.html` correctly updated (intended change) |
-| **2026-09-28 16:39:05** | **Ten historical captures accidentally mutated** |
-| 2026-09-28 16:40:02–16:40:22 | `dist/` site copies updated (intended change) |
-| 2026-09-28 16:44:49 | Commit `e2d8172` |
-| 2026-09-29 | Recovery from snapshot (this document) |
+| Time (IST)                   | Event                                                                            |
+| ---------------------------- | -------------------------------------------------------------------------------- |
+| 2026-09-15                   | Evidence captures taken (the record being protected)                             |
+| 2026-09-28 16:33:15          | APFS local Time Machine snapshot `com.apple.TimeMachine.2026-09-28-163315.local` |
+| 2026-09-28 16:36:39          | Site source `*.html` correctly updated (intended change)                         |
+| **2026-09-28 16:39:05**      | **Ten historical captures accidentally mutated**                                 |
+| 2026-09-28 16:40:02–16:40:22 | `dist/` site copies updated (intended change)                                    |
+| 2026-09-28 16:44:49          | Commit `e2d8172`                                                                 |
+| 2026-09-29                   | Recovery from snapshot (this document)                                           |
 
 The snapshot predates the mutation by 5m50s, so it holds the pre-mutation
 bytes. It was the only recovery authority used.
@@ -60,18 +60,18 @@ repeated `dist/.../roboracer-site/` tree (ten files, five distinct contents).
 `index.live.html` and `roboracer.ambimat.com.live.html` are the same page
 captured under two names, hence the shared hash.
 
-| File (relative) | Damaged SHA-256 | Snapshot / restored SHA-256 |
-|---|---|---|
-| `reports/orders_backgroundless_image_20260915T000000Z/evidence/autonomous-racing-robotics-kit.live.html` | `96137c1321b7b706…` | `90cdb08c17d58c3c…` |
-| `reports/orders_backgroundless_image_20260915T000000Z/evidence/contact.live.html` | `0666454e3edb9987…` | `96fb8271ede0d26f…` |
-| `reports/orders_backgroundless_image_20260915T000000Z/evidence/index.live.html` | `b2fcef25691d1d51…` | `b2462be632d6c935…` |
-| `reports/orders_backgroundless_image_20260915T000000Z/evidence/roboracer.ambimat.com.live.html` | `b2fcef25691d1d51…` | `b2462be632d6c935…` |
-| `reports/orders_backgroundless_image_20260915T000000Z/evidence/specifications.live.html` | `ea3471cc7d390638…` | `07c3c14dcc8f5a32…` |
-| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/autonomous-racing-robotics-kit.live.html` | `96137c1321b7b706…` | `90cdb08c17d58c3c…` |
-| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/contact.live.html` | `0666454e3edb9987…` | `96fb8271ede0d26f…` |
-| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/index.live.html` | `b2fcef25691d1d51…` | `b2462be632d6c935…` |
-| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/roboracer.ambimat.com.live.html` | `b2fcef25691d1d51…` | `b2462be632d6c935…` |
-| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/specifications.live.html` | `ea3471cc7d390638…` | `07c3c14dcc8f5a32…` |
+| File (relative)                                                                                                                                       | Damaged SHA-256     | Snapshot / restored SHA-256 |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | --------------------------- |
+| `reports/orders_backgroundless_image_20260915T000000Z/evidence/autonomous-racing-robotics-kit.live.html`                                              | `96137c1321b7b706…` | `90cdb08c17d58c3c…`         |
+| `reports/orders_backgroundless_image_20260915T000000Z/evidence/contact.live.html`                                                                     | `0666454e3edb9987…` | `96fb8271ede0d26f…`         |
+| `reports/orders_backgroundless_image_20260915T000000Z/evidence/index.live.html`                                                                       | `b2fcef25691d1d51…` | `b2462be632d6c935…`         |
+| `reports/orders_backgroundless_image_20260915T000000Z/evidence/roboracer.ambimat.com.live.html`                                                       | `b2fcef25691d1d51…` | `b2462be632d6c935…`         |
+| `reports/orders_backgroundless_image_20260915T000000Z/evidence/specifications.live.html`                                                              | `ea3471cc7d390638…` | `07c3c14dcc8f5a32…`         |
+| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/autonomous-racing-robotics-kit.live.html` | `96137c1321b7b706…` | `90cdb08c17d58c3c…`         |
+| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/contact.live.html`                        | `0666454e3edb9987…` | `96fb8271ede0d26f…`         |
+| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/index.live.html`                          | `b2fcef25691d1d51…` | `b2462be632d6c935…`         |
+| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/roboracer.ambimat.com.live.html`          | `b2fcef25691d1d51…` | `b2462be632d6c935…`         |
+| `dist/dist/dist/dist/dist/dist/roboracer-site/reports/orders_backgroundless_image_20260915T000000Z/evidence/specifications.live.html`                 | `ea3471cc7d390638…` | `07c3c14dcc8f5a32…`         |
 
 Full 64-character hashes, per file, damaged / snapshot / restored:
 
