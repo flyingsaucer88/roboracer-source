@@ -224,6 +224,19 @@ jobs:
             **/.DS_Store
             **/.git*
 
+      - name: Check out the verifier only
+        uses: actions/checkout@v4
+        with:
+          path: _verify
+          sparse-checkout: .github/scripts
+
+      - name: Verify production serves the artifact, byte for byte
+        # FTP-Deploy-Action uploads what its server-side state file says has
+        # changed, not what the server lacks, so it can skip a file and still
+        # succeed. Every shipped file is fetched over HTTPS and hashed against
+        # the artifact; the deploy fails unless all of them match.
+        run: python3 _verify/.github/scripts/verify-live-bytes.py dist/roboracer-site https://roboracer.ambimat.com
+
       - name: Deployment summary
         if: success()
         run: |
@@ -232,12 +245,7 @@ jobs:
             echo ""
             echo "- Commit: \`${{ github.sha }}\`"
             echo "- Actor: ${{ github.actor }}"
-            echo ""
-            echo "Run the post-deployment verification before declaring success:"
-            echo ""
-            echo '```'
-            echo "bash tools/verify-production.sh"
-            echo '```'
+            echo "- Every shipped file verified live against the artifact SHA-256."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Failure guidance
@@ -249,4 +257,8 @@ jobs:
             echo "The upload did not complete. The web root may be in a partially"
             echo "updated state — follow the rollback procedure in"
             echo "\`docs/DEPLOYMENT.md\` before retrying."
+            echo ""
+            echo "If the live-bytes check failed, the FTPS state file is out of step"
+            echo "with the server: delete .ftp-deploy-state.json in the docroot and"
+            echo "re-run, which forces a full upload."
           } >> "$GITHUB_STEP_SUMMARY"
