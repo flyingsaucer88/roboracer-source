@@ -11,7 +11,11 @@ import { fileURLToPath } from "node:url";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const v = (rel) =>
-  crypto.createHash("sha256").update(fs.readFileSync(path.join(REPO, rel))).digest("hex").slice(0, 12);
+  crypto
+    .createHash("sha256")
+    .update(fs.readFileSync(path.join(REPO, rel)))
+    .digest("hex")
+    .slice(0, 12);
 
 test("intake.js / intake.css references carry their content hash", () => {
   const html = fs.readFileSync(path.join(REPO, "contact.html"), "utf8");
