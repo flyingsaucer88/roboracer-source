@@ -632,26 +632,6 @@
     payload.sourceForm = form.getAttribute('data-intake-form') || 'contact';
     payload.sourceUrl = w.location.href.split('#')[0];
 
-    // Lets the API reject a double submission without creating two inquiries.
-    //
-    // MINTED ONCE PER FILLED FORM, NOT PER ATTEMPT. contracts/dynamodb.md §5
-    // records IDEMPOTENCY#<sha256(idempotencyKey)> as existing for "website
-    // submit retry" — and a fresh UUID on every attempt defeats precisely that.
-    // The dangerous case is not the double click, which the disabled button
-    // already stops: it is the request that SUCCEEDED server-side and whose
-    // response was lost, where the visitor presses the button again. With a key
-    // per attempt that writes a second inquiry; with a key per filled form the
-    // server collapses it onto the first.
-    //
-    // Cleared on success (see send()), so the next genuinely new inquiry from
-    // the same page gets a new key.
-    if (!form.__intakeIdem) {
-      form.__intakeIdem = (w.crypto && w.crypto.randomUUID)
-        ? w.crypto.randomUUID()
-        : String(Date.now()) + '-' + Math.random().toString(36).slice(2, 10);
-    }
-    payload.idempotencyKey = form.__intakeIdem;
-
     // The typed layer. `schemaId` is a claim the server re-derives from
     // (sourceSite, sourceForm) and rejects if it disagrees (§29.3), so nothing
     // here is trusted; it exists so a mismatch is a 400 rather than a silent
@@ -675,6 +655,32 @@
     // record NOT_CAPTURED rather than a false "they declined".
     var terms = termsPayload(form);
     if (terms) { payload.terms = terms; }
+
+    // Lets the API reject a double submission without creating two inquiries.
+    //
+    // ONE KEY PER LOGICAL SUBMISSION, NOT PER ATTEMPT AND NOT PER PAGE. The
+    // dangerous case is the request that SUCCEEDED server-side and whose
+    // response was lost: pressing the button again must resend the SAME key, so
+    // the server collapses it onto the first. But the server answers 409
+    // IDEMPOTENCY_CONFLICT when a key comes back with a different body, so a
+    // visitor who edits the form after a failure is making a NEW submission and
+    // needs a new key. The key therefore follows the content: unchanged
+    // content keeps it, any edit mints a fresh one. Computed last, over
+    // everything above, so no field can change without being noticed.
+    //
+    // sourceUrl is left out: a reload that adds a query parameter is not a
+    // different enquiry. Cleared on success (see send()).
+    var url = payload.sourceUrl;
+    delete payload.sourceUrl;
+    var fp = JSON.stringify(payload);
+    payload.sourceUrl = url;
+    if (!form.__intakeIdem || form.__intakeIdemFp !== fp) {
+      form.__intakeIdem = (w.crypto && w.crypto.randomUUID)
+        ? w.crypto.randomUUID()
+        : String(Date.now()) + '-' + Math.random().toString(36).slice(2, 10);
+      form.__intakeIdemFp = fp;
+    }
+    payload.idempotencyKey = form.__intakeIdem;
     return payload;
   }
 
@@ -755,17 +761,89 @@
     d.body.appendChild(a); a.click(); d.body.removeChild(a);
   }
 
+  // Central Intake only: the legacy form endpoint never verified a token, so
+  // AmbiSecure must not start pulling Google's script because of this file.
+  var USES_RECAPTCHA = !!(ENDPOINT && SITE_KEY && CFG.encoding !== 'form');
+  var RECAPTCHA_TIMEOUT_MS = 10000;
+  var recaptchaLoading = null;
+
+  /** Load api.js once, on the visitor's first interaction with the form — not
+   *  at page load (a displayed form costs nothing), and not only at submit
+   *  (that would add a full script fetch to every send). LOADING is not
+   *  EXECUTING: no token is minted until token() runs at submit. Resolves to
+   *  grecaptcha, or null if blocked; it never rejects. */
+  function loadRecaptcha() {
+    if (!USES_RECAPTCHA) { return Promise.resolve(null); }
+    if (w.grecaptcha && w.grecaptcha.ready) { return Promise.resolve(w.grecaptcha); }
+    if (recaptchaLoading) { return recaptchaLoading; }
+    recaptchaLoading = new Promise(function (resolve) {
+      var s = d.createElement('script');
+      s.src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(SITE_KEY);
+      s.async = true;
+      // api.js defines grecaptcha.ready at once but execute only after a second
+      // script arrives, so wait on ready(), never on execute: a visitor who
+      // autofills and submits within a second of focusing would otherwise be
+      // sent without a token and refused.
+      s.onload = function () { resolve(w.grecaptcha && w.grecaptcha.ready ? w.grecaptcha : null); };
+      // Blocked by an extension or a network: let the next submit try again.
+      s.onerror = function () { recaptchaLoading = null; resolve(null); };
+      d.head.appendChild(s);
+    });
+    return recaptchaLoading;
+  }
+
   function token() {
     // No endpoint means no submission, and therefore no reason to execute
     // reCAPTCHA at all. Never run it just because a form is on screen.
-    if (!ENDPOINT || !SITE_KEY || !w.grecaptcha || !w.grecaptcha.execute) {
-      return Promise.resolve(null);
-    }
-    return new Promise(function (resolve) {
-      w.grecaptcha.ready(function () {
-        w.grecaptcha.execute(SITE_KEY, { action: ACTION }).then(resolve, function () { resolve(null); });
+    if (!USES_RECAPTCHA) { return Promise.resolve(null); }
+    // A missing token is sent as missing: the server answers CAPTCHA_FAILED and
+    // the visitor is told to reload. A submit button that spins forever is not
+    // an answer, hence the timeout.
+    var minted = loadRecaptcha().then(function (g) {
+      if (!g) { return null; }
+      return new Promise(function (resolve) {
+        g.ready(function () {
+          g.execute(SITE_KEY, { action: ACTION }).then(resolve, function () { resolve(null); });
+        });
       });
     });
+    var timeout = new Promise(function (resolve) { setTimeout(function () { resolve(null); }, RECAPTCHA_TIMEOUT_MS); });
+    return Promise.race([minted, timeout]);
+  }
+
+  /** The Central Intake wire body: exactly the closed-world contract
+   *  (contracts/schemas/intake/<schemaId>.schema.json, additionalProperties
+   *  false). Anything not listed there is a 400, so this is an allowlist:
+   *  `subject` becomes the top-level `inquiryType`, the contact fields move
+   *  under `contact`, and `extra`, `ts` and `recaptchaAction` are not sent —
+   *  the server derives the action from the route. A site whose form collects
+   *  something outside its schema must add it to the schema, not to `extra`. */
+  function toContract(payload) {
+    var out = {
+      schemaId: payload.schemaId,
+      schemaVersion: payload.schemaVersion,
+      sourceSite: payload.sourceSite,
+      sourceForm: payload.sourceForm,
+      contact: {},
+      message: payload.message,
+      idempotencyKey: payload.idempotencyKey
+    };
+    ['name', 'email', 'phone', 'company', 'country'].forEach(function (k) {
+      if (payload[k]) { out.contact[k] = payload[k]; }
+    });
+    // An over-long URL is metadata the server would reject the enquiry for.
+    if (payload.sourceUrl && payload.sourceUrl.length <= 500) { out.sourceUrl = payload.sourceUrl; }
+    var det = payload.details;
+    if (det && det.inquiryType) { out.inquiryType = det.inquiryType; }
+    if (det) {
+      var rest = {}, k;
+      for (k in det) { if (k !== 'inquiryType') { rest[k] = det[k]; } }
+      if (Object.keys(rest).length) { out.details = rest; }
+    }
+    ['consent', 'attribution', 'terms', 'recaptchaToken'].forEach(function (k2) {
+      if (payload[k2]) { out[k2] = payload[k2]; }
+    });
+    return out;
   }
 
   // Flatten to the wire. `extra` is folded in for form-encoded legacy
@@ -819,7 +897,7 @@
                headers: { 'Content-Type': 'application/x-www-form-urlencoded',
                           'Accept': 'application/json', 'X-Requested-With': 'fetch' } };
     }
-    return { body: JSON.stringify(payload),
+    return { body: JSON.stringify(toContract(payload)),
              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' } };
   }
 
@@ -832,10 +910,28 @@
     server:     'We could not record your inquiry just now. Please try again, or email us directly.'
   };
 
+  // Central Intake answers with an UPPER_CASE code (backend shared/errors.py);
+  // the legacy endpoint with the lower-case keys above. Both land on one message.
+  var CODE = {
+    VALIDATION_FAILED: 'validation', INVALID_REQUEST: 'validation',
+    ATTACHMENT_REJECTED: 'validation', RATE_LIMITED: 'ratelimit',
+    CAPTCHA_FAILED: 'origin', PAYLOAD_TOO_LARGE: 'toolarge'
+  };
+
+  /** Server field paths -> form control names: contact.email -> email,
+   *  details.x -> d_x, inquiryType -> the subject select. */
+  function fieldName(path) {
+    var p = String(path);
+    if (p === 'inquiryType') { return 'subject'; }
+    if (p.indexOf('contact.') === 0) { return p.slice(8); }
+    if (p.indexOf('details.') === 0) { return DPREFIX + p.slice(8).split('.')[0]; }
+    return p;
+  }
+
   /* ── generate_lead ───────────────────────────────────────────────────────
    *
-   * THE ONLY PLACE THIS MAY FIRE is the branch above: a parsed response whose
-   * `ok` is true, i.e. Central Intake has accepted and durably stored the
+   * THE ONLY PLACE THIS MAY FIRE is the success branch of send(): a parsed
+   * response whose `success` (legacy: `ok`) is true, i.e. Central Intake has accepted and durably stored the
    * inquiry. Not on form open, not on first interaction, not on submit click,
    * not when the request goes out, and never optimistically on a network error.
    * The estate has been here before — a generate_lead derived from /contact page
@@ -870,7 +966,8 @@
         source_site: payload.sourceSite,
         source_form: payload.sourceForm
       };
-      if (payload.inquiryType) { params.intake_type = payload.inquiryType; }
+      var itype = payload.details && payload.details.inquiryType;
+      if (itype) { params.intake_type = itype; }
       var a = payload.attribution;
       if (a) {
         if (a.campaign) { params.attr_campaign = a.campaign; }
@@ -887,15 +984,23 @@
   }
 
   function send(form, payload, btn) {
+    function done() {
+      form.__intakeBusy = false;
+      btn.disabled = false; btn.removeAttribute('aria-disabled');
+    }
     token().then(function (t) {
       if (t) { payload.recaptchaToken = t; payload.recaptchaAction = ACTION; }
       var wire = encode(payload, form);
       return w.fetch(ENDPOINT, { method: 'POST', body: wire.body, headers: wire.headers,
                                credentials: 'same-origin' });
     }).then(function (res) {
-      return res.json().catch(function () { return { ok: false, error: 'server' }; });
+      return res.json().then(function (data) {
+        // A 4xx/5xx is never success, whatever its body says.
+        return res.ok === false && data ? { error: data.error || 'server', fields: data.fields } : data;
+      }, function () { return { ok: false, error: 'server' }; });
     }).then(function (data) {
-      if (data && data.ok) {
+      // Central Intake says {success:true} with a 201; the legacy endpoint {ok:true}.
+      if (data && (data.success === true || data.ok === true)) {
         // Only the server can confirm an inquiry was stored, so only now.
         emitLead(form, payload);
         // A new inquiry from this page must not reuse the accepted key.
@@ -911,14 +1016,17 @@
         form.reset();
       } else {
         var code = (data && data.error) || 'server';
-        setStatus(form, 'error', ERR[code] || ERR.server);
-        (data && data.fields || []).forEach(function (f) { fieldErr(form, f, true); });
+        // The key was spent on a different body. The client rotates keys on any
+        // edit, so this should not happen; if it does, the next attempt is new.
+        if (code === 'IDEMPOTENCY_CONFLICT') { form.__intakeIdem = null; }
+        setStatus(form, 'error', ERR[CODE[code] || code] || ERR.server);
+        (data && data.fields || []).forEach(function (f) { fieldErr(form, fieldName(f), true); });
       }
-      btn.disabled = false; btn.removeAttribute('aria-disabled');
+      done();
     }).catch(function () {
       // Network failure. Never claim success.
       setStatus(form, 'error', ERR.server);
-      btn.disabled = false; btn.removeAttribute('aria-disabled');
+      done();
     });
   }
 
@@ -986,8 +1094,11 @@
       if (el) { el.addEventListener('input', function () { fieldErr(form, f, false); }, { passive: true }); }
     });
 
+    if (USES_RECAPTCHA) { form.addEventListener('focusin', loadRecaptcha, { once: true }); }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (form.__intakeBusy) { return; }
 
       // Honeypot: hidden from people and assistive tech, so anything in it is
       // a bot. Stop silently — telling a bot it failed only helps it retry.
@@ -1013,6 +1124,10 @@
 
       if (!ENDPOINT) { composeMail(form, payload); return; }
 
+      // One request in flight per form. The disabled button stops the second
+      // click; this stops every other route to a second submit event.
+      if (form.__intakeBusy) { return; }
+      form.__intakeBusy = true;
       btn.disabled = true; btn.setAttribute('aria-disabled', 'true');
       setStatus(form, 'busy', 'Sending your inquiry…');
       send(form, payload, btn);
